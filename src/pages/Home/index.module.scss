@@ -1,3 +1,22 @@
 .div {
-    
+    & .header {
+        height: 70px;
+        display: flex;
+        align-items: center;
+
+        & img {
+            height: 50px;
+        }
+    }
+
+	& .slide {
+		width: 100vw;
+		height: 400px;
+        background-color: gray;
+	}
+
+    & .calendar {
+        height: 70px;
+        background-color: red;
+    }
 }
