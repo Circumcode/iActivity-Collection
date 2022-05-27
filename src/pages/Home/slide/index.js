@@ -4,12 +4,12 @@ import './index.css';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 
-const url = "https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json";
+const url = 'https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json';
 const arrUrl = [];
 const axios = require('axios').default;
 
 axios.get(url).then((response)=>{
-  console.log(response.data);
+  // console.log(response.data);
   let data = response.data;
   let index = 0;
   for (let i=1; i<data.length; i++){

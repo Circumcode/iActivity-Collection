@@ -15,22 +15,6 @@ class ActivityDetail {
 	}
 }
 
-// let Detail: Array<ActivityDetail> = [];
-
-
-// axios.get(url).then((response) => {
-// 		for (let index in response.data) {
-// 			Detail.push(new ActivityDetail(response.data[index].title, response.data[index].imageUrl));
-// 		}
-
-// 	}).catch(function (error) {
-// 		console.log(error);
-
-// 	});
-
-
-
-
 interface IProps{};
 interface IState{
 	activityDetail: Array<ActivityDetail>
