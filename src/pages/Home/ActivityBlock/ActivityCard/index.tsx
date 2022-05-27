@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -28,12 +29,14 @@ export default class index extends Component<IProps, IState> {
 	}
 	
 	getPicture() {
-		if (this.state.isChoose)
+		if (this.state.isChoose) {
 			return <img src={require('../../../../assets/icon/close.png')} style={{ width: '50px' }}
 						onClick={() => {this.setState({isChoose: false})}} />
-		else 
+		}
+		else {
 			return <img src={require('../../../../assets/icon/plus.png')} style={{ width: '50px' }}
 						onClick={this.choose} />
+		}
 	}
 
 	render() {
@@ -45,8 +48,10 @@ export default class index extends Component<IProps, IState> {
 					<div className={style.button}>
 						{this.getPicture()}
 						<img className={style.bar} src={require('../../../../assets/icon/line.png')} />
-						<img src={require('../../../../assets/icon/search.png')} style={{ width: '25px' }} 
-							 onClick={(event) => {event.preventDefault(); console.log('serach~~~')}} />
+						<Link to='../../../Activity'>
+							<img src={require('../../../../assets/icon/search.png')} style={{ marginTop: '8px', width: '35px' }} 
+								onClick={(event) => {console.log('serach~~~')}} />
+						</Link>
 					</div>
 				</Card.Body>
 			</Card>
