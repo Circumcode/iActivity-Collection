@@ -1,10 +1,14 @@
 [
     {
+        "UID": "5b3dd544aaa378d7ca9a2e9a",
         "title": "科博館《古代人說故事》南屯山仔腳遺址出土的鐵刀首亮相!",
         "showInfo": [
             {
-                "time": "2022/05/27 09:00:00",
                 "city": "臺中市",
+                "area": "北區",
+                "latitude": "24.157234",
+                "longitude": "120.66606",
+                "time": "2022/05/27 09:00:00",
                 "location": "臺中市40453 臺中市北區館前路一號",
                 "locationName": "人類文化廳二樓",
                 "onSales": "Y",
@@ -19,15 +23,20 @@
         "masterUnit": [
             "國立自然科學博物館"
         ],
+        "sourceWebPromote": "https://www.nmns.edu.tw/ch/",
         "startDate": "2022/05/27",
         "endDate": "2028/12/31"
     },
     {
+        "UID": "5c7e1bcdaaa375d860933d3a",
         "title": "曾侯乙編鐘「重返」科博館  小編鐘與VR相伴共推科學教育",
         "showInfo": [
             {
-                "time": "2019/03/05 09:00:00",
                 "city": "臺中市",
+                "area": "北區",
+                "latitude": "24.1572555",
+                "longitude": "120.6661841",
+                "time": "2019/03/05 09:00:00",
                 "location": "臺中市北區館前路1號",
                 "locationName": "國立自然科學博物館",
                 "onSales": "N",
@@ -42,38 +51,20 @@
         "masterUnit": [
             "國立自然科學博物館"
         ],
+        "sourceWebPromote": "http://www.nmns.edu.tw/web/news.htm?category_id=news&id=252379",
         "startDate": "2019/03/05",
         "endDate": "2024/03/05"
     },
     {
-        "title": "曾侯乙編鐘「重返」科博館  小編鐘與VR相伴共推科學教育",
-        "showInfo": [
-            {
-                "time": "2019/03/05 09:00:00",
-                "city": "臺中市",
-                "location": "臺中市北區館前路1號",
-                "locationName": "國立自然科學博物館",
-                "onSales": "N",
-                "price": "",
-                "endTime": "2024/03/05 17:00:00",
-                "isIndoor": "Y"
-            }
-        ],
-        "showUnit": "國立自然科學博物館",
-        "descriptionFilterHtml": " 曾侯乙編鐘再現科博館!今(5)日在臺灣國樂團演出鐘鼓音的莊嚴典雅樂聲後，正式宣告曾侯乙編鐘即日起在科博館展示五年。為了讓觀眾能更全面認識編鐘，科博館自本(3)月9日起安排一系列編鐘學習推廣活動，每週假日限額讓觀眾體驗編鐘VR，以及小編鐘科學演示等活動，另外平假日上下午各有一場編鐘導覽，解說編鐘歷史以及相關科學原理，歡迎踴躍參加。\r\n\r\n     當年編鐘被發掘後即於湖北省博物館展示至今，為大陸一級文物，禁止出境展覽。而以原件為母範複製出的整套編鐘，即這次展出的精品，經驗證為今日最接近原件的複製件。國立傳統藝術中心主任陳濟民指出編鐘有東方樂器之王的美稱，更曾有專家認為此套複製件的中音區音質比原件更好。科博館館長孫維新認為透過最新科技與最古老文物的結合，能讓大眾有更多元面向的收穫。國樂團團長劉麗貞表示希望透過與科博館的合作，讓編鐘發揮一加一大於二的效益。2015年科博館展出《鼎立三十》特展時，即展示過此編鐘，這一次將展出五年，歡迎民眾把握機會一睹風采。\r\n\r\n    編鐘為西元前433年曾侯乙墓埋藏文物，其上有銘文「曾侯乙作持」（曾國-侯爵-乙-持有），故命名為曾侯乙編鐘。編鐘專家李慧老師提到其樂音有沉靜之感，一聲一世界，一響一天堂，應精準演奏，更應顧及旋律連結的優美。編鐘於正面或側面敲擊可發出間隔約三度的兩個樂音。整組編鐘音域橫跨五個半八度，中心音域內12半音齊備。   \r\n\r\n    科博館助理研究員陳叔倬提到「王者之音」有雙重意義：第一重是此展品—曾侯乙編鐘是古代王者的禮樂器物，第二重是此展品是東方樂器之王。曾侯乙是戰國早期周王分封曾國（近今湖北隨州）的王室後裔，姓姬名乙。1978年整座編鐘於墓葬挖掘時原樣出土，鐘架呈L字型掛有編鐘65件，最長面7.5公尺，最大鐘高152公分重204公斤，最小鐘高20公分重2.4公斤，為東方最大樂器。除鑄造精美外，更是音樂發展的極高成就。",
-        "imageUrl": "https://cloud.culture.tw/e_new_upload/cms/image/A0/B0/C0/D5/E145/F330/82fac577-bb20-43d9-9439-249d043b579c.jpg",
-        "masterUnit": [
-            "國立自然科學博物館"
-        ],
-        "startDate": "2019/03/05",
-        "endDate": "2024/03/05"
-    },
-    {
+        "UID": "5e5ffbf8d083a329401eed57",
         "title": "漁村生活體驗活動－一線成網",
         "showInfo": [
             {
-                "time": "2022/07/01 09:00:00",
                 "city": "宜蘭縣",
+                "area": "蘇澳鎮",
+                "latitude": "24.585190",
+                "longitude": "121.872151",
+                "time": "2022/07/01 09:00:00",
                 "location": "宜蘭縣蘇澳鎮",
                 "locationName": "蘇澳鎮（宜蘭縣）=",
                 "onSales": "N",
@@ -88,15 +79,20 @@
         "masterUnit": [
             "宜蘭縣立蘭陽博物館"
         ],
+        "sourceWebPromote": "https://www.lym.gov.tw/ch/index.html",
         "startDate": "2022/07/01",
         "endDate": "2022/12/31"
     },
     {
+        "UID": "5efb8db9d083a33abc1ac109",
         "title": "國美4.0建築模型文件",
         "showInfo": [
             {
-                "time": "2020/07/04 10:00:00",
                 "city": "臺中市",
+                "area": "西區",
+                "latitude": "24.139665",
+                "longitude": "120.665874",
+                "time": "2020/07/04 10:00:00",
                 "location": "臺中市西區五權西路一段2號",
                 "locationName": "國立臺灣美術館",
                 "onSales": "N",
@@ -111,13 +107,19 @@
         "masterUnit": [
             "國立臺灣美術館"
         ],
+        "sourceWebPromote": "https://www.ntmofa.gov.tw/",
         "startDate": "2020/07/04",
         "endDate": "2023/06/25"
     },
     {
+        "UID": "6009d0bcd083a330884e92cf",
         "title": "「聽‧黃舉人宅」聲音漫遊",
         "showInfo": [
             {
+                "city": "宜蘭縣",
+                "area": "五結鄉",
+                "latitude": "24.685451",
+                "longitude": "121.824171",
                 "time": "2022/01/01 09:00:00",
                 "location": "宜蘭縣五結鄉24鄰五濱路二段201號",
                 "locationName": "國立傳統藝術中心宜蘭園區",
@@ -133,13 +135,19 @@
         "masterUnit": [
             "國立傳統藝術中心"
         ],
+        "sourceWebPromote": "https://www.ncfta.gov.tw/",
         "startDate": "2022/01/01",
         "endDate": "2022/12/31"
     },
     {
+        "UID": "603e8c47d083a396f8aedb76",
         "title": "院藏亞洲佛教藝術之美：佛陀形影",
         "showInfo": [
             {
+                "city": "嘉義縣",
+                "area": "太保市",
+                "latitude": "23.4704066",
+                "longitude": "120.2913281",
                 "time": "2022/01/01 09:00:00",
                 "location": "嘉義縣太保市故宮大道888號",
                 "locationName": "國立故宮博物院南部院區",
@@ -155,13 +163,19 @@
         "masterUnit": [
             "國立故宮博物院南院處"
         ],
+        "sourceWebPromote": "https://www.nmh.gov.tw/",
         "startDate": "2022/01/01",
         "endDate": "2022/12/31"
     },
     {
+        "UID": "60796f9ad083a3a724cd5a1b",
         "title": "《WeWORD 字我訂造：流行歌詞及其創造的》新媒體展",
         "showInfo": [
             {
+                "city": "台北市",
+                "area": "信義區",
+                "latitude": "25.0436839",
+                "longitude": "121.55935",
                 "time": "2022/09/22 10:00:00",
                 "location": " 台北市信義區光復南路133號 ",
                 "locationName": "松山文創園區一號倉庫",
@@ -177,13 +191,19 @@
         "masterUnit": [
             "大地風/寬魚國際"
         ],
+        "sourceWebPromote": "https://kktix.com/",
         "startDate": "2022/09/22",
         "endDate": "2022/10/09"
     },
     {
+        "UID": "60a1dee3aaa33e89fe9fbca5",
         "title": "茶遊記-茶的超時空壯遊 線上展",
         "showInfo": [
             {
+                "city": null,
+                "area": null,
+                "latitude": null,
+                "longitude": null,
                 "time": "2020/06/15 00:00:00",
                 "location": "新北市線上展",
                 "locationName": "線上展",
@@ -199,6 +219,7 @@
         "masterUnit": [
             "新北市坪林茶葉博物館＆國立歷史博物館"
         ],
+        "sourceWebPromote": "https://vr.nmh.gov.tw/home/zh-tw",
         "startDate": "2020/06/15",
         "endDate": "2022/12/31"
     }
