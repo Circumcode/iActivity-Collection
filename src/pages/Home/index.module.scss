@@ -1,3 +1,33 @@
-.div {
-    
+body {
+    margin: 0;
+    padding: 0;
+
+    .titlebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: calc(100vw);
+        height: calc(10vh);
+        background-color: white;
+
+        .iconLeft {
+            height: calc(4vh);
+            float: left;
+            margin-left: calc(5vw);
+        }
+
+        .iconRight {
+            height: calc(4vh);
+            float: right;
+            margin-left: calc(5vw);
+        }
+    }
+
+    .slideShow {
+        margin: auto;
+        margin-top: calc(10vh);
+        height: calc(50vh);
+        width: calc(100vw);
+    }
 }
+
