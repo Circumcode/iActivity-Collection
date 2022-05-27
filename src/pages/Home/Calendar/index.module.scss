@@ -1,0 +1,25 @@
+.calendar {
+    height: 80px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    & .years {
+        input{
+            display: inline;
+        }
+        h5 {
+            display: inline;
+        }
+    }
+
+    & .season {
+
+        & a{
+            color: rgb(164, 164, 164) !important ;
+            font-family: DFKai-sb;
+            margin: 20px;
+        }
+    }
+}

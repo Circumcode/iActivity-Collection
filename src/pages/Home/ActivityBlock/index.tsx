@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Container, Col, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import style from './index.module.scss'
 
 import ActivityCard from './ActivityCard';
 import axios from 'axios';
@@ -15,18 +16,18 @@ class ActivityDetail {
 	}
 }
 
-interface IProps{};
-interface IState{
-	activityDetail: Array<ActivityDetail>
-};
+interface IProps {}
+interface IState {
+	activityDetail: Array<ActivityDetail>;
+}
 export default class index extends PureComponent<IProps, IState> {
-	url = 'https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json'
+	url = 'https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json';
 
 	constructor(props: any) {
 		super(props);
 		this.state = {
 			activityDetail: [],
-		}
+		};
 	}
 
 	componentDidMount(): void {
@@ -40,14 +41,14 @@ export default class index extends PureComponent<IProps, IState> {
 		for (let index in response.data) {
 			tempArray.push(new ActivityDetail(response.data[index].title, response.data[index].imageUrl));
 		}
-		
-		this.setState({activityDetail: tempArray});
-	}
+
+		this.setState({ activityDetail: tempArray });
+	};
 
 	createActivity(): Array<JSX.Element> {
 		let tempArray: Array<JSX.Element> = [];
 		for (let index = 0; index < this.state.activityDetail.length; index += 3) {
-			tempArray.push(<Row key={index}>{this.addCol(index)}</Row>);
+			tempArray.push(<div key={index} className={style.Row}>{this.addCol(index)}</div>);
 		}
 		return tempArray;
 	}
@@ -57,13 +58,13 @@ export default class index extends PureComponent<IProps, IState> {
 			if (index === this.state.activityDetail.length) break;
 
 			tempArray.push(
-				<Col key={index}>
+				<div key={index} className={style.Col}>
 					<ActivityCard
 						key={index}
 						title={this.state.activityDetail[index].title}
 						picLink={this.state.activityDetail[index].picLink}
 					></ActivityCard>
-				</Col>
+				</div>
 			);
 			index++;
 		}
@@ -71,6 +72,13 @@ export default class index extends PureComponent<IProps, IState> {
 	}
 
 	render() {
-		return <Container className="activity">{this.createActivity()}</Container>;
+		return (
+			<>
+				<div className={style.activity}>{this.createActivity()}</div>
+				<div className={style.aside}>
+					<div className={style.dateBlock}></div>
+				</div>
+			</>
+		);
 	}
 }

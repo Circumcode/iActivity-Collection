@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import style from './index.module.scss';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 
@@ -9,7 +9,6 @@ const arrUrl = [];
 const axios = require('axios').default;
 
 axios.get(url).then((response)=>{
-  // console.log(response.data);
   let data = response.data;
   let index = 0;
   for (let i=1; i<data.length; i++){
@@ -28,10 +27,12 @@ class Frame extends Component {
   render() {
     return (
       <div className='each-slide'>
-        <div className='title'>title</div>
-        <div className="slideImage">
-          <img src={arrUrl[this.props.id]} className="img"></img>
+        <div className={style.title}>title</div>
+
+        <div className={style.slideImage}>
+          <img src={arrUrl[this.props.id]} className={style.img}></img>
         </div>
+
       </div>
     )
   }

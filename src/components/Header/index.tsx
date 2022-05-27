@@ -6,7 +6,7 @@ import style from './index.module.scss';
 export default class index extends Component {
 	render() {
 		return (
-			<div className={style.header}>
+			<header className={style.header}>
 				<Link
 					to='/'
 				>
@@ -18,10 +18,10 @@ export default class index extends Component {
 					className={style.rightLink}
 				>
 					<img src={require('../../assets/icon/calendar.png')}></img>
-					<input type="button" className={style.btn} value="自訂行成" />
+					<input type="button" className={style.btn} value="自訂行程" />
 
 				</Link>
-			</div>
+			</header>
 		);
 	}
 }

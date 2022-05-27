@@ -6,12 +6,17 @@
 }
 
 .slideImage {
-  overflow:hidden;
   width: calc(100vw);
   height: calc(40vh);
+  text-align: center;
+  overflow:hidden;
+
+
+  & .img{
+    width: auto;
+    height: auto;
+    max-height: 500px;
+  }
 }
 
-.img{
-  width: calc(100%);
-  height: calc(100%);
-}
+
