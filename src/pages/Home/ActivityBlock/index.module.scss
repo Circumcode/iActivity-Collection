@@ -1,38 +1,42 @@
 .activity {
-    width: 72%;
-    float: left;
+    width: 98vw;
 
-    margin-left: 60px;
+	.activityList {
+		width: 72%;
+		float: left;
 
-    & .Row{
-        display: flex;
-        justify-content: left;
+		margin-left: 60px;
 
-        & .Col{
-            width: 30em;
-            margin: 10px;
-        }
-    }
-}
+		& .Row {
+			display: flex;
+			justify-content: left;
 
-.aside {
-    width: 24%;
-    display: inline;
+			& .Col {
+				width: 30em;
+				margin: 10px;
+			}
+		}
+	}
 
-    & .dateBlock{
-        width: 300px;
-        height: 380px;
-        float: left;
-        margin-bottom: 20px;
+	.aside {
+		width: 18%;
+		display: inline;
 
-        display: flex;
-        justify-content: right;
+		& .dateBlock {
+			width: 300px;
+			height: 380px;
+			float: left;
+			margin-bottom: 20px;
 
-        border-left: 3px solid rgb(255, 170, 0);
+			display: flex;
+			justify-content: right;
 
-        & {
-            color: rgb(255, 170, 0);
-            font-weight: bolder;
-        }
-    }
+			border-left: 3px solid rgb(255, 170, 0);
+
+			& {
+				color: rgb(255, 170, 0);
+				font-weight: bolder;
+			}
+		}
+	}
 }

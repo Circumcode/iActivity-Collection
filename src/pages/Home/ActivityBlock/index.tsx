@@ -79,14 +79,14 @@ export default class index extends PureComponent<IProps, IState> {
 
 	render() {
 		return (
-			<>
-				<div className={style.activity}>{this.createActivity()}</div>
+			<div className={style.activity}>
+				<div className={style.activityList}>{this.createActivity()}</div>
 				<div className={style.aside}>
 					<div className={style.dateBlock}><h3>1 - 3月</h3></div>
 					<div className={style.dateBlock}><h3>4 - 6月</h3></div>
 					<div className={style.dateBlock}><h3>7 - 9月</h3></div>
 				</div>
-			</>
+			</div>
 		);
 	}
 }

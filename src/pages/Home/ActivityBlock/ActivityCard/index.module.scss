@@ -1,0 +1,21 @@
+.border {
+	border: 3px solid orange;
+	box-sizing: border-box;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+
+	& img {
+		// margin: 0 18px 0 18px;
+        height: auto;
+		cursor: pointer;
+	}
+
+	& .bar {
+		width: 25px;
+        margin: 0 60px 0 50px;
+		cursor: auto;
+	}
+}
