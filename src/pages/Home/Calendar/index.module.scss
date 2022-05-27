@@ -7,10 +7,14 @@
 
     & .years {
         input{
+            border: 0.5px solid rgb(58, 58, 58);
+            background-color: transparent;
             display: inline;
         }
         h5 {
             display: inline;
+            margin: 0 10px 0 10px;
+            font-weight: bold;
         }
     }
 

@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
-import { Container, Col, Row } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+
 import style from './index.module.scss'
 
 import ActivityCard from './ActivityCard';
-import axios from 'axios';
+
 
 class ActivityDetail {
 	title: string;
@@ -55,17 +55,23 @@ export default class index extends PureComponent<IProps, IState> {
 	private addCol(index: number): Array<JSX.Element> {
 		let tempArray: Array<JSX.Element> = [];
 		for (let i = 0; i < 3; i++) {
-			if (index === this.state.activityDetail.length) break;
+			if (index >= this.state.activityDetail.length) {
+				tempArray.push(
+					<div key={index} className={style.Col}></div>
+				);
+			} else {
+				tempArray.push(
+					<div key={index} className={style.Col}>
+						<ActivityCard
+							key={index}
+							title={this.state.activityDetail[index].title}
+							picLink={this.state.activityDetail[index].picLink}
+						></ActivityCard>
+					</div>
+				);
+			}
 
-			tempArray.push(
-				<div key={index} className={style.Col}>
-					<ActivityCard
-						key={index}
-						title={this.state.activityDetail[index].title}
-						picLink={this.state.activityDetail[index].picLink}
-					></ActivityCard>
-				</div>
-			);
+			
 			index++;
 		}
 		return tempArray;
@@ -76,7 +82,9 @@ export default class index extends PureComponent<IProps, IState> {
 			<>
 				<div className={style.activity}>{this.createActivity()}</div>
 				<div className={style.aside}>
-					<div className={style.dateBlock}></div>
+					<div className={style.dateBlock}><h3>1 - 3月</h3></div>
+					<div className={style.dateBlock}><h3>4 - 6月</h3></div>
+					<div className={style.dateBlock}><h3>7 - 9月</h3></div>
 				</div>
 			</>
 		);

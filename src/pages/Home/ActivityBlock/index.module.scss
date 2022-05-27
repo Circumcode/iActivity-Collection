@@ -1,14 +1,15 @@
 .activity {
-    width: 75%;
+    width: 72%;
     float: left;
 
-    margin-left: 30px;
+    margin-left: 60px;
 
     & .Row{
         display: flex;
         justify-content: left;
 
         & .Col{
+            width: 30em;
             margin: 10px;
         }
     }
@@ -19,8 +20,19 @@
     display: inline;
 
     & .dateBlock{
-        height: 400px;
-        background-color: red;
-        border-left: 3px solid yellow;
+        width: 300px;
+        height: 380px;
+        float: left;
+        margin-bottom: 20px;
+
+        display: flex;
+        justify-content: right;
+
+        border-left: 3px solid rgb(255, 170, 0);
+
+        & {
+            color: rgb(255, 170, 0);
+            font-weight: bolder;
+        }
     }
 }

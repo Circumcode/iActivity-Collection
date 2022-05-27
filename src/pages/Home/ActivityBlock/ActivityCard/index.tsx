@@ -13,10 +13,9 @@ export default class index extends PureComponent<IProps> {
     constructor(props: any) {
         super(props);
     }
-    // src={require(this.props.picLink)} 
 	render() {
 		return (
-			<Card style={{width: '18rem'}}>
+			<Card style={{width: '18em'}}>
 				<Card.Img variant="top" style={{height: '250px'}} src={this.props.picLink} />
 				<Card.Body>
 					<Card.Title style={{height: '50px'}}>{this.props.title}</Card.Title>

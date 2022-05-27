@@ -51,6 +51,8 @@ const SlideShow = ()=> {
         <Frame id={0} />
         <Frame id={1}/>
         <Frame id={2}/>
+        <Frame id={3}/>
+        <Frame id={4}/>
       </Slide>
     </div>
   )
