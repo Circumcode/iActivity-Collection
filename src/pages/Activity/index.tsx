@@ -2,12 +2,15 @@ import { request } from 'http';
 import { memo } from 'react';
 
 import style from './index.module.scss';
+import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 
 
 const ActivityPage = memo(() => {
   return (
     <>
+      <Header />
+      
       <div
         className={style.div}
       >
@@ -17,7 +20,7 @@ const ActivityPage = memo(() => {
 
         <section id={style.secondSection}>
           <div>
-            <img src={require("../../assets/logo.png")} />
+            <img src={require("../../assets/logo512.png")} />
             <section>
               <img
                 className={style.icon}
