@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import './index.scss';
+import style from './index.module.scss';
 
 interface IProps {
     tag: string;
@@ -14,7 +14,7 @@ export default class tag extends Component<IProps> {
 
     render(): React.ReactNode {
         return (
-            <button className="tag" onClick={this.handleClick.bind(this)}>{this.props.tag}</button>
+            <button className={style.tag} onClick={this.handleClick.bind(this)}>{this.props.tag}</button>
         )
     }
 }

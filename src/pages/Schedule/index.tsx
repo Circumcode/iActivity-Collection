@@ -1,6 +1,6 @@
 import { Component, ReactNode } from 'react';
 
-import './index.scss';
+import style from './index.module.scss';
 import Header from '../../components/Header';
 import SwitchTag from './switchTag';
 import ScheBlock from './scheBlock';
@@ -31,7 +31,7 @@ class SchedulePage extends Component<IProps, IState> {
     return (
       <>
         <Header/>
-        <div className='schedule'>
+        <div className={style.schedule}>
           <SwitchTag changePage={this.changePage}/>
           <ScheBlock style={{display: this.state.page === "排程" ? "block" : "none"}} />
           <ScheMap style={{display: this.state.page === "地圖" ? "block" : "none"}} />
