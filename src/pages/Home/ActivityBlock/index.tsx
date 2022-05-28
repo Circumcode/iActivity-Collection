@@ -1,76 +1,132 @@
 import React, { PureComponent } from 'react';
-import { Container, Col, Row } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import ActivityCard from './ActivityCard';
 import axios from 'axios';
 
-class ActivityDetail {
-	title: string;
-	picLink: string;
+import style from './index.module.scss'
 
-	constructor(title: string, picLink: string) {
+import ActivityCard from './ActivityCard';
+
+import Activity from '../../../tools/Activity'
+
+class ActivityDetail {
+	id: string;
+	title: string;
+	date: string;
+	picLink: string;
+	isOverTime: boolean;
+
+	constructor(id: string, title: string, date: string, picLink: string, isOverTime: boolean) {
+		this.id = id;
 		this.title = title;
+		this.date = date;
 		this.picLink = picLink;
+		this.isOverTime = isOverTime;
 	}
 }
 
-interface IProps{};
-interface IState{
-	activityDetail: Array<ActivityDetail>
-};
+interface IProps {}
+interface IState {
+}
 export default class index extends PureComponent<IProps, IState> {
-	url = 'https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json'
+	url: string = 'https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json';
+	arrSpring: Array<ActivityDetail> = this.getDetail("spring");
+	arrSummer: Array<ActivityDetail> = this.getDetail("summer");
+	arrFall: Array<ActivityDetail> = this.getDetail("fall");
+	arrWinter: Array<ActivityDetail> = this.getDetail("winter");
 
 	constructor(props: any) {
 		super(props);
-		this.state = {
-			activityDetail: [],
-		}
 	}
 
-	componentDidMount(): void {
-		this.getDetail();
-	}
-
-	getDetail = async () => {
+	getDetail(strSeason: "spring" | "summer" | "fall" | "winter") {
 		let tempArray = [];
-
-		let response = await axios.get(this.url);
-		for (let index in response.data) {
-			tempArray.push(new ActivityDetail(response.data[index].title, response.data[index].imageUrl));
+		let arrSeason = Activity.getBySeason(2022, strSeason);
+		for (let index in arrSeason) {
+			tempArray.push(new ActivityDetail(arrSeason[index].UID, arrSeason[index].title,
+				strSeason, arrSeason[index].imageUrl, false));
 		}
-		
-		this.setState({activityDetail: tempArray});
-	}
+
+		return tempArray;
+	};
 
 	createActivity(): Array<JSX.Element> {
 		let tempArray: Array<JSX.Element> = [];
-		for (let index = 0; index < this.state.activityDetail.length; index += 3) {
-			tempArray.push(<Row key={index}>{this.addCol(index)}</Row>);
+
+		for (let index = 0; index < this.arrSpring.length; index += 3) {
+			tempArray.push(<div key={'spring' + index} className={style.Row}>{this.addCol(index, 'spring', this.arrSpring)}</div>);
 		}
+		for (let index = 0; index < this.arrSummer.length; index += 3) {
+			tempArray.push(<div key={'summer' + index} className={style.Row}>{this.addCol(index, 'summer', this.arrSummer)}</div>);
+		}
+		for (let index = 0; index < this.arrFall.length; index += 3) {
+			tempArray.push(<div key={'fall' + index} className={style.Row}>{this.addCol(index, 'fall', this.arrFall)}</div>);
+		}
+		for (let index = 0; index < this.arrWinter.length; index += 3) {
+			tempArray.push(<div key={'winter' + index} className={style.Row}>{this.addCol(index, 'winter', this.arrWinter)}</div>);
+		}
+
+
 		return tempArray;
 	}
-	private addCol(index: number): Array<JSX.Element> {
+	private addCol(index: number, strSeason: "spring" | "summer" | "fall" | "winter", arrSeason: Array<ActivityDetail>): Array<JSX.Element> {
 		let tempArray: Array<JSX.Element> = [];
+
 		for (let i = 0; i < 3; i++) {
-			if (index === this.state.activityDetail.length) break;
+			if (index + i >= arrSeason.length) {
+				tempArray.push(
+					<div key={strSeason + index + i} className={style.Col}></div>
+				);
+			} else {
+				tempArray.push(
+					<div key={index + i} className={style.Col} style={(index === 0) ? {marginTop: '60px'} : {}}>
+						<ActivityCard
+							key={index + i}
+							id={arrSeason[index + i].id}
+							title={arrSeason[index + i].title}
+							picLink={arrSeason[index + i].picLink}
+							isOverTime={arrSeason[index + i].isOverTime}
+						></ActivityCard>
+					</div>
+				);
+			}
+		}
+
+		if (index === 0) {
+			let season: string = '';
+			switch (strSeason){
+				case "spring":
+					season = '1 - 3月';
+					break;
+				case "summer":
+					season = '4 - 6月';
+					break;
+				case "fall":
+					season = '7 - 9月';
+					break;
+				case "winter":
+					season = '10 - 12月';
+					break;
+			}
 
 			tempArray.push(
-				<Col key={index}>
-					<ActivityCard
-						key={index}
-						title={this.state.activityDetail[index].title}
-						picLink={this.state.activityDetail[index].picLink}
-					></ActivityCard>
-				</Col>
+				<a id={strSeason} key={strSeason + " a"} className={style.targetFix}></a>
 			);
-			index++;
+			tempArray.push(
+				<div key={strSeason} className={style.dateBlock}><h2>{season}</h2></div>
+			);
+		} else {
+			tempArray.push(
+				<div key={strSeason + ' ' + index} className={style.dateBlock} style={{border: 'none'}}></div>
+			);
 		}
+		
 		return tempArray;
 	}
 
 	render() {
-		return <Container className="activity">{this.createActivity()}</Container>;
+		return (
+			<>
+				<div className={style.activityList}>{this.createActivity()}</div>
+			</>
+		);
 	}
 }

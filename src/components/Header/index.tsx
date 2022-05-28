@@ -6,22 +6,18 @@ import style from './index.module.scss';
 export default class index extends Component {
 	render() {
 		return (
-			<div className={style.header}>
-				<Link
-					to='/'
-				>
+			<header className={style.header}>
+				<Link to="/">
 					<img className={style.logo} src={require('../../assets/logo.png')}></img>
 				</Link>
 
-				<Link
-					to='/schedule'
-					className={style.rightLink}
-				>
-					<img src={require('../../assets/icon/calendar.png')}></img>
-					<input type="button" className={style.btn} value="自訂行成" />
-
-				</Link>
-			</div>
+				<div className={style.rightLink}>
+					<Link to="/schedule">
+						<img src={require('../../assets/icon/calendar.png')}></img>
+						<input type="button" className={style.btn} value="自訂行程" />
+					</Link>
+				</div>
+			</header>
 		);
 	}
 }

@@ -1,0 +1,54 @@
+.border {
+	border: 3px solid orange;
+	box-sizing: content-box;
+}
+
+.block {
+	width: 100%;
+	height: 250px;
+	
+	position: absolute;
+	background-color: rgba(173, 173, 173, 0.468);
+
+	display: flex;
+	align-items: center;
+
+	& div {
+		width: 100%;
+
+		background-color: rgba(81, 81, 81, 0.562);
+
+		text-align: center;
+		font-size: 35px;
+	}
+}
+.noneBlock {
+	display: none;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+
+	& img {
+        width: auto;
+		height: 25px;
+		cursor: pointer;
+	}
+
+	& .bar {
+		height: 30px;
+        margin: 0 100px 0 100px;
+		cursor: auto;
+	}
+
+	& .imgAdd {
+		transform: rotate(0deg);
+		transition: transform 1s;
+	}
+
+	& .imgClose {
+		transform: rotate(315deg);
+		transition: transform 1s;
+	}
+}
