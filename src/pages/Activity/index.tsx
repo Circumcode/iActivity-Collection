@@ -1,39 +1,27 @@
-import { request } from 'http';
 import { memo } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import style from './index.module.scss';
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
+import Activity, { NotExistActivity } from '../../components/Activity';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
+import classActivity from '../../tools/Activity';//
+
+
+const parsePathName: Function = () => {
+  return window.location.pathname.split("/")[2];
+}
 
 const ActivityPage = memo(() => {
+  const location = useLocation();
+  const strActivityId = location.pathname.split("/")[2];
+  const activity = classActivity.get(strActivityId);
+
+
   return (
     <>
       <Header />
-      
-      <div
-        className={style.div}
-      >
-        <section id={style.firstSection}>
-          <span>{"不只是房子"}</span>
-        </section>
-
-        <section id={style.secondSection}>
-          <div>
-            <img src={require("../../assets/logo512.png")} />
-            <section>
-              <img
-                className={style.icon}
-                src={require("../../assets/icon/plus.png")}
-              />
-            </section>
-            <section>{"我是內文"}</section>
-            <hr />
-            <button>前往官方網站</button>
-          </div>
-        </section>
-      </div>
-
+      {(activity == null)? <NotExistActivity /> : <Activity activity={classActivity.get(strActivityId)} />}
       <Footer />
     </>
   )
