@@ -55,8 +55,6 @@ class Test extends Component {
   }
 }
 
-export default Test;
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
