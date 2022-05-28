@@ -46,7 +46,7 @@ export default class index extends Component<IProps, IState> {
 
 	render() {
 		return (
-			<Card className={this.state.isChoose ? style.border : ''} style={{ width: '28em', boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)'}}
+			<Card className={this.state.isChoose ? style.border : ''} style={{ width: '25em', boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)'}}
 				  onClick={this.choose}>
 
 				<div className={(this.props.isOverTime) ? style.block : style.noneBlock}>
