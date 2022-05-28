@@ -12,10 +12,10 @@ export default class index extends Component {
                 </div>
                 <br/>
 				<div className={style.season}>
-					<a href="#sesson0">1-3月</a>
-					<a href="#sesson1">4-6月</a>
-					<a href="#sesson2">7-9月</a>
-					<a href="#sesson3">10-12月</a>
+					<a href="#spring">1-3月</a>
+					<a href="#summer">4-6月</a>
+					<a href="#fall">7-9月</a>
+					<a href="#winter">10-12月</a>
 				</div>
 			</div>
 		);
