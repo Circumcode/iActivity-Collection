@@ -5,6 +5,7 @@ import style from './index.module.scss'
 
 import ActivityCard from './ActivityCard';
 
+import Activity from '../../../tools/Activity'
 
 class ActivityDetail {
 	id: string;
@@ -42,17 +43,13 @@ export default class index extends PureComponent<IProps, IState> {
 		this.getDetail();
 	}
 
-	getDetail = async () => {
+	getDetail() {
 		let tempArray = [];
-
-		let response = await axios.get(this.url);
-		for (let index in response.data) {
-			tempArray.push(new ActivityDetail(response.data[index].UID, response.data[index].title, parseInt(index) + 1, response.data[index].imageUrl, false));
+		console.log(Activity.getBySeason(2022, 'spring'));
+		for (let index in Activity.getAll()) {
+			tempArray.push(new ActivityDetail(Activity.getAll()[index].UID, Activity.getAll()[index].title,
+							parseInt(index) + 1, Activity.getAll()[index].imageUrl, false));
 		}
-		tempArray[3].date = 3;
-		tempArray[0].isOverTime = true;
-		tempArray[1].isOverTime = true;
-		tempArray[2].isOverTime = true;
 
 		this.setState({ activityDetail: tempArray });
 	};
@@ -65,6 +62,7 @@ export default class index extends PureComponent<IProps, IState> {
 
 		if (this.state.activityDetail.length !== 0) {
 			for (let sesson in this.isSesson) {
+				this.index++;
 				if (!this.isSesson[sesson]) tempArray.push(<div key={this.index} className={style.Row}>{this.addCol(parseInt(sesson))}</div>);
 			}
 		}

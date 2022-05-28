@@ -63,7 +63,7 @@ export default class index extends Component<IProps, IState> {
 						<img className={style.bar} style={(this.props.isOverTime) ? {display : 'none'} : {}}
 							 src={require('../../../../assets/icon/line.png')} />
 
-						<Link to= {`../../../Activity/` + this.props.id}>
+						<Link to= {`/activity/` + this.props.id}>
 							<img src={(!this.state.isChoose) ? require('../../../../assets/icon/search.png') : require('../../../../assets/icon/search_orange.png')}
 								 onClick={(event) => {event.stopPropagation();}} />
 						</Link>
