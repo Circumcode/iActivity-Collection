@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Card } from 'react-bootstrap';
@@ -13,25 +13,26 @@ interface IProps {
 	picLink: string;
 	isReserve: boolean;
 	isOverTime: boolean;
+	toBlock: Function;
 }
-export default class index extends Component<IProps> {
+export default class index extends PureComponent<IProps> {
 	constructor(props: any) {
 		super(props);
-
+		
 		this.switchChoose = this.switchChoose.bind(this);
 	}
 
 	switchChoose(event: React.MouseEvent<HTMLImageElement, MouseEvent>) {
 		if (!this.props.isReserve) {
-			Activity.reserve(this.props.id);
-		} else {
-			Activity.cancel(this.props.id);
-		}
-		event.stopPropagation();
-		this.setState({isReserve: !this.props.isReserve});
-	}
+			if(!Activity.isReserved(this.props.id)) 
+				Activity.reserve(this.props.id);
 
-	cancelBubble(event: React.MouseEvent<HTMLImageElement, MouseEvent>) {
+			this.props.toBlock();
+		} else {
+			if(Activity.isReserved(this.props.id)) 
+				Activity.cancel(this.props.id);
+			this.props.toBlock();
+		}
 		event.stopPropagation();
 	}
 	
@@ -51,20 +52,21 @@ export default class index extends Component<IProps> {
 				<div className={(this.props.isOverTime) ? style.block : style.noneBlock}>
 					<div>overTime</div>
 				</div>
-				<Card.Img variant="top" style={{ height: '250px' }} src={this.props.picLink} />
+				<Card.Img variant="top" style={{height: '250px', userSelect: 'none'}} src={this.props.picLink} />
 
 				<Card.Body>
 
-					<Card.Title style={{ height: '70px' }}>{this.props.title}</Card.Title>
+					<Card.Title className={style.title} style={(!this.props.isReserve) ? {height: '70px'} : {height: '66px'} }>
+						{this.props.title}
+					</Card.Title>
 
 					<div className={style.button}>
 						{this.getPicture()}
 						<img className={style.bar} style={(this.props.isOverTime) ? {display : 'none'} : {}}
 							 src={require('../../../../assets/icon/line.png')} />
 
-						<Link to= {`/activity/` + this.props.id}>
-							<img src={(!this.props.isReserve) ? require('../../../../assets/icon/search.png') : require('../../../../assets/icon/search_orange.png')}
-								 onClick={() => {this.cancelBubble.bind(this)}} />
+						<Link to= {`/activity/` + this.props.id} onClick={(event) => {event.stopPropagation();}}>
+							<img src={(!this.props.isReserve) ? require('../../../../assets/icon/search.png') : require('../../../../assets/icon/search_orange.png')} />
 						</Link>
 					</div>
 				</Card.Body>

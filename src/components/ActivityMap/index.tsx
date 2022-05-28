@@ -7,7 +7,11 @@ import React, { RefObject } from "react";
 import AcitvityUtils from '../../tools/Activity'
 import LocationMarker from "./LocationMarker";
 import { MapTravel } from './domain/domain'
+import FunctionCaller from '../../tools/FunctionCaller'
 import style from './index.module.css'
+
+
+export const FUNCTION_CALLER_KEY_UPDATE_MAP = 'updateMap'
 
 const mapTravelIcon: L.DivIcon = L.divIcon({
   className: style.map_travel_icon,
@@ -39,7 +43,9 @@ export default class ActivityMap extends React.Component<IProps, IState> {
     const userReserved = AcitvityUtils.getReserved()
     let maxDistance = [Number.MAX_VALUE, Number.MIN_VALUE, Number.MAX_VALUE, Number.MIN_VALUE]
     let activityInfo: MapTravel[] = []
-    userReserved.map(item => {
+    userReserved.map( temp => {
+      let item = temp.activity
+      console.log(item)
       if (item && item.showInfo[0] && item.showInfo[0].latitude && item.showInfo[0].longitude) {
         const temp = {
           UID: item.UID,
@@ -57,6 +63,7 @@ export default class ActivityMap extends React.Component<IProps, IState> {
         activityInfo.push(temp);
       }
     })
+    console.log(activityInfo)
 
     const interval = setInterval(() => {
       if (this.mapRef.current) {
@@ -74,6 +81,10 @@ export default class ActivityMap extends React.Component<IProps, IState> {
 
   componentDidMount() {
     this.updateMap()
+    if(!FunctionCaller.hasKey(FUNCTION_CALLER_KEY_UPDATE_MAP)){
+      FunctionCaller.set(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap)
+    }
+    
   }
 
   render() {

@@ -1,5 +1,4 @@
-import React, { PureComponent } from 'react';
-import axios from 'axios';
+import React, { Component } from 'react';
 
 import style from './index.module.scss';
 
@@ -24,24 +23,44 @@ class ActivityDetail {
 }
 
 interface IProps {}
-interface IState {}
-export default class index extends PureComponent<IProps, IState> {
+interface IState {
+	isChange: boolean
+}
+export default class index extends Component<IProps, IState> {
 	url: string = 'https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json';
-	arrSpring: Array<ActivityDetail> = this.getDetail('spring');
-	arrSummer: Array<ActivityDetail> = this.getDetail('summer');
-	arrFall: Array<ActivityDetail> = this.getDetail('fall');
-	arrWinter: Array<ActivityDetail> = this.getDetail('winter');
-	mapIsReserve: {[key: string]: boolean} = {}
+	arrSpring: Array<ActivityDetail>;
+	arrSummer: Array<ActivityDetail>;
+	arrFall: Array<ActivityDetail>;
+	arrWinter: Array<ActivityDetail>;
+	mapIsReserve: {[key: string]: boolean} = {};
 
 	constructor(props: any) {
 		super(props);
+
+		this.arrSpring = this.getDetail('spring');
+		this.arrSummer = this.getDetail('summer');
+		this.arrFall = this.getDetail('fall');
+		this.arrWinter = this.getDetail('winter');
+
+		this.state = {
+			isChange: false
+		}
+
+		this.getDetail = this.getDetail.bind(this);
+		this.toBlock = this.toBlock.bind(this);
 	}
 
 	getDetail(strSeason: 'spring' | 'summer' | 'fall' | 'winter') {
 		let tempArray = [];
 		let arrSeason = Activity.getBySeason(2022, strSeason);
 		for (let index in arrSeason) {
-			
+			if (this.mapIsReserve[arrSeason[index].UID] === undefined) {
+				this.mapIsReserve[arrSeason[index].UID] = Activity.isReserved(arrSeason[index].UID);
+			} else {
+				this.mapIsReserve[arrSeason[index].UID] =
+				 this.mapIsReserve[arrSeason[index].UID] && Activity.isReserved(arrSeason[index].UID);
+			}
+
 			tempArray.push(
 				new ActivityDetail(arrSeason[index].UID, arrSeason[index].title, strSeason, arrSeason[index].imageUrl, false)
 			);
@@ -50,45 +69,37 @@ export default class index extends PureComponent<IProps, IState> {
 		return tempArray;
 	}
 
+	toBlock() {
+		this.setState({isChange: true});
+	}
+
 	createActivity(): Array<JSX.Element> {
 		let tempArray: Array<JSX.Element> = [];
 
-		for (let index = 0; index < this.arrSpring.length; index += 3) {
-			tempArray.push(
-				<div key={'spring' + index} className={style.Row}>
-					{this.addCol(index, 'spring', this.arrSpring)}
-				</div>
-			);
-		}
-		for (let index = 0; index < this.arrSummer.length; index += 3) {
-			tempArray.push(
-				<div key={'summer' + index} className={style.Row}>
-					{this.addCol(index, 'summer', this.arrSummer)}
-				</div>
-			);
-		}
-		for (let index = 0; index < this.arrFall.length; index += 3) {
-			tempArray.push(
-				<div key={'fall' + index} className={style.Row}>
-					{this.addCol(index, 'fall', this.arrFall)}
-				</div>
-			);
-		}
-		for (let index = 0; index < this.arrWinter.length; index += 3) {
-			tempArray.push(
-				<div key={'winter' + index} className={style.Row}>
-					{this.addCol(index, 'winter', this.arrWinter)}
-				</div>
-			);
-		}
+		tempArray = this.findAllSeason(tempArray, this.arrSpring, 'spring');
+		tempArray = this.findAllSeason(tempArray, this.arrSummer, 'summer');
+		tempArray = this.findAllSeason(tempArray, this.arrFall, 'fall');
+		tempArray = this.findAllSeason(tempArray, this.arrWinter, 'winter');
 
 		return tempArray;
 	}
-	private addCol(
-		index: number,
-		strSeason: 'spring' | 'summer' | 'fall' | 'winter',
-		arrSeason: Array<ActivityDetail>
-	): Array<JSX.Element> {
+	private findAllSeason(tempArray: Array<JSX.Element>, arrSeason: Array<ActivityDetail>, season: 'spring' | 'summer' | 'fall' | 'winter'): Array<JSX.Element> {
+		for (let index = 0; index < arrSeason.length; index += 3) {
+			tempArray.push(
+				<div key={season + index} className={style.Row}>
+					{this.addCol(index, season, arrSeason)}
+				</div>
+			);
+		}
+		if (arrSeason.length === 0) {
+			tempArray.push(<div key={season + 0} className={style.Row}>
+								<div className={style.block}><h1>Coming Soon...</h1></div>
+								{this.addCol(0, season, arrSeason)}
+							</div>)
+		}
+		return tempArray;
+	}
+	private addCol(index: number,strSeason: 'spring' | 'summer' | 'fall' | 'winter',arrSeason: Array<ActivityDetail>): Array<JSX.Element> {
 		let tempArray: Array<JSX.Element> = [];
 
 		for (let i = 0; i < 3; i++) {
@@ -102,8 +113,9 @@ export default class index extends PureComponent<IProps, IState> {
 							id={arrSeason[index + i].id}
 							title={arrSeason[index + i].title}
 							picLink={arrSeason[index + i].picLink}
-							isReserve={false}
+							isReserve={Activity.isReserved(arrSeason[index + i].id)}
 							isOverTime={arrSeason[index + i].isOverTime}
+							toBlock={this.toBlock}
 						></ActivityCard>
 					</div>
 				);
@@ -142,9 +154,7 @@ export default class index extends PureComponent<IProps, IState> {
 
 	render() {
 		return (
-			<>
-				<div className={style.activityList}>{this.createActivity()}</div>
-			</>
+			<div className={style.activityList}>{this.createActivity()}</div>
 		);
 	}
 }
