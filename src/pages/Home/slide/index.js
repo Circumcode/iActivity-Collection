@@ -27,7 +27,6 @@ class Frame extends Component {
   render() {
     return (
       <div className='each-slide'>
-        <div className={style.title}>title</div>
 
         <div className={style.slideImage}>
           <img src={arrUrl[this.props.id]} className={style.img}></img>

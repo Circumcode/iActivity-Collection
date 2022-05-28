@@ -1,6 +1,7 @@
 .calendar {
     height: 80px;
-    margin: 20px;
+    margin: 40px 20px 0 0;
+    margin-right: 50px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -19,11 +20,14 @@
     }
 
     & .season {
-
         & a{
-            color: rgb(164, 164, 164) !important ;
+            color: rgb(164, 164, 164) !important;
+            
+            text-shadow: 1px 0 0 rgb(164, 164, 164);
+            text-decoration: none;
             font-family: DFKai-sb;
-            margin: 20px;
+            font-size: 20px;
+            margin-left: 60px;
         }
     }
 }
