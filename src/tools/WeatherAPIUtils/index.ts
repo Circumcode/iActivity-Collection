@@ -27,23 +27,14 @@ CITY_ID_1WEEK_MAP.set("臺南市", "F-D0047-079")
 CITY_ID_1WEEK_MAP.set("連江縣", "F-D0047-083")
 CITY_ID_1WEEK_MAP.set("金門縣", "F-D0047-087")
 
-
-// API Example =============================================
-// WeatherAPIUtils.getLocation("高雄市", "燕巢區")
-// .then((data)=>{
-//   // console.log(data.data.records.locations[0].location[0])
-//   console.log(data)
-// })
-
 export default class WeatherAPIUtils {
 
-    static getLocation = async (strCity: String, strArea: String) => {
+    static getByLocation = async (strCity: String, strArea: String) => {
         const requestURL = `${BASE_URL + CITY_ID_1WEEK_MAP.get(strCity)}?Authorization=${API_KEY}&format=JSON&locationName=${strArea}&elementName=PoP12h,Wx,WeatherDescription`
         const response = await axios.get(requestURL)
         let locationData = []
         if (response) {
             const element = response.data.records.locations[0].location[0].weatherElement;
-            console.log(element)
             for (let i = 0; i < element[0].time.length; i++) {
                 const item = {
                     startTime: element[0].time[i].startTime,

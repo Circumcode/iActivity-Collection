@@ -1,7 +1,7 @@
 # Weather API Utile
 ### 根據位址獲取 天氣往後12小時天氣預測資訊
 ```javascript
-WeatherAPIUtils.getLocation("高雄市", "燕巢區")
+WeatherAPIUtils.getByLocation("高雄市", "燕巢區")
 .then((data)=>{
   console.log(data)
   /* Output
