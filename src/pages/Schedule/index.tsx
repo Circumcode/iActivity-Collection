@@ -25,6 +25,9 @@ class SchedulePage extends Component<IProps, IState> {
     this.setState({
       page: newPage,
     });
+    if(this.state.page === "地圖"){
+
+    }
   }
 
   render(): ReactNode {
