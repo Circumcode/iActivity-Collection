@@ -47,41 +47,41 @@ export default class ScheBlock extends Component<IProps, IState> {
     }
 
     setScheDetails(){
-        let response = Activity.getReserved();
-        let newScheDetails: scheDetail[] = [];
-        for (let i=0; i<response.length; i++){
-            let weather = "";
-            let flag = true;
-            let startTime = response[i].showInfo[0].time;
-            let endTime = response[i].showInfo[0].endTime;
-            WeatherAPIUtils.getByLocation(response[i].showInfo[0].city, response[i].showInfo[0].area)
-            .then((data) =>{
-                if (data !== undefined) {
-                    for (let j=0; j<data.length; j++){
-                        let weatherStart = data[i].startTime.split(" ")[0].split("-");
-                        let weatherEnd = data[i].endTime.split(" ")[0].split("-");
-                        let eventTime = startTime.split(" ")[0].split("/");
-                        for (let index=0; index<3; index++){
-                            if (Number(weatherStart[index]) <= Number(eventTime[index]) && 
-                            Number(weatherEnd[index]) >= Number(eventTime[index])) continue;
-                            else {
-                                flag = false;
-                                break;
-                            }
-                        }
-                        if (flag) weather = data[i].values.Wx;
-                    }
-                }
-                if (flag === false) weather = "尚未有天氣預報";
-                this.state.scheDetails[i] = new scheDetail(
-                    response[i].UID,
-                    response[i].title,
-                    response[i].showInfo[0].location,
-                    startTime, 
-                    endTime,
-                    weather);
-            })
-        }
+        // let response = Activity.getReserved();
+        // let newScheDetails: scheDetail[] = [];
+        // for (let i=0; i<response.length; i++){
+        //     let weather = "";
+        //     let flag = true;
+        //     let startTime = response[i].showInfo[0].time;
+        //     let endTime = response[i].showInfo[0].endTime;
+        //     WeatherAPIUtils.getByLocation(response[i].showInfo[0].city, response[i].showInfo[0].area)
+        //     .then((data) =>{
+        //         if (data !== undefined) {
+        //             for (let j=0; j<data.length; j++){
+        //                 let weatherStart = data[i].startTime.split(" ")[0].split("-");
+        //                 let weatherEnd = data[i].endTime.split(" ")[0].split("-");
+        //                 let eventTime = startTime.split(" ")[0].split("/");
+        //                 for (let index=0; index<3; index++){
+        //                     if (Number(weatherStart[index]) <= Number(eventTime[index]) && 
+        //                     Number(weatherEnd[index]) >= Number(eventTime[index])) continue;
+        //                     else {
+        //                         flag = false;
+        //                         break;
+        //                     }
+        //                 }
+        //                 if (flag) weather = data[i].values.Wx;
+        //             }
+        //         }
+        //         if (flag === false) weather = "尚未有天氣預報";
+        //         this.state.scheDetails[i] = new scheDetail(
+        //             response[i].UID,
+        //             response[i].title,
+        //             response[i].showInfo[0].location,
+        //             startTime, 
+        //             endTime,
+        //             weather);
+        //     })
+        // }
     }
 
     getSche(){
