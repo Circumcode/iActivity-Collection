@@ -1,0 +1,25 @@
+.map_travel_icon,
+.map_home_icon {
+    background: rgb(255, 255, 255);
+    border-radius: 50%;
+    box-shadow: 0px 3px 10px rgb(179, 179, 179);
+}
+
+.map_travel_icon:after,
+.map_home_icon:after {
+    display: block;
+    position: relative;
+    top: -33px;
+    left: -5px;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+}
+
+.map_travel_icon:after {
+    content: url(../../assets/map-travel-dot.svg);
+}
+
+.map_home_icon:after {
+    content: url(../../assets/map-home-dot.svg);
+}
