@@ -83,6 +83,15 @@ export default class index extends PureComponent<IProps, IState> {
 			isNewSesson = true;
 		}
 		for (let i = 0; i < 3; i++) {
+			if (intSesson === unGetSesson) {
+				tempArray.push(
+					<div key={this.index + " " + i} className={style.block}>
+						<h1>Coming Soon...</h1>
+					</div>
+				);
+				break;
+			}
+
 			if (this.index >= this.state.activityDetail.length || Math.floor((this.state.activityDetail[this.index].date - 1) / 3) !== intSesson) {
 				tempArray.push(
 					<div key={this.index + " " + i} className={style.Col}></div>

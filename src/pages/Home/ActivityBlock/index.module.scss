@@ -10,6 +10,15 @@
 			margin: 0 10px 0 10px;
 		}
 
+		& .block {
+			width: calc(90em + 60px);
+			padding-left: 20px;
+			display: flex;
+			align-items: center;
+
+			text-shadow: 1px 0 0;
+		}
+
 		& .dateBlock {
 			width: 290px;
 			height: 300px;
