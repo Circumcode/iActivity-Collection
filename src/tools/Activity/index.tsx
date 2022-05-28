@@ -36,7 +36,7 @@ export default class Activity {
         let intIndex: number = Activity.getIndex(strId);
         return (intIndex === -1)? null : Activity.arrActivity[intIndex];
     }
-    static getIndex(strId: string){
+    private static getIndex(strId: string){
         for (let intIndex = 0; intIndex < Activity.arrActivity.length; intIndex++){
             if (Activity.arrActivity[intIndex].UID == strId) return intIndex;
         }
@@ -64,6 +64,12 @@ export default class Activity {
         return arrActivitySeason;
     }
 
+    static isReserved(strId: string){
+        for (let intIndex = 0; intIndex < Activity.arrActivityReserved.length; intIndex++){
+            if (Activity.arrActivityReserved[intIndex].UID === strId) return true;
+        }
+        return false;
+    }
     static reserve(strId: string){
         Activity.arrActivityReserved.push(Activity.get(strId));
     }

@@ -1,17 +1,21 @@
 import { CSSProperties, memo, useState } from 'react';
 
 import style from './index.module.scss';
+import classActivity from '../../tools/Activity';
 
 
 const Activity = memo((props: {activity: any}) => {
-  const [isReserve, setReservedState] = useState(false);
+  const [isReserve, setReservedState] = useState(classActivity.isReserved(props.activity.UID));
   const changeReservedState: React.MouseEventHandler<HTMLElement> = () => {
-    if (!isReserve) alert("已將此活動加入排成清單");
+    if (!isReserve) {
+      alert("已將此活動加入排成清單");
+      classActivity.reserve(props.activity.UID);
+    }
+    else classActivity.cancel(props.activity.UID);
     setReservedState(!isReserve);
   }
 
 
-  console.log(props.activity.showInfo);//
   const cssInfo: CSSProperties = {
     backgroundColor: isReserve? "#faf8e7" : "#eaf3f5",
   }
@@ -47,7 +51,8 @@ const Activity = memo((props: {activity: any}) => {
           <hr />
           <div id={style.container}>
             <a
-              href={""}
+              target="_blank"
+              href={props.activity.sourceWebPromote}
             >
               <img
                 src={require("../../assets/icon/open.png")}
