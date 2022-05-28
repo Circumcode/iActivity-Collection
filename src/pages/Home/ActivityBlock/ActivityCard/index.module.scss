@@ -4,7 +4,6 @@
 }
 
 .card {
-	width: '25em';
 	box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.556);
 
 	& .block {
@@ -42,7 +41,7 @@
 	
 		& .bar {
 			height: 30px;
-			margin: 0 100px 0 100px;
+			margin: 0 25% 0 25%;
 			cursor: auto;
 		}
 	
