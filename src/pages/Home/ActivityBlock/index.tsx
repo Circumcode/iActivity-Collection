@@ -37,7 +37,7 @@ export default class index extends PureComponent<IProps, IState> {
 		super(props);
 	}
 
-	getDetail(strSeason: "spring" | "summer" | "fall" | "winter") {
+	getDetail(strSeason: "spring" | "summer" | "fall" | "winter") {    
 		let tempArray = [];
 		let arrSeason = Activity.getBySeason(2022, strSeason);
 		for (let index in arrSeason) {
