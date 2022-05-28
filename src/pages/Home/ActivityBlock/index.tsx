@@ -108,7 +108,7 @@ export default class index extends PureComponent<IProps, IState> {
 			}
 
 			tempArray.push(
-				<a id={strSeason} className={style.targetFix}></a>
+				<a id={strSeason} key={strSeason + " a"} className={style.targetFix}></a>
 			);
 			tempArray.push(
 				<div key={strSeason} className={style.dateBlock}><h2>{season}</h2></div>
