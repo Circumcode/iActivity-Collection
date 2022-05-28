@@ -10,26 +10,45 @@ const mapSeason: Map<string, number> = new Map([
 
 export default class Activity {
     private static strUrl: string = "https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json";
-    private static isLoading = false;
-    private static isLoaded = false;
+    private static strKeyReservedIds = "reserverdId"
+    private static boolLoading = false;
+    private static boolLoaded = false;
 
     private static arrActivityReserved: Array<any> = [];
     private static arrActivity: Array<any> = [];
 
 
     static async load() {
-        if (!Activity.isLoaded && !Activity.isLoading)
+        if (!Activity.isLoaded() && !Activity.isLoading()){
             await axios.get(Activity.strUrl).then((response)=>{
-                Activity.arrActivityReserved = [];
                 Activity.arrActivity = response.data;
-                Activity.isLoading = false;
-                Activity.isLoaded = true;
+                Activity.boolLoading = false;
+                Activity.boolLoaded = true;
             });
+        }
         
-        Activity.isLoading = true;
+        Activity.boolLoading = true;
+        Activity.readFromLocalStorage();
     }
-    static isLoad(){
-        return Activity.isLoaded;
+    static isLoading(){
+        return Activity.boolLoading;
+    }
+    static isLoaded(){
+        return Activity.boolLoaded;
+    }
+
+    private static readFromLocalStorage(){
+        let strReservedIds = localStorage.getItem(Activity.strKeyReservedIds);
+        if (strReservedIds != null){
+            Activity.arrActivityReserved = [];
+            let arrIds: Array<string> = JSON.parse(strReservedIds);
+            arrIds.forEach(strId => {
+                Activity.arrActivityReserved.push(Activity.get(strId));
+            });
+        }
+    }
+    private static storeToLocalStorage(){
+        localStorage.setItem(Activity.strKeyReservedIds, JSON.stringify(Activity.getReservedId()));
     }
 
     static get(strId: string){
@@ -42,12 +61,26 @@ export default class Activity {
         }
         return -1;
     }
+    private static getIndexForReserved(strId: string){
+        for (let intIndex = 0; intIndex < Activity.arrActivityReserved.length; intIndex++){
+            if (Activity.arrActivityReserved[intIndex].UID == strId) return intIndex;
+        }
+        return -1;
+    }
 
     static getAll(){
         return Activity.arrActivity;
     }
     static getReserved(){
         return Activity.arrActivityReserved;
+    }
+    static getReservedId(){
+        let arrReservedIds: Array<any> = [];
+        
+        Activity.arrActivityReserved.forEach(activity => {
+            arrReservedIds.push(activity.UID);
+        })
+        return arrReservedIds;
     }
 
     static getBySeason(intYear: number, strSeason: "spring" | "summer" | "fall" | "winter"){
@@ -72,9 +105,13 @@ export default class Activity {
     }
     static reserve(strId: string){
         Activity.arrActivityReserved.push(Activity.get(strId));
+
+        Activity.storeToLocalStorage();
     }
     static cancel(strId: string){
-        let intIndex: number = Activity.getIndex(strId);
+        let intIndex: number = Activity.getIndexForReserved(strId);
         if (intIndex !== -1) Activity.arrActivityReserved.splice(intIndex, 1);
+
+        Activity.storeToLocalStorage();
     }
 }
