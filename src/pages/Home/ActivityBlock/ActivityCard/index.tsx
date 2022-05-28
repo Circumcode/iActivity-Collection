@@ -3,37 +3,32 @@ import { Link } from 'react-router-dom';
 
 import { Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import style from './index.module.scss';
+
+import Activity from '../../../../tools/Activity'
 
 interface IProps {
 	id: string
 	title: string;
 	picLink: string;
+	isReserve: boolean;
 	isOverTime: boolean;
 }
-interface IState {
-	isChoose: boolean;
-}
-export default class index extends Component<IProps, IState> {
+export default class index extends Component<IProps> {
 	constructor(props: any) {
 		super(props);
 
-		this.state = {
-			isChoose: false,
-		};
-
-		this.choose = this.choose.bind(this);
 		this.switchChoose = this.switchChoose.bind(this);
 	}
 
-	choose() {
-		if (!this.props.isOverTime)
-			this.setState({isChoose: true});
-	}
 	switchChoose(event: React.MouseEvent<HTMLImageElement, MouseEvent>) {
+		if (!this.props.isReserve) {
+			Activity.reserve(this.props.id);
+		} else {
+			Activity.cancel(this.props.id);
+		}
 		event.stopPropagation();
-		this.setState({isChoose: !this.state.isChoose});
+		this.setState({isReserve: !this.props.isReserve});
 	}
 
 	cancelBubble(event: React.MouseEvent<HTMLImageElement, MouseEvent>) {
@@ -43,15 +38,15 @@ export default class index extends Component<IProps, IState> {
 	getPicture() {
 		if (this.props.isOverTime) return <></>;
 
-		return <img src={(!this.state.isChoose) ? require('../../../../assets/icon/plus.png') : require('../../../../assets/icon/plus_orange.png')}
-					className={(!this.state.isChoose) ? style.imgAdd : style.imgClose}
+		return <img src={(!this.props.isReserve) ? require('../../../../assets/icon/plus.png') : require('../../../../assets/icon/plus_orange.png')}
+					className={(!this.props.isReserve) ? style.imgAdd : style.imgClose}
 					onClick={(event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {this.switchChoose(event)}} />
 	}
 
 	render() {
 		return (
-			<Card className={this.state.isChoose ? style.border : ''} style={{ width: '25em', boxShadow: '2px 2px 2px 1px rgba(0, 0, 0, 0.2)'}}
-				  onClick={this.choose}>
+			<Card className={this.props.isReserve ? `${style.border} ${style.card}` : style.card} 
+				  onClick={(event: React.MouseEvent<HTMLImageElement, MouseEvent>) => this.switchChoose(event)}>
 
 				<div className={(this.props.isOverTime) ? style.block : style.noneBlock}>
 					<div>overTime</div>
@@ -68,7 +63,7 @@ export default class index extends Component<IProps, IState> {
 							 src={require('../../../../assets/icon/line.png')} />
 
 						<Link to= {`/activity/` + this.props.id}>
-							<img src={(!this.state.isChoose) ? require('../../../../assets/icon/search.png') : require('../../../../assets/icon/search_orange.png')}
+							<img src={(!this.props.isReserve) ? require('../../../../assets/icon/search.png') : require('../../../../assets/icon/search_orange.png')}
 								 onClick={() => {this.cancelBubble.bind(this)}} />
 						</Link>
 					</div>
