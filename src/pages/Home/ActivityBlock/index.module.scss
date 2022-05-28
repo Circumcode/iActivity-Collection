@@ -4,6 +4,7 @@
 	& .Row {
 		display: flex;
 		justify-content: left;
+		margin-bottom: 20px;
 
 		& .Col {
 			width: 30em;
@@ -20,9 +21,10 @@
 		}
 
 		& .dateBlock {
-			width: 290px;
-			height: 300px;
-			margin: 60px 0 120px 0;
+			height: 290px;
+			min-width: 290px;
+			
+			margin: 60px 0 100px 0;
 			padding-right: 40px;
 
 			display: flex;

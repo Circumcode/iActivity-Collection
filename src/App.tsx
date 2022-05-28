@@ -12,7 +12,7 @@ import Loading from './components/Loading'
 
 
 function App() {
-  const [isLoaded, setLoadedState] = useState(classActivity.isLoad());
+  const [isLoaded, setLoadedState] = useState(classActivity.isLoaded());
 
 
   return (
