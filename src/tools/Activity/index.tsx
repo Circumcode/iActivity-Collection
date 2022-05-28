@@ -24,6 +24,14 @@ export default class Activity {
                 Activity.arrActivity = response.data;
                 Activity.isLoading = false;
                 Activity.isLoaded = true;
+
+
+                // Start Test Data =====================================
+                Activity.reserve("5b3dd544aaa378d7ca9a2e9a");
+                Activity.reserve("5c7e1bcdaaa375d860933d3a");
+                Activity.reserve("5e5ffbf8d083a329401eed57");
+                Activity.reserve("5efb8db9d083a33abc1ac109");
+                // End Test Data =======================================
             });
         
         Activity.isLoading = true;
