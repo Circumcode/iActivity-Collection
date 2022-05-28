@@ -35,6 +35,10 @@ export default class index extends Component<IProps, IState> {
 		event.stopPropagation();
 		this.setState({isChoose: !this.state.isChoose});
 	}
+
+	cancelBubble(event: React.MouseEvent<HTMLImageElement, MouseEvent>) {
+		event.stopPropagation();
+	}
 	
 	getPicture() {
 		if (this.props.isOverTime) return <></>;
@@ -65,7 +69,7 @@ export default class index extends Component<IProps, IState> {
 
 						<Link to= {`/activity/` + this.props.id}>
 							<img src={(!this.state.isChoose) ? require('../../../../assets/icon/search.png') : require('../../../../assets/icon/search_orange.png')}
-								 onClick={(event) => {event.stopPropagation();}} />
+								 onClick={() => {this.cancelBubble.bind(this)}} />
 						</Link>
 					</div>
 				</Card.Body>

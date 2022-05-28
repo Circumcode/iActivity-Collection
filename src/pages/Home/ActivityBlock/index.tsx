@@ -10,11 +10,11 @@ import Activity from '../../../tools/Activity'
 class ActivityDetail {
 	id: string;
 	title: string;
-	date: number;
+	date: string;
 	picLink: string;
 	isOverTime: boolean;
 
-	constructor(id: string, title: string, date: number, picLink: string, isOverTime: boolean) {
+	constructor(id: string, title: string, date: string, picLink: string, isOverTime: boolean) {
 		this.id = id;
 		this.title = title;
 		this.date = date;
@@ -25,118 +25,97 @@ class ActivityDetail {
 
 interface IProps {}
 interface IState {
-	activityDetail: Array<ActivityDetail>;
 }
 export default class index extends PureComponent<IProps, IState> {
-	index: number = 0;
-	isSesson: Array<boolean> = [false, false, false, false];
 	url: string = 'https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json';
+	arrSpring: Array<ActivityDetail> = this.getDetail("spring");
+	arrSummer: Array<ActivityDetail> = this.getDetail("summer");
+	arrFall: Array<ActivityDetail> = this.getDetail("fall");
+	arrWinter: Array<ActivityDetail> = this.getDetail("winter");
 
 	constructor(props: any) {
 		super(props);
-		this.state = {
-			activityDetail: [],
-		};
 	}
 
-	componentDidMount(): void {
-		this.getDetail();
-	}
-
-	getDetail() {
+	getDetail(strSeason: "spring" | "summer" | "fall" | "winter") {
 		let tempArray = [];
-		console.log(Activity.getBySeason(2022, 'spring'));
-		for (let index in Activity.getAll()) {
-			tempArray.push(new ActivityDetail(Activity.getAll()[index].UID, Activity.getAll()[index].title,
-							parseInt(index) + 1, Activity.getAll()[index].imageUrl, false));
+		let arrSeason = Activity.getBySeason(2022, strSeason);
+		for (let index in arrSeason) {
+			tempArray.push(new ActivityDetail(arrSeason[index].UID, arrSeason[index].title,
+				strSeason, arrSeason[index].imageUrl, false));
 		}
 
-		this.setState({ activityDetail: tempArray });
+		return tempArray;
 	};
 
 	createActivity(): Array<JSX.Element> {
 		let tempArray: Array<JSX.Element> = [];
-		for (this.index; this.index < this.state.activityDetail.length;) {
-			tempArray.push(<div key={this.index} className={style.Row}>{this.addCol(-1)}</div>);
+
+		for (let index = 0; index < this.arrSpring.length; index += 3) {
+			tempArray.push(<div key={'spring' + index} className={style.Row}>{this.addCol(index, 'spring', this.arrSpring)}</div>);
+		}
+		for (let index = 0; index < this.arrSummer.length; index += 3) {
+			tempArray.push(<div key={'summer' + index} className={style.Row}>{this.addCol(index, 'summer', this.arrSummer)}</div>);
+		}
+		for (let index = 0; index < this.arrFall.length; index += 3) {
+			tempArray.push(<div key={'fall' + index} className={style.Row}>{this.addCol(index, 'fall', this.arrFall)}</div>);
+		}
+		for (let index = 0; index < this.arrWinter.length; index += 3) {
+			tempArray.push(<div key={'winter' + index} className={style.Row}>{this.addCol(index, 'winter', this.arrWinter)}</div>);
 		}
 
-		if (this.state.activityDetail.length !== 0) {
-			for (let sesson in this.isSesson) {
-				this.index++;
-				if (!this.isSesson[sesson]) tempArray.push(<div key={this.index} className={style.Row}>{this.addCol(parseInt(sesson))}</div>);
-			}
-		}
 
 		return tempArray;
 	}
-	private addCol(unGetSesson: number): Array<JSX.Element> {
+	private addCol(index: number, strSeason: "spring" | "summer" | "fall" | "winter", arrSeason: Array<ActivityDetail>): Array<JSX.Element> {
 		let tempArray: Array<JSX.Element> = [];
-		let isNewSesson: boolean = false;
-		let intSesson: number = (this.state.activityDetail[this.index]) 
-								? Math.floor((this.state.activityDetail[this.index].date - 1) / 3)
-								: unGetSesson;
 
-		if (!this.isSesson[intSesson]) {
-			this.isSesson[intSesson] = true;
-			isNewSesson = true;
-		}
 		for (let i = 0; i < 3; i++) {
-			if (intSesson === unGetSesson) {
+			if (index + i >= arrSeason.length) {
 				tempArray.push(
-					<div key={this.index + " " + i} className={style.block}>
-						<h1>Coming Soon...</h1>
-					</div>
+					<div key={strSeason + index + i} className={style.Col}></div>
 				);
-				break;
-			}
-
-			if (this.index >= this.state.activityDetail.length || Math.floor((this.state.activityDetail[this.index].date - 1) / 3) !== intSesson) {
-				tempArray.push(
-					<div key={this.index + " " + i} className={style.Col}></div>
-				);
-				this.index--;
 			} else {
 				tempArray.push(
-					<div key={this.index} className={style.Col} style={(isNewSesson) ? {marginTop: '60px'} : {}}>
+					<div key={index + i} className={style.Col} style={(index === 0) ? {marginTop: '60px'} : {}}>
 						<ActivityCard
-							key={this.index}
-							id={this.state.activityDetail[this.index].id}
-							title={this.state.activityDetail[this.index].title}
-							picLink={this.state.activityDetail[this.index].picLink}
-							isOverTime={this.state.activityDetail[this.index].isOverTime}
+							key={index + i}
+							id={arrSeason[index + i].id}
+							title={arrSeason[index + i].title}
+							picLink={arrSeason[index + i].picLink}
+							isOverTime={arrSeason[index + i].isOverTime}
 						></ActivityCard>
 					</div>
 				);
 			}
-			this.index++;
 		}
 
-		if (isNewSesson) {
-			let sesson: string = '';
-			switch (intSesson){
-				case 0:
-					sesson = '1 - 3月';
+		if (index === 0) {
+			let season: string = '';
+			switch (strSeason){
+				case "spring":
+					season = '1 - 3月';
 					break;
-				case 1:
-					sesson = '4 - 6月';
+				case "summer":
+					season = '4 - 6月';
 					break;
-				case 2:
-					sesson = '7 - 9月';
+				case "fall":
+					season = '7 - 9月';
 					break;
-				case 3:
-					sesson = '10 - 12月';
+				case "winter":
+					season = '10 - 12月';
 					break;
 			}
 
 			tempArray.push(
-				<a id={'sesson' + intSesson} className={style.targetFix}></a>
+				<a id={strSeason} key={strSeason + " a"} className={style.targetFix}></a>
 			);
 			tempArray.push(
-				<div key={intSesson + ' ' + index} className={style.dateBlock}><h2>{sesson}</h2></div>
+				<div key={strSeason} className={style.dateBlock}><h2>{season}</h2></div>
 			);
 		} else {
 			tempArray.push(
-				<div key={intSesson + ' ' + index} className={style.dateBlock} style={{border: 'none'}}></div>
+				<div key={strSeason + ' ' + index} className={style.dateBlock} style={{border: 'none'}}></div>
 			);
 		}
 		
