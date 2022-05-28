@@ -55,5 +55,3 @@ const SlideShow = () => {
 };
 export default SlideShow;
 
-const root = document.getElementById('root');
-ReactDOM.render(SlideShow(), root);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Card } from 'react-bootstrap';
@@ -15,7 +15,7 @@ interface IProps {
 	isOverTime: boolean;
 	toBlock: Function;
 }
-export default class index extends Component<IProps> {
+export default class index extends PureComponent<IProps> {
 	constructor(props: any) {
 		super(props);
 		
@@ -52,11 +52,13 @@ export default class index extends Component<IProps> {
 				<div className={(this.props.isOverTime) ? style.block : style.noneBlock}>
 					<div>overTime</div>
 				</div>
-				<Card.Img variant="top" style={{ height: '250px' }} src={this.props.picLink} />
+				<Card.Img variant="top" style={{height: '250px', userSelect: 'none'}} src={this.props.picLink} />
 
 				<Card.Body>
 
-					<Card.Title style={{ height: '70px' }}>{this.props.title}</Card.Title>
+					<Card.Title className={style.title} style={(!this.props.isReserve) ? {height: '70px'} : {height: '66px'} }>
+						{this.props.title}
+					</Card.Title>
 
 					<div className={style.button}>
 						{this.getPicture()}

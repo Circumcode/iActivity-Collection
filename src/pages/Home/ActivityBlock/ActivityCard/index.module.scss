@@ -4,7 +4,7 @@
 }
 
 .card {
-	box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.556);
+	box-shadow: 3px 3px 3px 3px rgba(46, 46, 46, 0.556);
 
 	& .block {
 		width: 100%;
@@ -15,6 +15,8 @@
 	
 		display: flex;
 		align-items: center;
+
+		user-select: none;
 	
 		& div {
 			width: 100%;
@@ -27,11 +29,20 @@
 	}
 	& .noneBlock {
 		display: none;
+		user-select: none;
+	}
+	
+	@import url(//fonts.googleapis.com/earlyaccess/notosanstc.css);
+	& .title {
+		overflow: hidden;
+		font-family: 'Noto Sans TC', sans-serif;
+		user-select: text;
 	}
 	
 	& .button {
 		display: flex;
 		justify-content: center;
+		user-select: none;
 	
 		& img {
 			width: auto;
