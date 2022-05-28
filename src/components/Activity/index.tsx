@@ -2,6 +2,7 @@ import { CSSProperties, memo, useState } from 'react';
 
 import style from './index.module.scss';
 import classActivity from '../../tools/Activity';
+import { Link } from 'react-router-dom';
 
 
 const Activity = memo((props: {activity: any}) => {
@@ -27,12 +28,17 @@ const Activity = memo((props: {activity: any}) => {
       className={style.div}
     >
       <section id={style.firstSection}>
+        <Link
+          to='/'
+        >
+          <img className={style.icon} src={require("../../assets/icon/angleBrackets.png")} />
+        </Link>
         <span>{props.activity.title}</span>
       </section>
 
       <section id={style.secondSection}>
         <div>
-          <img src={props.activity.imageUrl} />
+          <img id={style.image} src={props.activity.imageUrl} />
           <section
             id={style.info}
             style={cssInfo}

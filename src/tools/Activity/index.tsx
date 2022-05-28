@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { LogicalError } from '../Error';
+
 
 const mapSeason: Map<string, number> = new Map([
     ["spring", 1],
@@ -8,13 +10,52 @@ const mapSeason: Map<string, number> = new Map([
     ["winter", 10]
 ]);
 
+
+class ReservedInfo {
+    strId: string;
+    dateStart: Date | null = null;
+    dateEnd: Date | null = null;
+    activity: any;
+
+    constructor(strId: string, activity: any){
+        this.strId = strId;
+        this.activity = activity;
+    }
+
+    static compare(reservedInfo1: ReservedInfo, reservedInfo2: ReservedInfo){
+        if (reservedInfo1.dateStart === reservedInfo2.dateStart)
+            return 0;
+        if ((reservedInfo1.dateStart === null) && (reservedInfo2.dateStart !== null))
+            return -1;
+        if ((reservedInfo1.dateStart !== null) && (reservedInfo2.dateStart === null))
+            return 1;
+        if (reservedInfo1.dateStart! < reservedInfo2.dateStart!)
+            return -1;
+    
+        return 1;
+    }
+
+    setTime(strStartDate: string, strEndDate: string){
+        this.dateStart = (strStartDate === '')? null : new Date(strStartDate);
+        this.dateEnd = (strEndDate === '')? null : new Date(strEndDate);
+    }
+
+    pack(){
+        return {
+            strId: this.strId,
+            strStartDate: (this.dateStart === null)? "" : this.dateStart.toJSON().split(".")[0],
+            strEndDate: (this.dateEnd === null)? "" : this.dateEnd.toJSON().split(".")[0]
+        }
+    }
+}
+
 export default class Activity {
     private static strUrl: string = "https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/ActivityData.json";
-    private static strKeyReservedIds = "reserverdId"
+    private static strKeyReservedIds = "reservedId"
     private static boolLoading = false;
     private static boolLoaded = false;
 
-    private static arrActivityReserved: Array<any> = [];
+    private static arrReservedInfos: Array<ReservedInfo> = [];
     private static arrActivity: Array<any> = [];
 
 
@@ -37,22 +78,35 @@ export default class Activity {
         return Activity.boolLoaded;
     }
 
+    private static packInfo(){
+        let arrPackedReservedInfo: Array<any> = [];
+        Activity.arrReservedInfos.forEach(reservedInfo => {
+            arrPackedReservedInfo.push(reservedInfo.pack());
+        })
+        return arrPackedReservedInfo;
+    }
+    private static unpackInfo(arrPackedReservedInfo: Array<any>){
+        Activity.arrReservedInfos = [];
+
+        arrPackedReservedInfo.forEach(info => {
+            let reservedInfo = new ReservedInfo(info.strId, Activity.get(info.strId));
+            reservedInfo.setTime(info.strStartDate, info.strEndDate);
+            Activity.arrReservedInfos.push(reservedInfo);
+        })
+        Activity.arrReservedInfos = arrPackedReservedInfo;
+    }
     private static readFromLocalStorage(){
         let strReservedIds = localStorage.getItem(Activity.strKeyReservedIds);
-        if (strReservedIds != null){
-            Activity.arrActivityReserved = [];
-            let arrIds: Array<string> = JSON.parse(strReservedIds);
-            arrIds.forEach(strId => {
-                Activity.arrActivityReserved.push(Activity.get(strId));
-            });
-        }
+        if (strReservedIds != null) Activity.unpackInfo(JSON.parse(strReservedIds));
     }
     private static storeToLocalStorage(){
-        localStorage.setItem(Activity.strKeyReservedIds, JSON.stringify(Activity.getReservedId()));
+        localStorage.setItem(Activity.strKeyReservedIds, JSON.stringify(Activity.packInfo()));
     }
 
-    static get(strId: string){
+    static get(strId: string, isStrict: boolean = true){
         let intIndex: number = Activity.getIndex(strId);
+
+        if ((isStrict) && (intIndex === -1)) throw new LogicalError("Activity- 此活動並未在清單中 (id: " + strId + ")");
         return (intIndex === -1)? null : Activity.arrActivity[intIndex];
     }
     private static getIndex(strId: string){
@@ -62,8 +116,8 @@ export default class Activity {
         return -1;
     }
     private static getIndexForReserved(strId: string){
-        for (let intIndex = 0; intIndex < Activity.arrActivityReserved.length; intIndex++){
-            if (Activity.arrActivityReserved[intIndex].UID == strId) return intIndex;
+        for (let intIndex = 0; intIndex < Activity.arrReservedInfos.length; intIndex++){
+            if (Activity.arrReservedInfos[intIndex].strId == strId) return intIndex;
         }
         return -1;
     }
@@ -72,15 +126,7 @@ export default class Activity {
         return Activity.arrActivity;
     }
     static getReserved(){
-        return Activity.arrActivityReserved;
-    }
-    static getReservedId(){
-        let arrReservedIds: Array<any> = [];
-        
-        Activity.arrActivityReserved.forEach(activity => {
-            arrReservedIds.push(activity.UID);
-        })
-        return arrReservedIds;
+        return Activity.arrReservedInfos;
     }
 
     static getBySeason(intYear: number, strSeason: "spring" | "summer" | "fall" | "winter"){
@@ -98,20 +144,36 @@ export default class Activity {
     }
 
     static isReserved(strId: string){
-        for (let intIndex = 0; intIndex < Activity.arrActivityReserved.length; intIndex++){
-            if (Activity.arrActivityReserved[intIndex].UID === strId) return true;
+        for (let intIndex = 0; intIndex < Activity.arrReservedInfos.length; intIndex++){
+            if (Activity.arrReservedInfos[intIndex].strId === strId) return true;
         }
         return false;
     }
     static reserve(strId: string){
-        Activity.arrActivityReserved.push(Activity.get(strId));
+        if (Activity.isReserved(strId)) throw new LogicalError("Activity- 已預約過活動無法在預約 (id: " + strId + ")");
+        
+        Activity.arrReservedInfos.push(new ReservedInfo(strId, Activity.get(strId)));
 
         Activity.storeToLocalStorage();
+        Activity.sort();
     }
     static cancel(strId: string){
-        let intIndex: number = Activity.getIndexForReserved(strId);
-        if (intIndex !== -1) Activity.arrActivityReserved.splice(intIndex, 1);
+        if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
+
+        Activity.arrReservedInfos.splice(Activity.getIndexForReserved(strId), 1);
 
         Activity.storeToLocalStorage();
+        Activity.sort();
+    }
+    static setTime(strId: string, strStartDate: string, strEndDate: string){
+        if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
+
+        Activity.arrReservedInfos[Activity.getIndexForReserved(strId)].setTime(strStartDate, strEndDate);
+
+        Activity.storeToLocalStorage();
+        Activity.sort();
+    }
+    private static sort(){
+        Activity.arrReservedInfos.sort(ReservedInfo.compare);
     }
 }
