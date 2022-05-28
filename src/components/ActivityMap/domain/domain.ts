@@ -1,9 +1,10 @@
 export interface MapTravel {
-    productName: string;
-    englishProductName: string;
-    vendor: string;
-    location: string;
-    lat: number;
-    lon: number;
-    description?: string;
-  }
+  UID: string;
+  title: string;
+  sourceWebPromote: string;
+  location: string;
+  latitude: number;
+  longitude: number;
+  masterUnit: string;
+}
+

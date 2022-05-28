@@ -27,6 +27,8 @@ CITY_ID_1WEEK_MAP.set("臺南市", "F-D0047-079")
 CITY_ID_1WEEK_MAP.set("連江縣", "F-D0047-083")
 CITY_ID_1WEEK_MAP.set("金門縣", "F-D0047-087")
 
+
+// https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-067?Authorization=CWB-9D1F8318-1E3B-4A1D-BE21-87435E79CDA7&format=JSON&locationName=燕巢區&elementName=PoP12h,Wx,WeatherDescription
 export default class WeatherAPIUtils {
 
     static getByLocation = async (strCity: String, strArea: String) => {
