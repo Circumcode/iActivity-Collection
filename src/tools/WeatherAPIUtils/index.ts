@@ -30,7 +30,6 @@ CITY_ID_1WEEK_MAP.set("金門縣", "F-D0047-087")
 export default class WeatherAPIUtils {
 
     static getByLocation = async (strCity: String, strArea: String) => {
-        if(!strCity || !strArea) return
         const requestURL = `${BASE_URL + CITY_ID_1WEEK_MAP.get(strCity)}?Authorization=${API_KEY}&format=JSON&locationName=${strArea}&elementName=PoP12h,Wx,WeatherDescription`
         const response = await axios.get(requestURL)
         let locationData = []

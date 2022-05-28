@@ -1,19 +1,15 @@
 import React, { Component } from "react";
-import ActivityMap from '../../../components/ActivityMap'
-
 
 interface IProps {
     style: any,
 }
 class map extends Component<IProps>{
-
+    
     render(): React.ReactNode {
-        return (
-            <div>
-                <ActivityMap />
-            </div>
+        return(
+            <div style={this.props.style}>map</div>
         )
     }
-
+    
 }
 export default map

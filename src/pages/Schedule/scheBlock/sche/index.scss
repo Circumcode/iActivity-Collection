@@ -1,0 +1,41 @@
+.sche {
+    width: calc(80vw);
+    height: calc(4.3vh);
+    text-align: center;
+    background-color: white;
+    box-shadow: 1px 1px 1px 1px rgb(89, 89, 89);
+    margin-left: calc(10vw);
+    margin-top: calc(3vh);
+    border-radius: 6px;
+
+    .sche_block {
+        margin: calc(0.75vh);
+        display: inline-block;
+    }
+
+    .scheDate {
+        border: 1px solid rgb(66, 66, 213);
+        border-radius: 6px;
+        width: calc(18%);
+        height: calc(3vh);
+    }
+
+    .scheTitle {
+        width: calc(17%);
+    }
+    .scheSpace {
+        width: calc(17%)
+    }
+    .scheWeather {
+        width: calc(15%);
+    }
+    .cancel{
+        width: calc(5%)
+    }
+    
+    .line {
+        width:1px;
+        border-left:1px solid rgb(71, 71, 228);
+    }
+}
+
