@@ -39,6 +39,10 @@ class ReservedInfo {
         this.dateStart = (strStartDate === '')? null : new Date(strStartDate);
         this.dateEnd = (strEndDate === '')? null : new Date(strEndDate);
     }
+    clearTime(){
+        this.dateStart = null;
+        this.dateEnd = null;
+    }
 
     pack(){
         return {
@@ -60,16 +64,15 @@ export default class Activity {
 
 
     static async load() {
-        if (!Activity.isLoaded() && !Activity.isLoading()){
-            await axios.get(Activity.strUrl).then((response)=>{
-                Activity.arrActivity = response.data;
-                Activity.boolLoading = false;
-                Activity.boolLoaded = true;
-            });
-        }
-        
+        if (Activity.isLoaded() || Activity.isLoading()) return;
         Activity.boolLoading = true;
-        Activity.readFromLocalStorage();
+
+        await axios.get(Activity.strUrl).then((response)=>{
+            Activity.arrActivity = response.data;
+            Activity.readFromLocalStorage();
+            Activity.boolLoaded = true;
+            Activity.boolLoading = false;
+        });
     }
     static isLoading(){
         return Activity.boolLoading;
@@ -93,7 +96,6 @@ export default class Activity {
             reservedInfo.setTime(info.strStartDate, info.strEndDate);
             Activity.arrReservedInfos.push(reservedInfo);
         })
-        Activity.arrReservedInfos = arrPackedReservedInfo;
     }
     private static readFromLocalStorage(){
         let strReservedIds = localStorage.getItem(Activity.strKeyReservedIds);
@@ -165,6 +167,9 @@ export default class Activity {
         Activity.storeToLocalStorage();
         Activity.sort();
     }
+    static clear(){
+        Activity.arrReservedInfos = [];
+    }
     static setTime(strId: string, strStartDate: string, strEndDate: string){
         if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
 
@@ -172,6 +177,11 @@ export default class Activity {
 
         Activity.storeToLocalStorage();
         Activity.sort();
+    }
+    static clearTime(){
+        Activity.arrReservedInfos.forEach(reservedInfo => {
+            reservedInfo.clearTime();
+        })
     }
     private static sort(){
         Activity.arrReservedInfos.sort(ReservedInfo.compare);

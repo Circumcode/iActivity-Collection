@@ -1,4 +1,8 @@
 .leaflet-container {
-    width: 100%;
-    height: 480px ;
+    /* width: 100%;
+    height: 480px ; */
+    /* margin-top: calc(90px); */
+    z-index: 1;
+    width: calc(100vw);
+    height: calc(100vh - 184px);
 }

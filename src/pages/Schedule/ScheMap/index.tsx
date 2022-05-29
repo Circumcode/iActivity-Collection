@@ -6,6 +6,7 @@ interface IProps {
     style: any,
 }
 class map extends Component<IProps>{
+    
 
     render(): React.ReactNode {
         return (
