@@ -4,15 +4,12 @@ import style from './index.module.scss';
 
 
 interface IProps {
-    style: any,
+    display: boolean,
 }
 class map extends Component<IProps>{
-    
-
     render(): React.ReactNode {
         return (
-            // <div style={this.props.style}>
-            <div>
+            <div style={{display: (this.props.display) ? '' : 'none'}}>
                 <ActivityMap />
             </div>
         )

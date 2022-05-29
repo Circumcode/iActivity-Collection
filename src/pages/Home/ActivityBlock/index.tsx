@@ -50,8 +50,8 @@ export default class index extends Component<IProps, IState> {
 		this.toBlock = this.toBlock.bind(this);
 	}
 
-	getDetail(strSeason: 'spring' | 'summer' | 'fall' | 'winter') {
-		let tempArray = [];
+	getDetail(strSeason: 'spring' | 'summer' | 'fall' | 'winter'): Array<ActivityDetail> {
+		let tempArray: Array<ActivityDetail> = [];
 		let arrSeason = Activity.getBySeason(2022, strSeason);
 		for (let index in arrSeason) {
 			if (this.mapIsReserve[arrSeason[index].UID] === undefined) {

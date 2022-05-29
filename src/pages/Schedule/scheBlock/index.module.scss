@@ -1,26 +1,25 @@
 .scheblock {
-    padding: 1px;
-    width: calc(100vw);
-    height: calc(95vh - 150px);
-    background-color: rgb(169, 161, 161);
+	height: 100%;
+	background-color: rgb(224, 224, 224);
 }
 
 .cleantimeButton {
-    width: calc(80px);
-    height: calc(80px);
-    position: absolute;
-    top: calc(80vh);
-    left: calc(92vw);
+	width: 80px;
+	height: 80px;
+	position: absolute;
+	bottom: 4vh;
+	right: 4vw;
 
-    border:0;
-    background-color:#003C9D;
-    color:#fff;
-    border-radius:10px;
-    cursor:pointer;
-}
+	border: 0;
+	background-color: #003c9d;
+	color: #fff;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.3s linear;
 
-.cleantimeButton:hover {
-    color:#003C9D;
-    background-color:#fff;
-    border:2px #003C9D solid;
+	&:hover {
+		color: #003c9d;
+		background-color: #fff;
+		// border:2px #003C9D solid;
+	}
 }

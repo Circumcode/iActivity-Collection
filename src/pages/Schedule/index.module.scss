@@ -1,6 +1,14 @@
 .schedule {
-    margin-top: calc(90px);
-    width: calc(100vw);
-    height: calc(100vh - 151px);
-    overflow: hidden;
+	margin-top: 90px;
+	height: calc(100vh - 150px);
+
+	position: relative;
+
+	overflow: hidden;
+
+
+	& .changeList {
+		width: 100%;
+		border-bottom: 2px solid rgb(126, 126, 126);
+	}
 }

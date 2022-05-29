@@ -1,26 +1,26 @@
-import { Component, ReactNode } from "react";
+import { Component, ReactNode } from 'react';
 import Tag from './tag';
 import style from './index.module.scss';
 
-const tag = ["排程", "地圖"]
+const tag = ['排程', '地圖'];
 
 interface IProps {
-    changePage: Function;
+	changePage: Function;
+    choosePage: string;
 }
-
 class switchTag extends Component<IProps> {
+	getTag() {
+		let tagNodes = [];
+		for (let i = 0; i < tag.length; i++) {
+			tagNodes.push(
+                <Tag  key={i} tag={tag[i]} changePage={this.props.changePage} isChoose={tag[i]===this.props.choosePage}/>
+            );
+		}
 
-    getTag(){
-        let tagNodes = [];
-        for (let i=0; i<tag.length; i++){
-            tagNodes.push(<Tag tag={tag[i]} key={i} changePage={this.props.changePage}/>);
-        }
-        return tagNodes
-    }
-    render(): ReactNode {
-        return(
-            <div className={style.tagContainer}>{this.getTag()}</div>
-        )
-    }
+		return tagNodes;
+	}
+	render(): ReactNode {
+		return <div className={style.tagContainer}>{this.getTag()}</div>;
+	}
 }
-export default switchTag
+export default switchTag;
