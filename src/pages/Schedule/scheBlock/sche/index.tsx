@@ -1,7 +1,7 @@
 import { Component, ReactNode } from "react";
 import style from './index.module.scss';
 import Activity from "../../../../tools/Activity";
-import 'antd/dist/antd.css';
+import './antd.css';
 import moment from 'moment';
 import { DatePicker, Space } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';

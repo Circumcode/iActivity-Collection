@@ -25,6 +25,10 @@ class SchedulePage extends PureComponent<IProps, IState> {
 		this.changePage = this.changePage.bind(this);
 	}
 
+	componentDidMount(){
+		this.setState({page: '排程'});
+	}
+
 	changePage = (newPage: string) => {
 		this.setState({ page: newPage });
 
