@@ -45,6 +45,7 @@ export default class ActivityMap extends React.Component<IProps, IState> {
     let activityInfo: MapTravel[] = []
     userReserved.map( temp => {
       let item = temp.activity
+      // console.log(item)
       if (item && item.showInfo[0] && item.showInfo[0].latitude && item.showInfo[0].longitude) {
         const temp = {
           UID: item.UID,
@@ -62,6 +63,7 @@ export default class ActivityMap extends React.Component<IProps, IState> {
         activityInfo.push(temp);
       }
     })
+    // console.log(activityInfo)
 
     const interval = setInterval(() => {
       if (this.mapRef.current) {
