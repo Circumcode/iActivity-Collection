@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 const intHeaderHeight: number = 0; // header's position: fixed;
 const intFooterHeight: number = 60;
-const intOtherComponentHeight: number = intHeaderHeight + intFooterHeight + 2;
+const intOtherComponentHeight: number = intHeaderHeight + intFooterHeight + 1;
 
 const FullWindowUnit = memo((props: {children: React.ReactNode, css: CSSProperties, isMinHeight: boolean}) => {
   const isFirstRender = useRef(true);

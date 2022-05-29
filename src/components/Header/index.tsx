@@ -23,3 +23,15 @@ export default class index extends Component {
 		);
 	}
 }
+
+export class HeaderEmpty extends Component {
+	render() {
+		return (
+			<header className={style.header}>
+				<Link to="/">
+					<img className={style.logo} src={require('../../assets/logo.png')}></img>
+				</Link>
+			</header>
+		);
+	}
+}

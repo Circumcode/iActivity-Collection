@@ -138,7 +138,9 @@ export default class ScheBlock extends Component<IProps, IState> {
                 cancel={this.cancel} 
                 update={this.setScheDetails}
                 click={this.click.bind(this)}
-                key={this.state.scheDetails[i].uid}/>
+                key={this.state.scheDetails[i].uid}
+                isFocus={this.state.nowFocus === this.state.scheDetails[i].uid}
+            />
         }
         return sches;
     }
@@ -147,9 +149,12 @@ export default class ScheBlock extends Component<IProps, IState> {
         return (
             <div className={style.scheblock} style={this.props.style}>
                 {this.getSche()}
-                <button className={style.button} onClick={()=>{}}>輔助排程</button>
-                <button className={style.cleanOneButton} onClick={this.clear.bind(this)}>clean focus</button>
-                <button className={style.cleantimeButton} onClick={this.clearAll.bind(this)}>clean All</button>
+                <div className={style.space}></div>
+                <div id={style.btnList}>
+                    <button onClick={()=>{}}>最快路徑</button>
+                    <button onClick={this.clear.bind(this)}>重設時間</button>
+                    <button onClick={this.clearAll.bind(this)}>重設活動</button>
+                </div>
             </div>
         )
     }

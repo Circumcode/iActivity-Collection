@@ -1,13 +1,13 @@
 .tag {
-	width: 10vw;
-	height: 5vh;
+	width: 50vw;
+	height: 40px;
 	padding-top: 5px;
 
 	color: rgb(0, 0, 0);
 	background-color: rgb(255, 255, 255);
 
 	border: 0;
-	border-radius: 40% 40% 0 0;
+	border-radius: 5px 5px 0 0;
 
 	display: inline-flex;
 	justify-content: center;
@@ -18,12 +18,14 @@
 	transition: all 0.3s linear;
 }
 .tag:hover {
-	background-color: rgba(189, 189, 189, 0.734);
+	background-color: rgb(224, 224, 224);
 }
 .tag:focus {
-	background-color: rgb(91, 195, 255);
+	color: white;
+	background-color: #74b7d6;
 }
 
 .isChoose {
-	background-color: rgb(91, 195, 255);
+	color: white;
+	background-color: #74b7d6;
 }

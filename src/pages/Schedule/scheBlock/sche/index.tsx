@@ -1,4 +1,4 @@
-import { Component, ReactNode } from "react";
+import { Component, CSSProperties, ReactNode } from "react";
 import style from './index.module.scss';
 import Activity from "../../../../tools/Activity";
 import './antd.css';
@@ -27,6 +27,8 @@ const disabledDateTime = () => ({
 
 
 interface IProps {
+    isFocus: boolean;
+
     uid: string;
     title: string;
     space: string;
@@ -92,8 +94,11 @@ export default class sche extends Component<IProps, IState>{
     }
 
     render(): ReactNode {
+        const cssBackgroundColor: CSSProperties = {
+            backgroundColor: "#e0f3ff"
+        }
         return(
-            <div className={style.sche} onClick={this.click.bind(this)}>
+            <div style={(this.props.isFocus)? cssBackgroundColor : undefined} className={style.sche} onClick={this.click.bind(this)}>
                 <span className={`${style.scheTitle} ${style.sche_block}`}>{this.props.title}</span>
                 <span className={style.line}></span>
                 <span className={`${style.scheSpace} ${style.sche_block}`}>{this.props.space}</span>
