@@ -8,7 +8,7 @@ import AcitvityUtils from '../../tools/Activity'
 import LocationMarker from "./LocationMarker";
 import { MapTravel } from './domain/domain'
 import FunctionCaller from '../../tools/FunctionCaller'
-import ACOUtil from '../../tools/ACO'
+import calculateRouter from '../../tools/ACO'
 import style from './index.module.css'
 import { ACOStation } from "../../tools/ACO/domain";
 
@@ -113,12 +113,16 @@ export default class ActivityMap extends React.Component {
 
   componentDidMount() {
     this.updateMap()
+    setTimeout(() => {
+      calculateRouter(AcitvityUtils.getReserved(), 1)
+    }, 5000)
     if (!FunctionCaller.hasKey(FUNCTION_CALLER_KEY_UPDATE_MAP)) {
       FunctionCaller.set(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap.bind(this))
     }
     if (!FunctionCaller.hasKey(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES)) {
       FunctionCaller.set(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, this.drawRouteLines.bind(this))
     }
+
 
   }
 
