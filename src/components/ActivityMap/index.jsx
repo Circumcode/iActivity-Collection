@@ -53,21 +53,21 @@ export default class ActivityMap extends React.Component {
 
 
   drawRouteLines = (resultRoute) => {
-    console.log(resultRoute)
+    // console.log(resultRoute)
     let newRouterWay = []
     for (const item of resultRoute) {
       const temp = [item.latitude, item.longitude]
-      console.log(temp)
+      // console.log(temp)
       newRouterWay.push(temp)
     }
     // if (mapRef)
-    console.log(newRouterWay)
+    // console.log(newRouterWay)
     // console.log(this)
     this.setState({ routerWay: [...newRouterWay] })
 
-    setTimeout(() => {
-      console.log(this.state)
-    }, 2000)
+    // setTimeout(() => {
+    //   console.log(this.state)
+    // }, 2000)
 
   }
 
@@ -95,7 +95,7 @@ export default class ActivityMap extends React.Component {
         activityInfo.push(temp);
       }
     })
-    console.log(activityInfo)
+    // console.log(activityInfo)
 
     const interval = setInterval(() => {
       if (this.mapRef.current) {
