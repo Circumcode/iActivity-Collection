@@ -1,0 +1,27 @@
+.div {
+    margin: 0 auto;
+    margin-top: 60px;
+    width: 70px;
+
+
+    & img {
+        width: 70px;
+        animation: loadIconRotation infinite 1s linear;
+    }
+
+    @keyframes loadIconRotation {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+.p {
+    width: 100%;
+
+    color: #639cb6;
+    text-align: center;
+}

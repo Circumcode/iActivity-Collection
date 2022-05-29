@@ -20,6 +20,16 @@ export default class index extends PureComponent<IProps> {
 		super(props);
 		
 		this.switchChoose = this.switchChoose.bind(this);
+
+		window.addEventListener("selectstart", () => {
+			console.log("Selection started");
+			return -1;
+		});
+	}
+
+	switchChooseContinuous(event: React.MouseEvent<HTMLImageElement, MouseEvent>){
+		if (event.buttons == 1) this.switchChoose(event);
+		event.stopPropagation();
 	}
 
 	switchChoose(event: React.MouseEvent<HTMLImageElement, MouseEvent>) {
@@ -47,7 +57,9 @@ export default class index extends PureComponent<IProps> {
 	render() {
 		return (
 			<Card className={this.props.isReserve ? `${style.border} ${style.card}` : style.card} 
-				  onClick={(event: React.MouseEvent<HTMLImageElement, MouseEvent>) => this.switchChoose(event)}>
+				onMouseEnter={(event: React.MouseEvent<HTMLImageElement, MouseEvent>) => this.switchChooseContinuous(event)}
+				onClick={(event: React.MouseEvent<HTMLImageElement, MouseEvent>) => this.switchChoose(event)}
+			>
 
 				<div className={(this.props.isOverTime) ? style.block : style.noneBlock}>
 					<div>overTime</div>

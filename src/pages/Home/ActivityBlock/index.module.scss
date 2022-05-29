@@ -1,5 +1,6 @@
 .activityList {
 	margin: 0 0 60px 60px;
+	user-select: none;
 
 	& .Row {
 		display: flex;
