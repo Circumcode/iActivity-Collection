@@ -32,25 +32,29 @@ CITY_ID_1WEEK_MAP.set("金門縣", "F-D0047-087")
 export default class WeatherAPIUtils {
 
     static getByLocation = async (strCity: String, strArea: String) => {
-        const requestURL = `${BASE_URL + CITY_ID_1WEEK_MAP.get(strCity)}?Authorization=${API_KEY}&format=JSON&locationName=${strArea}&elementName=PoP12h,Wx,WeatherDescription`
-        const response = await axios.get(requestURL)
-        let locationData = []
-        if (response) {
-            const element = response.data.records.locations[0].location[0].weatherElement;
-            for (let i = 0; i < element[0].time.length; i++) {
-                const item = {
-                    startTime: element[0].time[i].startTime,
-                    endTime: element[0].time[i].endTime,
-                    values:{
-                        PoP12h:  element[0].time[i].elementValue[0].value,
-                        Wx: element[1].time[i].elementValue[0].value,
-                        WeatherDescription: element[2].time[i].elementValue[0].value
+        if (CITY_ID_1WEEK_MAP.has(strCity)) {
+            const requestURL = `${BASE_URL + CITY_ID_1WEEK_MAP.get(strCity)}?Authorization=${API_KEY}&format=JSON&locationName=${strArea}&elementName=PoP12h,Wx,WeatherDescription`
+            const response = await axios.get(requestURL)
+            let locationData = []
+            if (response) {
+                const element = response.data.records.locations[0].location[0].weatherElement;
+                for (let i = 0; i < element[0].time.length; i++) {
+                    const item = {
+                        startTime: element[0].time[i].startTime,
+                        endTime: element[0].time[i].endTime,
+                        values: {
+                            PoP12h: element[0].time[i].elementValue[0].value,
+                            Wx: element[1].time[i].elementValue[0].value,
+                            WeatherDescription: element[2].time[i].elementValue[0].value
+                        }
                     }
+                    locationData.push(item)
                 }
-                locationData.push(item)
             }
+            return locationData;
+        }else{
+            throw new Error("又在搞事")
         }
-        return locationData;
     }
 }
 

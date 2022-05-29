@@ -1,39 +1,30 @@
-import L, { LatLngExpression } from "leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./index.css";
 import { MapContainer, Marker, TileLayer, Popup, Polyline } from "react-leaflet";
 import React from "react";
 
+import { nanoid } from 'nanoid'
+import pubsub from 'pubsub-js'
 import AcitvityUtils from '../../tools/Activity'
 import LocationMarker from "./LocationMarker";
-import { MapTravel } from './domain/domain'
-import FunctionCaller from '../../tools/FunctionCaller'
-import calculateRouter from '../../tools/ACO'
+import ACOCalculateRouter from '../../tools/ACO'
 import style from './index.module.css'
-import { ACOStation } from "../../tools/ACO/domain";
 
 
 
 export const FUNCTION_CALLER_KEY_UPDATE_MAP = 'updateMap'
 export const FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES = 'drawRouterLines'
+export const FUNCTION_CALLER_KEY_CALCULATE_ROUTER = 'calculateRouter'
 
 const mapTravelIcon = L.divIcon({
   className: style.map_travel_icon,
   iconSize: [20, 15],
   iconAnchor: [0, 0],
-  popupAnchor: [10, -30],
+  popupAnchor: [0, -45],
 });
 
-
 const mapLineColor = { fillColor: 'blue' }
-
-// interface IProps {
-// }
-
-// interface IState {
-//   list: MapTravel[],
-//   routerWay: L.LatLngExpression[] | L.LatLngExpression[][]
-// }
 
 export default class ActivityMap extends React.Component {
   // Default Map setting
@@ -47,28 +38,68 @@ export default class ActivityMap extends React.Component {
     this.state = {
       list: [],
       routerWay: [],
-      a: 1
+      homePosition: [],
     }
   }
 
+  setHomePosition = (homePosition) => {
+    this.setState({ homePosition })
+  }
 
-  drawRouteLines = (resultRoute) => {
-    // console.log(resultRoute)
-    let newRouterWay = []
-    for (const item of resultRoute) {
-      const temp = [item.latitude, item.longitude]
-      // console.log(temp)
-      newRouterWay.push(temp)
+  calculateRouter = () => {
+    let listPositions = []
+    if (this.state.homePosition.length !== 0) {
+      const temp = {
+        UID: "HOME",
+        latitude: this.state.homePosition[0],
+        longitude: this.state.homePosition[1],
+      }
+      listPositions.push(temp)
     }
-    // if (mapRef)
-    // console.log(newRouterWay)
-    // console.log(this)
-    this.setState({ routerWay: [...newRouterWay] })
+    if (this.state.list.length !== 0) {
+      this.state.list.map(item => listPositions.push(item))
+    }
+    ACOCalculateRouter(listPositions)
+  }
 
-    // setTimeout(() => {
-    //   console.log(this.state)
-    // }, 2000)
 
+  drawRouteLines = (_, resultRoute) => {
+    let newRouterWay = []
+    resultRoute.map(item => {
+      const temp = [item.latitude, item.longitude]
+      newRouterWay.push(temp)
+    })
+    // this.setState({ routerWay: [...newRouterWay] })
+    // setTimeout(() => console.log(this.state), 1000)
+
+    const tempMap = new Map();
+    this.state.list.map(item => tempMap.set(item.UID, item))
+    if (this.state.homePosition.length !== 0) {
+      let temp = {
+        UID: "HOME",
+        latitude: this.state.homePosition[0],
+        longitude: this.state.homePosition[1],
+      }
+      tempMap.set(temp.UID, temp)
+    }
+    resultRoute.map(item => {
+      const temp = tempMap.get(item.UID)
+      const newItem = {
+        ...temp,
+        stationData: item
+      }
+      tempMap.set(item.UID, newItem)
+    })
+
+    let tempList = []
+    let iterator = tempMap.values();
+    let item = iterator.next()
+    while (!item.done) {
+      tempList.push(item.value)
+      item = iterator.next()
+    }
+    this.setState({ list: [...tempList], routerWay: [...newRouterWay] })
+    // setTimeout(()=> console.log(this.state), 1000)
   }
 
   updateMap = () => {
@@ -84,8 +115,8 @@ export default class ActivityMap extends React.Component {
           title: activity.title,
           sourceWebPromote: activity.sourceWebPromote,
           location: activity.showInfo[0].location,
-          latitude: activity.showInfo[0].latitude,
-          longitude: activity.showInfo[0].longitude,
+          latitude: Number.parseFloat(activity.showInfo[0].latitude),
+          longitude: Number.parseFloat(activity.showInfo[0].longitude),
           masterUnit: (activity.masterUnit[0]) ? activity.masterUnit[0] : "網站連結"
         }
         maxDistance[0] = Math.max(maxDistance[0], parseFloat(activity.showInfo[0].latitude))
@@ -113,17 +144,9 @@ export default class ActivityMap extends React.Component {
 
   componentDidMount() {
     this.updateMap()
-    setTimeout(() => {
-      calculateRouter(AcitvityUtils.getReserved(), 1)
-    }, 5000)
-    if (!FunctionCaller.hasKey(FUNCTION_CALLER_KEY_UPDATE_MAP)) {
-      FunctionCaller.set(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap.bind(this))
-    }
-    if (!FunctionCaller.hasKey(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES)) {
-      FunctionCaller.set(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, this.drawRouteLines.bind(this))
-    }
-
-
+    pubsub.subscribe(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, this.drawRouteLines)
+    pubsub.subscribe(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap)
+    pubsub.subscribe(FUNCTION_CALLER_KEY_CALCULATE_ROUTER, this.calculateRouter)
   }
 
   render() {
@@ -137,21 +160,16 @@ export default class ActivityMap extends React.Component {
           attribution="&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <LocationMarker />
+        <LocationMarker setHomePosition={this.setHomePosition} />
         {
           this.state.routerWay.map(item => (
-            <Polyline pathOptions={mapLineColor} positions={[item]} />
+            <Polyline key={nanoid()} pathOptions={mapLineColor} positions={[item]} />
           ))
         }
         <Polyline pathOptions={mapLineColor} positions={this.state.routerWay} />
         {
-          this.state.list.map(item => (
-            <Marker
-              icon={mapTravelIcon}
-              key={item.UID}
-              position={[item.latitude, item.longitude]}
-              title={`${item.title}`}
-            >
+          this.state.list.map(item => (item.UID === "HOME") ? <></> : (
+            <Marker icon={mapTravelIcon} key={item.UID} position={[item.latitude, item.longitude]} title={`${item.title}`}>
               <Popup>
                 <p>
                   <strong>

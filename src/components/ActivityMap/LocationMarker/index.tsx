@@ -8,10 +8,10 @@ const mapHomeIcon: L.DivIcon = L.divIcon({
     className: style.map_home_icon,
     iconSize: [20, 15],
     iconAnchor: [0, 0],
-    popupAnchor: [10, -30],
+    popupAnchor: [0, -45],
 });
 
-export default function LocationMarker() {
+export default function LocationMarker(props: any) {
     const [position, setPosition] = useState(null)
     const map = useMapEvents({
         click() {
@@ -19,12 +19,14 @@ export default function LocationMarker() {
         },
         locationfound(event: any) {
             setPosition(event.latlng)
+            props.setHomePosition([event.latitude, event.longitude])
             map.flyTo(event.latlng, map.getZoom())
         },
     })
 
     return position === null ? null : (
         <Marker
+            key="HOME"
             icon={mapHomeIcon}
             position={position}>
             <Popup>You are here</Popup>
