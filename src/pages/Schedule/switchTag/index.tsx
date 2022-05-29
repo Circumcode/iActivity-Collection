@@ -13,7 +13,7 @@ class switchTag extends Component<IProps> {
 		let tagNodes = [];
 		for (let i = 0; i < tag.length; i++) {
 			tagNodes.push(
-                <Tag  key={i} tag={tag[i]} changePage={this.props.changePage} isChoose={tag[i]===this.props.choosePage}/>
+                <Tag  key={tag[i]} tag={tag[i]} changePage={this.props.changePage} isChoose={tag[i]===this.props.choosePage}/>
             );
 		}
 

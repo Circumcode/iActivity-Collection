@@ -35,43 +35,51 @@ interface IProps {
     endTime: string;
     cancel: Function;
     update: Function;
+    click: Function;
 }
-// interface IState {
-//     startTime: string;
-//     endTime: string;
-// }
+interface IState {
+    startTime: string;
+    endTime: string;
+    nowDatePicker: string;
+}
 
-export default class sche extends Component<IProps>{
-    nowDatePicker: string = "startTime";
-    startTime: string = "";
-    endTime: string = "";
-    // constructor(props: any){
-    //     super(props);
-    //     this.state = {
-    //         startTime:  "",
-    //         endTime: "",
-    //     }
-    // }
+export default class sche extends Component<IProps, IState>{
+    constructor(props: any){
+        super(props);
+        this.state = {
+            startTime: this.props.startTime,
+            endTime: this.props.endTime,
+            nowDatePicker: "",
+        }
+    }
     
-    
+    click(){
+        this.props.click(this.props.uid);
+    }
 
-    handleClick(event: any){
-        this.nowDatePicker = event.target.id;
-        console.log(this.nowDatePicker);
+    clickStart(){
+        this.setState({
+            nowDatePicker: "startTime",
+        })
+    }
+
+    clickEnd(){
+        this.setState({
+            nowDatePicker: "endTime",
+        })
     }
 
     dateChange = (event: any) =>{
         if(event){
-            if (this.nowDatePicker == "startTime") {
-                console.log("startTime");
-                this.startTime = event.format();
-            } else if (this.nowDatePicker == "endTime"){
-                console.log("endTime");
-                this.endTime = event.format();
+            console.log(event.format().split('+')[0]);
+            if (this.state.nowDatePicker === "startTime") {
+                this.setState({startTime: event.format().split('+')[0]})
+            } else if (this.state.nowDatePicker === "endTime"){
+                this.setState({endTime: event.format().split('+')[0]})
             }
-            console.log(this.startTime);
-            console.log(this.endTime);
-            Activity.setTime(this.props.uid, this.startTime, this.endTime);
+            setTimeout(()=>{
+                Activity.setTime(this.props.uid, this.state.startTime, this.state.endTime);
+            }, 500)
         }
     }
 
@@ -85,35 +93,35 @@ export default class sche extends Component<IProps>{
 
     render(): ReactNode {
         return(
-            <div className={style.sche}>
+            <div className={style.sche} onClick={this.click.bind(this)}>
                 <span className={`${style.scheTitle} ${style.sche_block}`}>{this.props.title}</span>
                 <span className={style.line}></span>
                 <span className={`${style.scheSpace} ${style.sche_block}`}>{this.props.space}</span>
                 <span className={style.line}></span>
-                <span className={`${style.scheDate} ${style.sche_block}`}>
+                <span className={`${style.scheDate} ${style.sche_block}`}
+                    onClick={this.clickStart.bind(this)}>
                     {<DatePicker
-                        onClick={this.handleClick.bind(this)}
                         id={"startTime"}
                         onChange={this.dateChange}
                         placement={"bottomLeft"}
                         format="YYYY-MM-DD HH:mm:ss"
                         disabledDate={disabledDate}
                         disabledTime={disabledDateTime}
-                        defaultValue={moment(this.props.startTime, "YYYY-MM-DDTHH:mm:ss")}
+                        value={(this.state.startTime !== "") ? moment( this.state.startTime, "YYYY-MM-DDTHH:mm:ss")! : null}
                         showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
                     />}
                 </span>
                 <span className={style.split}>~</span>
-                <span className={`${style.scheDate} ${style.sche_block}`}>
+                <span className={`${style.scheDate} ${style.sche_block}`}
+                    onClick={this.clickEnd.bind(this)}>
                     {<DatePicker
-                        onClick={this.handleClick.bind(this)}
                         id={"endTime"}
-                        onChange={this.dateChange}
+                        onChange={this.dateChange.bind(this)}
                         placement={"bottomLeft"}
                         format="YYYY-MM-DD HH:mm:ss"
                         disabledDate={disabledDate}
                         disabledTime={disabledDateTime}
-                        defaultValue={moment(this.props.endTime, "YYYY-MM-DDTHH:mm:ss")}
+                        value={(this.state.endTime !== "") ? moment( this.state.endTime, "YYYY-MM-DDTHH:mm:ss")! : null}
                         showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
                     />}
                 </span>

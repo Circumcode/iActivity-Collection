@@ -28,6 +28,7 @@ interface IProps {
 }
 interface IState {
     scheDetails: Array<scheDetail>,
+    nowFocus: string,
 };
 
 export default class ScheBlock extends Component<IProps, IState> {
@@ -35,6 +36,7 @@ export default class ScheBlock extends Component<IProps, IState> {
         super(props);
         this.state = {
             scheDetails: [],
+            nowFocus: "",
         }
     }
 
@@ -50,12 +52,12 @@ export default class ScheBlock extends Component<IProps, IState> {
     setScheDetails(){
         let newScheDetails:any = [];
         let response = Activity.getReserved();
+        console.log(response);
         if (response.length != 0){
             for (let i=0; i<response.length; i++){
                 let weather = "";
                 let flag = true;
                 let startTime = response[i].activity.showInfo[0].time;
-                let endTime = response[i].activity.showInfo[0].endTime;
                 WeatherAPIUtils.getByLocation(response[i].activity.showInfo[0].city, response[i].activity.showInfo[0].area)
                 .then((data) =>{
                     if (data !== undefined) {
@@ -76,14 +78,12 @@ export default class ScheBlock extends Component<IProps, IState> {
                     }
                     if (flag === false) weather = "尚未有天氣預報";
 
-                    console.log(response[i].dateStart);
-
                     newScheDetails.push(new scheDetail(
                         response[i].activity.UID,
                         response[i].activity.title,
                         response[i].activity.showInfo[0].location,
-                        (!response[i].dateStart) ? "0000-00-00T00:00:00": String(response[i].dateStart),
-                        (!response[i].dateEnd) ? "0000-00-00T00:00:00": String(response[i].dateEnd),
+                        (!response[i].dateStart) ? "": response[i].dateStart?.toJSON().split('.')[0]!,
+                        (!response[i].dateEnd) ? "": response[i].dateEnd?.toJSON().split('.')[0]!,
                         weather))
 
                     if (newScheDetails != null){
@@ -96,8 +96,8 @@ export default class ScheBlock extends Component<IProps, IState> {
                         response[i].activity.UID,
                         response[i].activity.title,
                         response[i].activity.showInfo[0].location,
-                        (!response[i].dateStart) ? "0000-00-00T00:00:00": String(response[i].dateStart),
-                        (!response[i].dateEnd) ? "0000-00-00T00:00:00": String(response[i].dateEnd),
+                        (!response[i].dateStart) ? "": response[i].dateStart?.toJSON().split('.')[0]!,
+                        (!response[i].dateEnd) ? "": response[i].dateEnd?.toJSON().split('.')[0]!,
                         "尚未有天氣預報"))
 
                     if (newScheDetails != null){
@@ -114,10 +114,31 @@ export default class ScheBlock extends Component<IProps, IState> {
         }
     }
 
+    click(uid: string){
+        this.setState({
+            nowFocus: uid,
+        })
+    }
+
+    clear(){
+        Activity.setTime(this.state.nowFocus, "", "");
+        console.log(123);
+        this.setScheDetails();
+    }
+
+    clearAll(){
+        Activity.clearTime();
+        this.setScheDetails();
+    }
+
     getSche(){
         let sches = [];
         for (let i=0; i<this.state.scheDetails.length; i++){
-            sches[i] = <Sche {...this.state.scheDetails[i]} cancel={this.cancel} update={this.setScheDetails} key={i}/>
+            sches[i] = <Sche {...this.state.scheDetails[i]} 
+                cancel={this.cancel} 
+                update={this.setScheDetails}
+                click={this.click.bind(this)}
+                key={this.state.scheDetails[i].uid}/>
         }
         return sches;
     }
@@ -126,7 +147,9 @@ export default class ScheBlock extends Component<IProps, IState> {
         return (
             <div className={style.scheblock} style={this.props.style}>
                 {this.getSche()}
-                <button className={style.cleantimeButton}>clean All</button>
+                <button className={style.button} onClick={()=>{}}>輔助排程</button>
+                <button className={style.cleanOneButton} onClick={this.clear.bind(this)}>clean focus</button>
+                <button className={style.cleantimeButton} onClick={this.clearAll.bind(this)}>clean All</button>
             </div>
         )
     }
