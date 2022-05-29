@@ -1,6 +1,6 @@
 import { Component, ReactNode } from "react";
 import Tag from './tag';
-import './index.scss';
+import style from './index.module.scss';
 
 const tag = ["排程", "地圖"]
 
@@ -19,7 +19,7 @@ class switchTag extends Component<IProps> {
     }
     render(): ReactNode {
         return(
-            <div className="tagContainer">{this.getTag()}</div>
+            <div className={style.tagContainer}>{this.getTag()}</div>
         )
     }
 }

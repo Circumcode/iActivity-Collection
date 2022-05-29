@@ -7,23 +7,12 @@ import 'react-slideshow-image/dist/styles.css';
 import Activity from '../../../tools/Activity';
 
 class Frame extends Component {
-	arrUrl = this.getImg();
-
-	getImg() {
-		let tempArray = [];
-		let arrSeason = Activity.getAll();
-		for (let index in arrSeason) {
-			tempArray.push(arrSeason[index].imageUrl);
-		}
-		return tempArray;
-	}
-
 	render() {
 		return (
 			<div className="each-slide">
 				<div className={style.slideImage} >
-					<div className={style.bkImage} style={{backgroundImage: `url(${this.arrUrl[this.props.id]})`}}></div>
-					<img src={this.arrUrl[this.props.id]} className={style.img}></img>
+					<div className={style.bkImage} style={{backgroundImage: `url(${this.props.arrUrl[this.props.id]})`}}></div>
+					<img src={this.props.arrUrl[this.props.id]} className={style.img}></img>
 				</div>
 			</div>
 		);
@@ -36,20 +25,33 @@ const properties = {
 	easing: 'ease',
 };
 
+let getUrl = () => {
+	let tempArray = [];
+	let arrSeason = Activity.getAll();
+	for (let index in arrSeason) {
+		tempArray.push(arrSeason[index].imageUrl);
+	};
+	return tempArray;
+}
+
 const SlideShow = () => {
+	const arrUrl = getUrl();
+
+	const createFrame = () => {
+		let tempArray = [];
+		for (let index = 0; index < arrUrl.length; index++) {
+			tempArray.push(<Frame id={index} key={index} arrUrl={arrUrl}/>)
+		}
+		return tempArray;
+	}
+
 	return (
 		<div>
 			<Slide {...properties}>
-				<Frame id={0} />
-				<Frame id={1} />
-				<Frame id={2} />
-				<Frame id={3} />
-				<Frame id={4} />
+				{createFrame()}
 			</Slide>
 		</div>
 	);
 };
 export default SlideShow;
 
-const root = document.getElementById('root');
-ReactDOM.render(SlideShow(), root);

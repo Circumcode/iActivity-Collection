@@ -1,121 +1,119 @@
 import L, { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./index.css";
-import { MapContainer, Marker, TileLayer, Popup, useMapEvents } from "react-leaflet";
-import React, { useState } from "react";
-
-import { MapTravel } from './domain/domain'
-import style from './index.module.css'
+import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
+import React, { RefObject } from "react";
 
 import AcitvityUtils from '../../tools/Activity'
+import LocationMarker from "./LocationMarker";
+import { MapTravel } from './domain/domain'
+import FunctionCaller from '../../tools/FunctionCaller'
+import style from './index.module.css'
 
 
-// import '../index.module.scss'
+export const FUNCTION_CALLER_KEY_UPDATE_MAP = 'updateMap'
+
 const mapTravelIcon: L.DivIcon = L.divIcon({
   className: style.map_travel_icon,
   iconSize: [20, 15],
   iconAnchor: [0, 0],
-  popupAnchor: [15, 0],
-});
-
-const mapHomeIcon: L.DivIcon = L.divIcon({
-  className: style.map_home_icon,
-  iconSize: [20, 15],
-  iconAnchor: [0, 0],
-  popupAnchor: [15, 0],
+  popupAnchor: [10, -30],
 });
 
 
-function LocationMarker() {
-  const [position, setPosition] = useState(null)
-  const map = useMapEvents({
-    click() {
-      map.locate()
-    },
-    locationfound(e: any) {
-      setPosition(e.latlng)
-      map.flyTo(e.latlng, map.getZoom())
-    },
-  })
-
-  return position === null ? null : (
-    <Marker
-      icon={mapHomeIcon}
-      position={position}>
-      <Popup>You are here</Popup>
-    </Marker>
-  )
+interface IProps {
 }
 
 
-export default class ActivityMap extends React.Component {
-  // Default coordinates set to Oslo central station
-  position: LatLngExpression = [59.91174337077401, 10.750425582038146];
-  // const position: LatLngExpression = [22.790482, 120.407660];
-  zoom: number = 18;
+interface IState {
+  list: MapTravel[],
+}
 
-  userReserved = AcitvityUtils.getReserved()
-  // console.log(userReserved)
-  list: MapTravel[] = [
-    {
-      productName: "Varm belgisk sjokolade",
-      englishProductName: "Belgian hot chocolate",
-      vendor: "Steam kaffebar",
-      location: "Jernbanetorget 1, Østbanehallen",
-      lat: 59.91088362120013,
-      lon: 10.752799203777597,
-    },
-    {
-      productName: "Varm sjokolade",
-      englishProductName: "Hot chocolate",
-      vendor: "Kaffebrenneriet",
-      location: "Karl Johans gate 7, Arkaden",
-      lat: 59.91181003626315,
-      lon: 10.747782602301388,
-    },
-    {
-      productName: "Sjokolade på pinne",
-      englishProductName: "Hot chocolate on a stick",
-      vendor: "Espresso House",
-      location: "Jernbanetorget 1, Østbanehallen",
-      lat: 59.91201090441835,
-      lon: 10.751298468298101,
-      description: "Seasonally available",
-    },
-  ];
+export default class ActivityMap extends React.Component<IProps, IState> {
+  // Default Map setting
+  position: LatLngExpression = [23.835193, 120.997456]
+  zoom: number = 5;
 
+  mapRef: RefObject<L.Map> = React.createRef();
+  state = {
+    list: [],
+  }
 
+  updateMap = () => {
+    const userReserved = AcitvityUtils.getReserved()
+    let maxDistance = [Number.MAX_VALUE, Number.MIN_VALUE, Number.MAX_VALUE, Number.MIN_VALUE]
+    let activityInfo: MapTravel[] = []
+    userReserved.map( temp => {
+      let item = temp.activity
+      console.log(item)
+      if (item && item.showInfo[0] && item.showInfo[0].latitude && item.showInfo[0].longitude) {
+        const temp = {
+          UID: item.UID,
+          title: item.title,
+          sourceWebPromote: item.sourceWebPromote,
+          location: item.showInfo[0].location,
+          latitude: item.showInfo[0].latitude,
+          longitude: item.showInfo[0].longitude,
+          masterUnit: (item.masterUnit[0]) ? item.masterUnit[0] : "網站連結"
+        }
+        maxDistance[0] = Math.max(maxDistance[0], parseFloat(item.showInfo[0].latitude))
+        maxDistance[1] = Math.min(maxDistance[1], parseFloat(item.showInfo[0].latitude))
+        maxDistance[2] = Math.max(maxDistance[2], parseFloat(item.showInfo[0].longitude))
+        maxDistance[3] = Math.min(maxDistance[3], parseFloat(item.showInfo[0].longitude))
+        activityInfo.push(temp);
+      }
+    })
+    console.log(activityInfo)
 
+    const interval = setInterval(() => {
+      if (this.mapRef.current) {
+        window.clearInterval(interval);
+        const map = this.mapRef.current
+        map.locate()
+        let maxDis = 0
+        maxDis = Math.max(maxDis, Math.abs(maxDistance[0] - maxDistance[1]))
+        maxDis = Math.max(maxDis, Math.abs(maxDistance[2] - maxDistance[3]))
+        map.setZoom(Number.parseInt(maxDis + "") * 7)
+      }
+    }, 300)
+    this.setState({ list: [...activityInfo] })
+  }
+
+  componentDidMount() {
+    this.updateMap()
+    if(!FunctionCaller.hasKey(FUNCTION_CALLER_KEY_UPDATE_MAP)){
+      FunctionCaller.set(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap)
+    }
+    
+  }
 
   render() {
     return (
-      <MapContainer center={this.position} zoom={this.zoom} scrollWheelZoom={true}>
+      <MapContainer
+        center={this.position}
+        zoom={this.zoom}
+        scrollWheelZoom={true}
+        ref={this.mapRef}>
         <TileLayer
           attribution="&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {
-          // Placeholder, we'll put our markers here
-        }
         <LocationMarker />
         {
-          this.list.map((item, index) => (
+          this.state.list.map((item: any) => (
             <Marker
               icon={mapTravelIcon}
-              key={index}
-              position={[item.lat, item.lon]}
-              title={`${item.englishProductName} at ${item.vendor}`}
+              key={item.UID}
+              position={[item.latitude, item.longitude]}
+              title={`${item.title}`}
             >
               <Popup>
-                <strong>
-                  {item.englishProductName} at {item.vendor}
-                </strong>
-                <br />
                 <p>
-                  Look for <strong>{item.productName}</strong> on the menu.
+                  <strong>
+                    <a target="_break" href={item.sourceWebPromote}>{item.masterUnit}</a>
+                  </strong>
                 </p>
                 <p>{item.location}</p>
-                {item.description && <em>{item.description}</em>}
               </Popup>
             </Marker>
           ))
@@ -124,6 +122,5 @@ export default class ActivityMap extends React.Component {
     );
   }
 }
-
 
 
