@@ -4,6 +4,7 @@ import style from './index.module.scss';
 interface IProps {
     tag: string;
     changePage: Function;
+    isChoose: boolean;
 }
 
 export default class tag extends Component<IProps> {
@@ -14,7 +15,7 @@ export default class tag extends Component<IProps> {
 
     render(): React.ReactNode {
         return (
-            <button className={style.tag} onClick={this.handleClick.bind(this)}>{this.props.tag}</button>
+            <button className={(this.props.isChoose) ? `${style.tag} ${style.isChoose}` : style.tag} onClick={this.handleClick.bind(this)}>{this.props.tag}</button>
         )
     }
 }
