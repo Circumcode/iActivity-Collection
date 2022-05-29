@@ -8,11 +8,19 @@
 .cleantimeButton {
     width: calc(80px);
     height: calc(80px);
-    border-radius: 12px;
-    border: 1px solid white;
-    box-shadow: 1px 1px 1px 1px;
-    background-color: rgb(157, 157, 250);
     position: absolute;
     top: calc(80vh);
     left: calc(92vw);
+
+    border:0;
+    background-color:#003C9D;
+    color:#fff;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.cleantimeButton:hover {
+    color:#003C9D;
+    background-color:#fff;
+    border:2px #003C9D solid;
 }

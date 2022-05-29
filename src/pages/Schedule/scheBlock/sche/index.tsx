@@ -1,6 +1,5 @@
 import { Component, ReactNode } from "react";
 import style from './index.module.scss';
-// import DataPicker from '../../../../components/DatePicker';
 
 interface IProps {
     uid: string;
@@ -27,9 +26,9 @@ export default class sche extends Component<IProps>{
                 <span className={style.line}></span>
                 <span className={`${style.scheSpace} ${style.sche_block}`}>{this.props.space}</span>
                 <span className={style.line}></span>
-                {/* <span className={`${style.scheDate} ${style.sche_block}`}>{<DataPicker />}</span> */}
+                <span className={`${style.scheDate} ${style.sche_block}`}>{this.props.time}</span>
                 <span className={style.split}>~</span>
-                {/* <span className={`${style.scheDate} ${style.sche_block}`}>{<DataPicker />}</span> */}
+                <span className={`${style.scheDate} ${style.sche_block}`}>{this.props.endTime}</span>
                 <span className={style.line}></span>
                 <span className={`${style.scheWeather} ${style.sche_block}`}>{this.props.weather}</span>
                 <span className={style.line}></span>
