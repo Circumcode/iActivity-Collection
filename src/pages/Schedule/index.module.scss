@@ -6,7 +6,9 @@
 
 
 	& .changeList {
-		width: 100%;
+		display: flex;
+		align-items: center;
+		
 		border-bottom: 2px solid rgb(126, 126, 126);
 	}
 }

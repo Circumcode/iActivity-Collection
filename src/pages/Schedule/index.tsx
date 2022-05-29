@@ -1,7 +1,7 @@
 import { PureComponent, ReactNode } from 'react';
 
 import style from './index.module.scss';
-import Header from '../../components/Header';
+import { HeaderEmpty } from '../../components/Header';
 import SwitchTag from './switchTag';
 import ScheBlock from './scheBlock';
 import ActivityMap from '../../components/ActivityMap';
@@ -38,7 +38,7 @@ class SchedulePage extends PureComponent<IProps, IState> {
 	render(): ReactNode {
 		return (
 			<>
-				<Header />
+				<HeaderEmpty />
 
 				<div className={style.schedule}>
 					<div className={style.changeList}>
