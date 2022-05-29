@@ -4,7 +4,7 @@ import style from './index.module.scss';
 import Header from '../../components/Header';
 import SwitchTag from './switchTag';
 import ScheBlock from './scheBlock';
-import ScheMap from './ScheMap';
+import ActivityMap from '../../components/ActivityMap';
 import Footer from '../../components/Footer';
 
 import FunctionCaller from '../../tools/FunctionCaller';
@@ -48,7 +48,9 @@ class SchedulePage extends PureComponent<IProps, IState> {
 					</div>
 
 					<ScheBlock style={{ display: this.state.page === '排程' ? 'block' : 'none' }} />
-					<ScheMap display={this.state.page === '地圖'} />
+					<div style={{display: (this.state.page === '地圖') ? '' : 'none'}}>
+						<ActivityMap />
+					</div>
 				</div>
 
 				<Footer />
