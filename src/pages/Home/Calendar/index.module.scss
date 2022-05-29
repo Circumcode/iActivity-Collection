@@ -8,27 +8,39 @@
     user-select: none;
 
     & .years {
-        input{
-            border: 0.5px solid rgb(58, 58, 58);
+        & input{
+            border: none;
             background-color: transparent;
             display: inline;
+
+
+            &:hover {
+                background-color: #e4e4e4;
+            }
         }
-        h5 {
+        & h5 {
             display: inline;
             margin: 0 10px 0 10px;
             font-weight: bold;
+            line-height: 30px;
         }
     }
 
     & .season {
         & a{
+            padding: 10px 20px;
+
             color: rgb(164, 164, 164) !important;
             
             text-shadow: 1px 0 0 rgb(164, 164, 164);
             text-decoration: none;
-            font-family: DFKai-sb;
+            font-family: Arial, sans-serif;
             font-size: 20px;
-            margin-left: 60px;
+
+
+            &:hover {
+                background-color: #f1f1f1;
+            }
         }
     }
 }

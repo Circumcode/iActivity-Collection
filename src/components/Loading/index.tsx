@@ -27,6 +27,7 @@ const Loading = memo((props: {setLoadedState: Function}) => {
                 clearInterval(timeoutId);
                 executeAfterLoaded();
             }
+            if (Activity.isFailed()) clearInterval(timeoutId);
         }, intDelayTime);
     }
     

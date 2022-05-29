@@ -58,6 +58,7 @@ export default class Activity {
     private static strKeyReservedIds = "reservedId"
     private static boolLoading = false;
     private static boolLoaded = false;
+    private static boolLoadingFailure = false;
 
     private static arrReservedInfos: Array<ReservedInfo> = [];
     private static arrActivity: Array<any> = [];
@@ -66,19 +67,28 @@ export default class Activity {
     static async load() {
         if (Activity.isLoaded() || Activity.isLoading()) return;
         Activity.boolLoading = true;
+        Activity.boolLoaded = false;
+        Activity.boolLoadingFailure = false;
 
-        await axios.get(Activity.strUrl).then((response)=>{
-            Activity.arrActivity = response.data;
-            Activity.readFromLocalStorage();
-            Activity.boolLoaded = true;
-            Activity.boolLoading = false;
-        });
+        await axios.get(Activity.strUrl)
+            .then((response)=>{
+                Activity.arrActivity = response.data;
+                Activity.readFromLocalStorage();
+                Activity.boolLoaded = true;
+                Activity.boolLoading = false;
+            })
+            .catch((error) => {
+                Activity.boolLoadingFailure = true;
+            })
     }
     static isLoading(){
         return Activity.boolLoading;
     }
     static isLoaded(){
         return Activity.boolLoaded;
+    }
+    static isFailed(){
+        return Activity.boolLoadingFailure;
     }
 
     private static packInfo(){

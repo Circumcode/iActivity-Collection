@@ -53,7 +53,7 @@ class Test extends Component {
       </div>
     )
   }
-}
+} 
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
