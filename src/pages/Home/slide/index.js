@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 import style from './index.module.scss';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
@@ -12,7 +12,10 @@ class Frame extends Component {
 			<div className="each-slide">
 				<div className={style.slideImage} >
 					<div className={style.bkImage} style={{backgroundImage: `url(${this.props.arrUrl[this.props.id]})`}}></div>
-					<img src={this.props.arrUrl[this.props.id]} className={style.img}></img>
+					
+					<Link to={'/Activity/' + this.props.arrUID[this.props.id]}>
+						<img src={this.props.arrUrl[this.props.id]} className={style.img}></img>
+					</Link>
 				</div>
 			</div>
 		);
@@ -25,22 +28,24 @@ const properties = {
 	easing: 'ease',
 };
 
-let getUrl = () => {
+let getDetail = (detail) => {
 	let tempArray = [];
 	let arrSeason = Activity.getAll();
 	for (let index in arrSeason) {
-		tempArray.push(arrSeason[index].imageUrl);
+		tempArray.push(arrSeason[index][detail]);
 	};
 	return tempArray;
 }
 
 const SlideShow = () => {
-	const arrUrl = getUrl();
+	const arrUrl = getDetail('imageUrl');
+	const arrUID = getDetail('UID');
+
 
 	const createFrame = () => {
 		let tempArray = [];
 		for (let index = 0; index < arrUrl.length; index++) {
-			tempArray.push(<Frame id={index} key={index} arrUrl={arrUrl}/>)
+			tempArray.push(<Frame id={index} key={index} arrUrl={arrUrl} arrUID={arrUID}/>);
 		}
 		return tempArray;
 	}
