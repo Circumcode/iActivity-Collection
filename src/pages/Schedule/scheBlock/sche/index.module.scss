@@ -20,6 +20,7 @@
     }
 
     .scheDate {
+        cursor: pointer;
         margin: calc(0.5vh);
         width: calc(18%);
         height: calc(3.5vh);
@@ -35,6 +36,7 @@
         width: calc(12%);
     }
     .cancel{
+        cursor: pointer;
         width: calc(5%)
     }
     
@@ -44,4 +46,5 @@
         border-left:1px solid rgb(71, 71, 228);
     }
 }
+
 
