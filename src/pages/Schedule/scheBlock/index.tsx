@@ -72,6 +72,7 @@ export default class ScheBlock extends Component<IProps, IState> {
                     }
                 }
                 if (flag === false) weather = "尚未有天氣預報";
+                
                 this.state.scheDetails[i] = new scheDetail(
                     response[i].activity.UID,
                     response[i].activity.title,

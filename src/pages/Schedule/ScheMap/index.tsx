@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ActivityMap from '../../../components/ActivityMap'
+import style from './index.module.scss';
 
 
 interface IProps {
