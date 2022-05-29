@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import style from './index.module.scss';
 import { Slide } from 'react-slideshow-image';
@@ -23,6 +23,7 @@ class Frame extends Component {
 }
 
 const properties = {
+	arrows: false,
 	autoplay: true,
 	duration: 3000,
 	easing: 'ease',
@@ -41,7 +42,6 @@ const SlideShow = () => {
 	const arrUrl = getDetail('imageUrl');
 	const arrUID = getDetail('UID');
 
-
 	const createFrame = () => {
 		let tempArray = [];
 		for (let index = 0; index < arrUrl.length; index++) {
@@ -50,11 +50,30 @@ const SlideShow = () => {
 		return tempArray;
 	}
 
+
+	const slideRef = useRef();
+    const goBack = () => {
+		slideRef.current.goBack();
+	}
+	const goNext = () => {
+		slideRef.current.goNext();
+	}
+
 	return (
-		<div>
-			<Slide {...properties}>
-				{createFrame()}
-			</Slide>
+		<div className={style.div}>
+			<div className="slide-container">
+				<Slide ref={slideRef} {...properties}>
+					{createFrame()}
+				</Slide>
+			</div>
+			<div className="slide-container buttons">
+				<button onClick={goBack}>
+					<img src={require("../../../assets/icon/angleBrackets.png")} />
+				</button>
+				<button id={style.btnGoNext} onClick={goNext}>
+					<img src={require("../../../assets/icon/angleBrackets.png")} />
+				</button>
+			</div>
 		</div>
 	);
 };

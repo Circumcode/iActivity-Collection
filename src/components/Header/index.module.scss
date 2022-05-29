@@ -1,21 +1,21 @@
 .header {
 	width: 100vw;
-	height: 40px;
+	height: 80px;
 	display: flex;
 	align-items: center;
-	padding: 25px;
 	background-color: rgb(255, 255, 255);
+	border-bottom: solid 1px #74b7d6;
 
 	top: 0;
 	position: fixed;
 
-	z-index: 100;
+	z-index: 11;
 	box-sizing: content-box;
 	user-select: none;
 
 	& .logo {
-		margin: 10px 0 0 55px;
-		height: 40px;
+		margin-left: 55px;
+		height: 30px;
 	}
 
 	& h4 {
@@ -24,27 +24,30 @@
 	}
 
 	& .rightLink {
-		width: calc(100vw - 550px);
+		margin-top: -5px;
+		position: absolute;
+		right: 55px;
 		height: 60px;
 		display: flex;
-		justify-content: right;
+		align-items: center;
 
 		text-decoration: none;
 
 		& img {
-			width: 50px;
-			height: 50px;
-			margin: 20px 15px 0 0;
+			position: relative;
+			top: 10px;
+			right: -12px;
+			height: 35px;
 		}
 
 		& input {
-			width: 60px;
-			height: 60px;
+			width: 50px;
+			height: 50px;
 			border: none;
 
 			color: #74b7d6;
 			background-color: transparent;
-			font-size: large;
+			font-size: 15px;
 			font-weight: bold;
 			font-family: DFKai-sb;
 

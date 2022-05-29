@@ -14,14 +14,10 @@ const HomePage = memo(() => {
 		<div className={style.div}>
 			<Header />
 
-			<div className={style.slideShow}>
-        		<SlideShow />
-      		</div>
-
+			<SlideShow />
 			<Calendar/>
-
 			<ActivityBlock />
-
+			
 			<Footer />
 		</div>
 	);

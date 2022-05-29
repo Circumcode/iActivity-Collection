@@ -3,12 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import classActivity from './tools/Activity';
 
+import Loading from './components/Loading';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Activity from './pages/Activity';
 import Schedule from './pages/Schedule';
 import NotMatch from './pages/NotMatch';
 import LoadingPage from './pages/Loading';
-import Loading from './components/Loading'
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
   return (
     <Router>
       {(isLoaded)? <></> : <Loading setLoadedState={setLoadedState} />}
+      <ScrollToTop />
 
       <Routes>
         <Route path='/' element={<Home />}></Route>

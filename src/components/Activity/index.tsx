@@ -3,6 +3,7 @@ import { CSSProperties, memo, useState } from 'react';
 import style from './index.module.scss';
 import classActivity from '../../tools/Activity';
 import { Link } from 'react-router-dom';
+import FullWindowMiddle from '../FullWindowMiddle';
 
 
 const Activity = memo((props: {activity: any}) => {
@@ -77,10 +78,8 @@ export default Activity;
 
 export const NotExistActivity = memo(() => {
   return (
-    <div
-      id={style.NotMatchDiv}
-    >
-      Not Exist...
-    </div>
+    <FullWindowMiddle>
+      <p className={style.p}>Sorry... 找不到這個活動 &gt;&lt;</p>
+    </FullWindowMiddle>
   )
 })
