@@ -156,14 +156,14 @@ export default class ActivityMap extends React.Component {
       }
     }, 300)
     this.setState({ list: [...activityInfo] })
-    // setTimeout(() => console.log(this.state))
+    setTimeout(() => console.log(this.state))
   }
 
   componentDidMount() {
-    this.updateMap()
     pubsub.subscribe(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, this.drawRouteLines)
     pubsub.subscribe(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap)
     pubsub.subscribe(FUNCTION_CALLER_KEY_CALCULATE_ROUTER, this.calculateRouter)
+    this.updateMap()
   }
 
   render() {
@@ -183,7 +183,7 @@ export default class ActivityMap extends React.Component {
           this.state.list.map(item => (item.UID === "HOME") ? <></> : (
             <Marker icon={mapTravelIcon} key={item.UID} position={[item.latitude, item.longitude]} title={`${item.title}`}>
               <Popup>
-                <p className={style.map_dot_title_link}><strong><a target="_break" href={item.sourceWebPromote}>{item.masterUnit}</a></strong></p>
+                <p className={style.map_dot_title_link}><strong><a target="_break" href={item.sourceWebPromote}>{item.title}</a></strong></p>
                 <p className={style.map_dot_title_location}><strong>📬地址:</strong> {item.location}</p>
                 {(this.state.weatherMap.has(item.city + item.area)) ? (<div><p className={style.map_icon_sun}></p>
                   <strong><p className={style.map_today_weather_title}>今日氣象</p></strong>
