@@ -1,7 +1,6 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./index.css";
-import { nanoid } from 'nanoid'
 import pubsub from 'pubsub-js'
 import { MapContainer, Marker, TileLayer, Popup, Polyline } from "react-leaflet";
 import React from "react";
@@ -156,7 +155,7 @@ export default class ActivityMap extends React.Component {
       }
     }, 300)
     this.setState({ list: [...activityInfo] })
-    setTimeout(() => console.log(this.state))
+    // setTimeout(() => console.log(this.state))
   }
 
   componentDidMount() {
