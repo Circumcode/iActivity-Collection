@@ -22,7 +22,7 @@ export default class index extends PureComponent<IProps> {
 		this.switchChoose = this.switchChoose.bind(this);
 
 		window.addEventListener("selectstart", () => {
-			console.log("Selection started");
+			// console.log("Selection started");
 			return -1;
 		});
 	}
