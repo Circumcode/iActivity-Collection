@@ -46,13 +46,15 @@ export default class WeatherAPIUtils {
                             PoP12h: element[0].time[i].elementValue[0].value,
                             Wx: element[1].time[i].elementValue[0].value,
                             WeatherDescription: element[2].time[i].elementValue[0].value
-                        }
+                        },
+                        city: strCity,
+                        area: strArea
                     }
                     locationData.push(item)
                 }
             }
             return locationData;
-        }else{
+        } else {
             throw new Error("又在搞事")
         }
     }

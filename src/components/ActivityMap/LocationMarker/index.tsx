@@ -29,7 +29,20 @@ export default function LocationMarker(props: any) {
             key="HOME"
             icon={mapHomeIcon}
             position={position}>
-            <Popup>You are here</Popup>
+            <Popup>
+                <p className={style.map_dot_home_title}><strong>當前位置</strong></p>
+                {(props.parentState.routerWay.length !== 0) ? (<div>
+                    <p className={style.map_dot_home_values}><strong>🏁總行程距離: </strong>
+                        {(Math.floor(props.parentState.routerWayTotalDistanceOfMeter / 1000) > 0) ? Math.floor(props.parentState.routerWayTotalDistanceOfMeter / 1000) + " 公里 " : ""}
+                        {(Math.floor(props.parentState.routerWayTotalDistanceOfMeter % 1000) > 0) ? Math.floor(props.parentState.routerWayTotalDistanceOfMeter % 1000) + "公尺" : ""}
+                    </p>
+                    <p className={style.map_dot_home_values}><strong>⏱總交通時間: </strong>
+                        {(Math.floor(props.parentState.routerWayTotalTimeInMinutes / 60 / 24) > 0) ? Math.floor(props.parentState.routerWayTotalTimeInMinutes / 60 / 24) + " 天 " : ""}
+                        {(Math.floor(props.parentState.routerWayTotalTimeInMinutes / 60 % 24) > 0) ? Math.floor(props.parentState.routerWayTotalTimeInMinutes / 60 % 24) + " 小時 " : ""}
+                        {(Math.floor(props.parentState.routerWayTotalTimeInMinutes % 60) > 0) ? Math.floor(props.parentState.routerWayTotalTimeInMinutes % 60) + " 分鐘 " : ""}
+                    </p>
+                </div>) : <></>}
+            </Popup>
         </Marker>
     )
 }
