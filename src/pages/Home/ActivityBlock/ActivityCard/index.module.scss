@@ -4,6 +4,10 @@
 }
 
 .card {
+	-moz-user-select: none;//
+	-webkit-user-select: none;//
+	-ms-user-select: none;//
+	user-select: none;//
 	box-shadow: 3px 3px 3px 3px rgba(46, 46, 46, 0.556);
 
 	& .block {
