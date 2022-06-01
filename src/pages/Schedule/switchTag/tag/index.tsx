@@ -15,7 +15,11 @@ export default class tag extends Component<IProps> {
 
     render(): React.ReactNode {
         return (
-            <button className={(this.props.isChoose) ? `${style.tag} ${style.isChoose}` : style.tag} onClick={this.handleClick.bind(this)}>{this.props.tag}</button>
+            <button className={(this.props.isChoose) ? `${style.tag} ${style.isChoose}` : style.tag} 
+                onClick={this.handleClick.bind(this)}
+            >
+                {this.props.tag}
+            </button>
         )
     }
 }

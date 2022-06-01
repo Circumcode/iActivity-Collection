@@ -7,7 +7,8 @@ import ScheBlock from './scheBlock';
 import ActivityMap from '../../components/ActivityMap';
 import Footer from '../../components/Footer';
 
-import FunctionCaller from '../../tools/FunctionCaller';
+import pubsub from 'pubsub-js'
+// import FunctionCaller from '../../tools/FunctionCaller';
 import { FUNCTION_CALLER_KEY_UPDATE_MAP } from '../../components/ActivityMap';
 
 interface IProps {}
@@ -31,10 +32,7 @@ class SchedulePage extends PureComponent<IProps, IState> {
 
 	changePage = (newPage: string) => {
 		this.setState({ page: newPage });
-
-		if (this.state.page === '地圖' && FunctionCaller.hasKey(FUNCTION_CALLER_KEY_UPDATE_MAP)) {
-			FunctionCaller.call(FUNCTION_CALLER_KEY_UPDATE_MAP);
-		}
+		if (this.state.page === '地圖') pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP)
 	};
 
 	render(): ReactNode {

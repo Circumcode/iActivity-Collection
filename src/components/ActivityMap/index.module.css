@@ -1,5 +1,7 @@
 .map_travel_icon,
 .map_home_icon {
+    top: -10px;
+    left: -10px;
     background: rgb(255, 255, 255);
     border-radius: 50%;
     box-shadow: 0px 3px 10px rgb(179, 179, 179);
@@ -22,4 +24,39 @@
 
 .map_home_icon:after {
     content: url(../../assets/map-home-dot.svg);
+}
+
+.map_today_weather_title {
+    line-height: 0px;
+    padding-top: 15px;
+    font-size: 15px;
+}
+
+.map_today_weather_values {
+    line-height: 0px;
+    padding-top: 3px;
+    font-size: 12px;
+}
+
+.map_dot_title_link {
+    font-size: 15px;
+}
+
+.map_dot_title_location,
+.map_dot_home_values,
+.map_dot_station_values {
+    line-height: 0px;
+    font-size: 12px;
+}
+
+.map_dot_station_title {
+    line-height: 0px;
+    padding-top: 10px;
+    font-size: 23px;
+}
+
+.map_dot_home_title {
+    text-align: center;
+    line-height: 1px;
+    font-size: 20px;
 }

@@ -1,11 +1,10 @@
 import ACO from './ACO'
 import LocationUtils from './LocationUtils'
-import { ACOStation } from './domain'
-import FunctionCaller from '../FunctionCaller'
+
+import pubsub from 'pubsub-js'
 import { FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES } from '../../components/ActivityMap'
 
-
-const TYPE_AVG_ONE_METER_NEED_MINUTE: Map<number, number> = new Map()
+const TYPE_AVG_ONE_METER_NEED_MINUTE = new Map()
 // 開車 分速為1111.111 公尺/分鐘 m/min
 TYPE_AVG_ONE_METER_NEED_MINUTE.set(0, 0.0009)
 // 小機車 分速為769.231 公尺/分鐘 m/min
@@ -14,38 +13,32 @@ TYPE_AVG_ONE_METER_NEED_MINUTE.set(1, 0.0013)
 TYPE_AVG_ONE_METER_NEED_MINUTE.set(2, 0.02)
 
 
-// eslint-disable-next-line import/no-anonymous-default-export
-const calculateRouter = (reservedActivity: any[],
-    transportType: number = 0 // 0:car, 1:scooter, 2:walk
+const calculateRouter = (reservedActivity, transportType = 0 // 0:car, 1:scooter, 2:walk
 ) => {
-    // console.log(reservedActivity)
-
-    let cityList: any[] = reservedActivity.map(item => {
-        let activity = item.activity;
-        if (item && activity && activity.showInfo[0] && activity.showInfo[0].latitude && activity.showInfo[0].longitude) {
-            return [activity.showInfo[0].latitude, activity.showInfo[0].longitude, activity.UID]
-        }
-    })
+    let cityList = reservedActivity.map(item =>
+        (item && item.UID && item.latitude && item.longitude) ?
+            [item.latitude, item.longitude, item.UID] :
+            undefined
+    )
     cityList = cityList.filter(item => item)
-    // console.log(cityList)
-
-    const findStartIndex = (startId: String, cityList: any[][]): number => {
+    
+    const findStartIndex = (startId, cityList) => {
         for (let i = 0; i < cityList.length; i++) {
             if (cityList[i][2] === startId) return i
         }
         return -1;
     }
 
-    const getEstimatedTimeInMinutes = (meter: number, transportType: number) => {
-        const oneMeterNeedMinute: number = (TYPE_AVG_ONE_METER_NEED_MINUTE.has(transportType)) ? TYPE_AVG_ONE_METER_NEED_MINUTE.get(transportType)! : 0;
+    const getEstimatedTimeInMinutes = (meter, transportType) => {
+        const oneMeterNeedMinute = TYPE_AVG_ONE_METER_NEED_MINUTE.get(transportType);
         return meter * oneMeterNeedMinute
     }
 
-    let resultRoute: ACOStation[] = []
+    let resultRoute = []
     const aco = new ACO(cityList)
     aco.done = () => {
-        let bestRoute: any[][] = aco.getBestRoute()
-        let startIndex: number = findStartIndex(cityList[0][2], bestRoute)
+        let bestRoute = aco.getBestRoute()
+        let startIndex = findStartIndex(cityList[0][2], bestRoute)
 
         if (startIndex !== -1) {
             for (let i = startIndex; i < bestRoute.length - 1; i++) {
@@ -83,9 +76,7 @@ const calculateRouter = (reservedActivity: any[],
                 curr.station = i;
             }
         }
-        if (FunctionCaller.hasKey(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES)) {
-            FunctionCaller.call(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, [resultRoute])
-        }
+        pubsub.publish(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, resultRoute)
     }
     aco.start()
 }

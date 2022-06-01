@@ -8,10 +8,10 @@ const mapHomeIcon: L.DivIcon = L.divIcon({
     className: style.map_home_icon,
     iconSize: [20, 15],
     iconAnchor: [0, 0],
-    popupAnchor: [10, -30],
+    popupAnchor: [0, -45],
 });
 
-export default function LocationMarker() {
+export default function LocationMarker(props: any) {
     const [position, setPosition] = useState(null)
     const map = useMapEvents({
         click() {
@@ -19,15 +19,30 @@ export default function LocationMarker() {
         },
         locationfound(event: any) {
             setPosition(event.latlng)
+            props.setHomePosition([event.latitude, event.longitude])
             map.flyTo(event.latlng, map.getZoom())
         },
     })
 
     return position === null ? null : (
         <Marker
+            key="HOME"
             icon={mapHomeIcon}
             position={position}>
-            <Popup>You are here</Popup>
+            <Popup>
+                <p className={style.map_dot_home_title}><strong>當前位置</strong></p>
+                {(props.parentState.routerWay.length !== 0) ? (<div>
+                    <p className={style.map_dot_home_values}><strong>🏁總行程距離: </strong>
+                        {(Math.floor(props.parentState.routerWayTotalDistanceOfMeter / 1000) > 0) ? Math.floor(props.parentState.routerWayTotalDistanceOfMeter / 1000) + " 公里 " : ""}
+                        {(Math.floor(props.parentState.routerWayTotalDistanceOfMeter % 1000) > 0) ? Math.floor(props.parentState.routerWayTotalDistanceOfMeter % 1000) + "公尺" : ""}
+                    </p>
+                    <p className={style.map_dot_home_values}><strong>⏱總交通時間: </strong>
+                        {(Math.floor(props.parentState.routerWayTotalTimeInMinutes / 60 / 24) > 0) ? Math.floor(props.parentState.routerWayTotalTimeInMinutes / 60 / 24) + " 天 " : ""}
+                        {(Math.floor(props.parentState.routerWayTotalTimeInMinutes / 60 % 24) > 0) ? Math.floor(props.parentState.routerWayTotalTimeInMinutes / 60 % 24) + " 小時 " : ""}
+                        {(Math.floor(props.parentState.routerWayTotalTimeInMinutes % 60) > 0) ? Math.floor(props.parentState.routerWayTotalTimeInMinutes % 60) + " 分鐘 " : ""}
+                    </p>
+                </div>) : <></>}
+            </Popup>
         </Marker>
     )
 }
