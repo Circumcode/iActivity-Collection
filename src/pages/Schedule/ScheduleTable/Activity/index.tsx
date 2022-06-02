@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { CSSProperties, memo } from 'react';
 
 import './antd.css';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import Divider from './Divider';
 import Weather from './Weather';
 
 
-const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function}) => {
+const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, focus: Function, isFocus: boolean}) => {
   const getFormatTime: Function = (event: moment.Moment) => {
     return event.format().split("+")[0];
   }
@@ -73,13 +73,20 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function}) =>
     props.render();
   }
 
-
+  
+  const cssBackgroundColor: CSSProperties = {
+    backgroundColor: "#e0f3ff"
+  }
   return (
-    <div className={style.div}>
+    <div
+      style={props.isFocus? cssBackgroundColor : undefined}
+      className={style.div}
+      onClick={() => props.focus(props.reservedInfo.getId())}
+    >
       <section id={style.title}>
         {props.reservedInfo.activity.title}
       </section>
-      <Divider />
+      <Divider intHeight={50} />
 
       <section id={style.addressAndTime}>
         <p>{props.reservedInfo.activity.showInfo[0].location}</p>
@@ -114,12 +121,12 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function}) =>
           />
         </div>
       </section>
-      <Divider />
+      <Divider intHeight={50} />
 
       <section id={style.weather}>
-        <Weather />
+        <Weather reservedInfo={props.reservedInfo} />
       </section>
-      <Divider />
+      <Divider intHeight={50} />
 
       <img
         id={style.btnCross}

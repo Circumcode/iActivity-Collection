@@ -6,12 +6,65 @@ $intActivityHeight: 100px;
 
 
 .div {
-	padding-top: 40px;
+	padding-top: 80px;
     padding-bottom: calc($intActivityHeight + 40px);
 
 	height: calc(100vh - $intHeaderHeight - $intFooterHeight - $intSwitchTagHeight);
 	background-color: rgb(224, 224, 224);
 
 	overflow-x: hidden;
-	overflow-y: auto;
+	overflow-y: scroll;
+
+
+	& article {
+		position: fixed;
+    	left: calc((100vw - 1200px) / 2 - 10px);
+		top: calc($intHeaderHeight + $intSwitchTagHeight + 2px);
+
+		padding-left: 15px;
+		width: 1200px;
+		height: 50px;
+
+		display: flex;
+    	align-items: center;
+
+		border-radius: 0 0 6px 6px;
+		box-shadow: 1px 1px 1px 1px rgb(89, 89, 89);
+		background-color: #FFFFFF;
+
+		z-index: 10;
+
+
+		& #title {
+			width: 400px;
+		}
+	
+		& #addressAndTime {
+			width: 370px;
+	
+			white-space: nowrap;
+	
+	
+			& div {
+				margin-top: 3px;
+				width: 170px;
+				height: 32px;
+	
+	
+				& #tilde {
+					padding: 0 3px;
+				}
+			}
+	
+			& p {
+				margin: 0;
+			}
+		}
+	
+		& #weather {
+			width: 200px;
+
+			text-align: center;
+		}
+	}
 }
