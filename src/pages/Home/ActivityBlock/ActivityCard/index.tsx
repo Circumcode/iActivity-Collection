@@ -23,11 +23,9 @@ export default class index extends PureComponent<IProps> {
 	}
 
 	avoidSelectingText(){
-		console.log("avoid")//
 		document.onselectstart = () => {
 			return false;
 		}
-		this.clearSelectingEventAfterSwitchChoosing();
 	}
 	clearSelectingEventAfterSwitchChoosing(){
 		document.onmouseup = () => {
@@ -39,6 +37,7 @@ export default class index extends PureComponent<IProps> {
 		if (event.buttons == 1) {
 			this.avoidSelectingText();
 			this.switchChoose(event);
+			this.clearSelectingEventAfterSwitchChoosing();
 		}
 
 		event.stopPropagation();

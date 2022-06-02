@@ -11,4 +11,44 @@
 		
 		border-bottom: 2px solid rgb(126, 126, 126);
 	}
+
+	& #btnList {
+		padding: 10px; 
+		position: fixed;
+		left: 4px;
+		bottom: 60px;
+
+		display: flex;
+		align-items: center;
+
+		border-radius: 5px 5px 0 0;
+		background-color: rgba($color: white, $alpha: 0.8);
+
+		z-index: 10;
+
+
+		& button {
+			margin: 3px;
+	
+			width: 80px;
+			height: 80px;
+	
+			background-color: #003c9d;
+			color: #fff;
+			border: 0;
+			border-radius: 10px;
+
+			font-size: 10px;
+			
+			cursor: pointer;
+			transition: all 0.3s linear;
+	
+			
+			&:hover {
+				color: #003c9d;
+				background-color: #fff;
+			}
+		}
+	}
+
 }

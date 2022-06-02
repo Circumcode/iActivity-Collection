@@ -1,0 +1,17 @@
+$intHeaderHeight: 90px;
+$intFooterHeight: 60px;
+$intSwitchTagHeight: 40px;
+
+$intActivityHeight: 100px;
+
+
+.div {
+	padding-top: 40px;
+    padding-bottom: calc($intActivityHeight + 40px);
+
+	height: calc(100vh - $intHeaderHeight - $intFooterHeight - $intSwitchTagHeight);
+	background-color: rgb(224, 224, 224);
+
+	overflow-x: hidden;
+	overflow-y: auto;
+}

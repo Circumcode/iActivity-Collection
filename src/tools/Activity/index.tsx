@@ -11,15 +11,19 @@ const mapSeason: Map<string, number> = new Map([
 ]);
 
 
-class ReservedInfo {
-    strId: string;
-    dateStart: Date | null = null;
-    dateEnd: Date | null = null;
+export class ReservedInfo {
+    private strId: string;
+    dateStart: Date | null = null;// private private private private private private private private private private private private private
+    dateEnd: Date | null = null;// private private private private private private private private private private private private private
     activity: any;
 
-    constructor(strId: string, activity: any){
+    constructor(strId: string, activity: any)
+    constructor(strId: string, activity: any, strStartTime: string, strEndTime: string)
+    constructor(strId: string, activity: any, strStartTime: string = "", strEndTime: string = ""){
         this.strId = strId;
         this.activity = activity;
+        this.dateStart = (strStartTime === '')? null : new Date(strStartTime);
+        this.dateEnd = (strEndTime === '')? null : new Date(strEndTime);
     }
 
     static compare(reservedInfo1: ReservedInfo, reservedInfo2: ReservedInfo){
@@ -35,20 +39,46 @@ class ReservedInfo {
         return 1;
     }
 
-    setTime(strStartDate: string, strEndDate: string){
-        this.dateStart = (strStartDate === '')? null : new Date(strStartDate);
-        this.dateEnd = (strEndDate === '')? null : new Date(strEndDate);
+    getId(){
+        return this.strId;
     }
+
     clearTime(){
         this.dateStart = null;
         this.dateEnd = null;
+
+        Activity.storeToLocalStorage();
+    }
+    private getFormatTime(date: Date){
+        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+                + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    }
+    getStartTime(){
+        return (this.dateStart === null)? "" : this.getFormatTime(this.dateStart);
+    }
+    getEndTime(){
+        return (this.dateEnd === null)? "" : this.getFormatTime(this.dateEnd);
+    }
+    setTime(strStartDate: string, strEndDate: string){
+        this.setStartTime(strStartDate);
+        this.setEndTime(strEndDate);
+    }
+    setStartTime(strStartTime: string){
+        this.dateStart = (strStartTime === '')? null : new Date(strStartTime);
+
+        Activity.storeToLocalStorage();
+    }
+    setEndTime(strEndTime: string){
+        this.dateEnd = (strEndTime === '')? null : new Date(strEndTime);
+
+        Activity.storeToLocalStorage();
     }
 
     pack(){
         return {
             strId: this.strId,
-            strStartDate: (this.dateStart === null)? "" : this.dateStart.toJSON().split(".")[0],
-            strEndDate: (this.dateEnd === null)? "" : this.dateEnd.toJSON().split(".")[0]
+            strStartDate: this.getStartTime(),
+            strEndDate: this.getEndTime()
         }
     }
 }
@@ -102,8 +132,7 @@ export default class Activity {
         Activity.arrReservedInfos = [];
 
         arrPackedReservedInfo.forEach(info => {
-            let reservedInfo = new ReservedInfo(info.strId, Activity.get(info.strId));
-            reservedInfo.setTime(info.strStartDate, info.strEndDate);
+            let reservedInfo = new ReservedInfo(info.strId, Activity.get(info.strId), info.strStartDate, info.strEndDate);
             Activity.arrReservedInfos.push(reservedInfo);
         })
     }
@@ -111,7 +140,7 @@ export default class Activity {
         let strReservedIds = localStorage.getItem(Activity.strKeyReservedIds);
         if (strReservedIds != null) Activity.unpackInfo(JSON.parse(strReservedIds));
     }
-    private static storeToLocalStorage(){
+    static storeToLocalStorage(){
         localStorage.setItem(Activity.strKeyReservedIds, JSON.stringify(Activity.packInfo()));
     }
 
@@ -129,7 +158,7 @@ export default class Activity {
     }
     private static getIndexForReserved(strId: string){
         for (let intIndex = 0; intIndex < Activity.arrReservedInfos.length; intIndex++){
-            if (Activity.arrReservedInfos[intIndex].strId == strId) return intIndex;
+            if (Activity.arrReservedInfos[intIndex].getId() == strId) return intIndex;
         }
         return -1;
     }
@@ -157,7 +186,7 @@ export default class Activity {
 
     static isReserved(strId: string){
         for (let intIndex = 0; intIndex < Activity.arrReservedInfos.length; intIndex++){
-            if (Activity.arrReservedInfos[intIndex].strId === strId) return true;
+            if (Activity.arrReservedInfos[intIndex].getId() === strId) return true;
         }
         return false;
     }
@@ -179,6 +208,8 @@ export default class Activity {
     }
     static clear(){
         Activity.arrReservedInfos = [];
+
+        Activity.storeToLocalStorage();
     }
     static setTime(strId: string, strStartDate: string, strEndDate: string){
         if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
