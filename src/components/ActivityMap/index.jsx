@@ -68,14 +68,6 @@ export default class ActivityMap extends React.Component {
 
 
   drawRouteLines = (_, resultRoute) => {
-    // https://www.google.com.tw/maps/dir/
-    // 22.8092071,120.287032/
-    // 22.808081,120.281519/
-    // 22.8339171,120.2453587/
-    // @22.8206598,120.2684215
-    // ,13.5z/data=!4m2!4m1!3e0?hl=zh-TW
-    // https://www.google.com.tw/maps/dir/22.8092071,120.287032/22.808081,120.281519/22.8339171,120.2453587/data=!4m2!4m1!3e0?hl=zh-TW
-
     let updateActivityData = []
     let newRouterWay = []
     let routerWayTotalDistanceOfMeter = 0
@@ -175,7 +167,7 @@ export default class ActivityMap extends React.Component {
   }
 
   mappingToGoogleMap = ()=>{
-    console.log('aaa');
+    // https://www.google.com.tw/maps/dir/22.8092071,120.287032/22.808081,120.281519/22.8339171,120.2453587/data=!4m2!4m1!3e0?hl=zh-TW
     const urlHead = "https://www.google.com.tw/maps/dir/"
     const urlLast = "data=!3m1!4b1!4m2!4m1!3e0?hl=zh-TW"
     let url = urlHead
