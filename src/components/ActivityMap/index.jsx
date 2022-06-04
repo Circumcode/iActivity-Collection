@@ -67,6 +67,7 @@ export default class ActivityMap extends React.Component {
 
 
   drawRouteLines = (_, resultRoute) => {
+    let updateActivityData = []
     let newRouterWay = []
     let routerWayTotalDistanceOfMeter = 0
     let routerWayTotalTimeInMinutes = 0
@@ -86,13 +87,14 @@ export default class ActivityMap extends React.Component {
       }
       tempMap.set(temp.UID, temp)
     }
-    resultRoute.map(item => {
+    updateActivityData = resultRoute.map(item => {
       const temp = tempMap.get(item.UID)
       const newItem = {
         ...temp,
         stationData: item
       }
       tempMap.set(item.UID, newItem)
+      return newItem
     })
 
     let tempList = []
@@ -102,6 +104,9 @@ export default class ActivityMap extends React.Component {
       tempList.push(item.value)
       item = iterator.next()
     }
+
+    AcitvityUtils.update(updateActivityData.filter( item => item.UID !== "HOME"))
+    // setTimeout(() => console.log(AcitvityUtils.getReserved()) ,1000)
     this.setState({ list: [...tempList], routerWay: [...newRouterWay], routerWayTotalDistanceOfMeter, routerWayTotalTimeInMinutes })
     // setTimeout(() => console.log(this.state), 1000)
   }
@@ -116,6 +121,7 @@ export default class ActivityMap extends React.Component {
     let promiseList = []
     let maxDistance = [Number.MAX_VALUE, Number.MIN_VALUE, Number.MAX_VALUE, Number.MIN_VALUE]
     let activityInfo = []
+    let newRouterWay = []
     userReserved.map(item => {
       let activity = item.activity
       if (item && activity && activity.showInfo[0] && activity.showInfo[0].latitude && activity.showInfo[0].longitude) {
@@ -130,6 +136,7 @@ export default class ActivityMap extends React.Component {
           city: activity.showInfo[0].city,
           area: activity.showInfo[0].area
         }
+        newRouterWay.push([temp.latitude, temp.longitude])
         promiseList.push(this.getPromiseWeatherData(activity.showInfo[0].city, activity.showInfo[0].area))
         maxDistance[0] = Math.max(maxDistance[0], parseFloat(activity.showInfo[0].latitude))
         maxDistance[1] = Math.min(maxDistance[1], parseFloat(activity.showInfo[0].latitude))
@@ -154,7 +161,7 @@ export default class ActivityMap extends React.Component {
         map.setZoom(Number.parseInt(maxDis + "") * 7)
       }
     }, 300)
-    this.setState({ list: [...activityInfo] })
+    this.setState({ list: [...activityInfo], routerWay: [...newRouterWay] })
     // setTimeout(() => console.log(this.state))
   }
 
@@ -176,7 +183,7 @@ export default class ActivityMap extends React.Component {
           attribution="&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <LocationMarker setHomePosition={this.setHomePosition} parentState={this.state}/>
+        <LocationMarker setHomePosition={this.setHomePosition} parentState={this.state} />
         <Polyline pathOptions={mapLineColor} positions={this.state.routerWay} />
         {
           this.state.list.map(item => (item.UID === "HOME") ? <></> : (
