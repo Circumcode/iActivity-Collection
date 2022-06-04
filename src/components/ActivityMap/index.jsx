@@ -98,6 +98,7 @@ export default class ActivityMap extends React.Component {
       tempMap.set(item.UID, newItem)
       return newItem
     })
+    updateActivityData = updateActivityData.map(item => item.stationData.UID !== "HOME")
 
     let tempList = []
     let iterator = tempMap.values();

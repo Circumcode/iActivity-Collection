@@ -21,15 +21,15 @@ export class ReservedInfo {
     constructor(strId: string, activity: any)
     constructor(strId: string, activity: any, strStartTime: string, strEndTime: string)
     constructor(strId: string, activity: any, strStartTime: string, strEndTime: string, stationData: any)
-    constructor(strId: string, activity: any, strStartTime: string = "", strEndTime: string = "", stationData?: any){
+    constructor(strId: string, activity: any, strStartTime: string = "", strEndTime: string = "", stationData?: any) {
         this.strId = strId;
         this.activity = activity;
-        this.dateStart = (strStartTime === '')? null : new Date(strStartTime);
-        this.dateEnd = (strEndTime === '')? null : new Date(strEndTime);
+        this.dateStart = (strStartTime === '') ? null : new Date(strStartTime);
+        this.dateEnd = (strEndTime === '') ? null : new Date(strEndTime);
         this.stationData = stationData ?? null;
     }
 
-    static compare(reservedInfo1: ReservedInfo, reservedInfo2: ReservedInfo){
+    static compare(reservedInfo1: ReservedInfo, reservedInfo2: ReservedInfo) {
         if (reservedInfo1.dateStart === reservedInfo2.dateStart)
             return 0;
         if ((reservedInfo1.dateStart === null) && (reservedInfo2.dateStart !== null))
@@ -38,57 +38,57 @@ export class ReservedInfo {
             return 1;
         if (reservedInfo1.dateStart! < reservedInfo2.dateStart!)
             return -1;
-    
+
         return 1;
     }
 
-    getId(){
+    getId() {
         return this.strId;
     }
 
-    isHavingStationData(){
+    isHavingStationData() {
         return this.stationData !== null;
     }
-    getStationData(){
+    getStationData() {
         return this.stationData;
     }
 
-    clearTime(){
+    clearTime() {
         this.dateStart = null;
         this.dateEnd = null;
 
         Activity.storeToLocalStorage();
     }
-    private getFormatTime(date: Date){
+    private getFormatTime(date: Date) {
         return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-                + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     }
-    getStartDate(){
+    getStartDate() {
         return this.dateStart;
     }
-    getStartTime(){
-        return (this.dateStart === null)? "" : this.getFormatTime(this.dateStart);
+    getStartTime() {
+        return (this.dateStart === null) ? "" : this.getFormatTime(this.dateStart);
     }
-    getEndTime(){
-        return (this.dateEnd === null)? "" : this.getFormatTime(this.dateEnd);
+    getEndTime() {
+        return (this.dateEnd === null) ? "" : this.getFormatTime(this.dateEnd);
     }
-    setTime(strStartDate: string, strEndDate: string){
+    setTime(strStartDate: string, strEndDate: string) {
         this.setStartTime(strStartDate);
         this.setEndTime(strEndDate);
     }
-    setStartTime(strStartTime: string){
-        this.dateStart = (strStartTime === '')? null : new Date(strStartTime);
+    setStartTime(strStartTime: string) {
+        this.dateStart = (strStartTime === '') ? null : new Date(strStartTime);
 
         Activity.sort();
         Activity.storeToLocalStorage();
     }
-    setEndTime(strEndTime: string){
-        this.dateEnd = (strEndTime === '')? null : new Date(strEndTime);
+    setEndTime(strEndTime: string) {
+        this.dateEnd = (strEndTime === '') ? null : new Date(strEndTime);
 
         Activity.storeToLocalStorage();
     }
 
-    pack(){
+    pack() {
         return {
             strId: this.strId,
             strStartDate: this.getStartTime(),
@@ -116,7 +116,7 @@ export default class Activity {
         Activity.boolLoadingFailure = false;
 
         await axios.get(Activity.strUrl)
-            .then((response)=>{
+            .then((response) => {
                 Activity.arrActivity = response.data;
                 Activity.readFromLocalStorage();
                 Activity.boolLoaded = true;
@@ -126,24 +126,24 @@ export default class Activity {
                 Activity.boolLoadingFailure = true;
             })
     }
-    static isLoading(){
+    static isLoading() {
         return Activity.boolLoading;
     }
-    static isLoaded(){
+    static isLoaded() {
         return Activity.boolLoaded;
     }
-    static isFailed(){
+    static isFailed() {
         return Activity.boolLoadingFailure;
     }
 
-    private static packInfo(){
+    private static packInfo() {
         let arrPackedReservedInfo: Array<any> = [];
         Activity.arrReservedInfos.forEach(reservedInfo => {
             arrPackedReservedInfo.push(reservedInfo.pack());
         })
         return arrPackedReservedInfo;
     }
-    private static unpackInfo(arrPackedReservedInfo: Array<any>){
+    private static unpackInfo(arrPackedReservedInfo: Array<any>) {
         Activity.arrReservedInfos = [];
 
         arrPackedReservedInfo.forEach(info => {
@@ -151,41 +151,41 @@ export default class Activity {
             Activity.arrReservedInfos.push(reservedInfo);
         })
     }
-    private static readFromLocalStorage(){
+    private static readFromLocalStorage() {
         let strReservedIds = localStorage.getItem(Activity.strKeyReservedIds);
         if (strReservedIds != null) Activity.unpackInfo(JSON.parse(strReservedIds));
     }
-    static storeToLocalStorage(){
+    static storeToLocalStorage() {
         localStorage.setItem(Activity.strKeyReservedIds, JSON.stringify(Activity.packInfo()));
     }
 
-    static get(strId: string, isStrict: boolean = true){
+    static get(strId: string, isStrict: boolean = true) {
         let intIndex: number = Activity.getIndex(strId);
 
         if ((isStrict) && (intIndex === -1)) throw new LogicalError("Activity- 此活動並未在清單中 (id: " + strId + ")");
-        return (intIndex === -1)? null : Activity.arrActivity[intIndex];
+        return (intIndex === -1) ? null : Activity.arrActivity[intIndex];
     }
-    private static getIndex(strId: string){
-        for (let intIndex = 0; intIndex < Activity.arrActivity.length; intIndex++){
+    private static getIndex(strId: string) {
+        for (let intIndex = 0; intIndex < Activity.arrActivity.length; intIndex++) {
             if (Activity.arrActivity[intIndex].UID == strId) return intIndex;
         }
         return -1;
     }
-    private static getIndexForReserved(strId: string){
-        for (let intIndex = 0; intIndex < Activity.arrReservedInfos.length; intIndex++){
+    private static getIndexForReserved(strId: string) {
+        for (let intIndex = 0; intIndex < Activity.arrReservedInfos.length; intIndex++) {
             if (Activity.arrReservedInfos[intIndex].getId() == strId) return intIndex;
         }
         return -1;
     }
 
-    static getAll(){
+    static getAll() {
         return Activity.arrActivity;
     }
-    static getReserved(){
+    static getReserved() {
         return Activity.arrReservedInfos;
     }
 
-    static getBySeason(intYear: number, strSeason: "spring" | "summer" | "fall" | "winter"){
+    static getBySeason(intYear: number, strSeason: "spring" | "summer" | "fall" | "winter") {
         let intSeasonMonth: number = mapSeason.get(strSeason)!;
         let dateSeasonStart: Date = new Date(intYear + "/" + intSeasonMonth + "/1");
         let dateSeasonEnd: Date = new Date(intYear + "/" + (intSeasonMonth + 3) + "/1");
@@ -194,26 +194,26 @@ export default class Activity {
         Activity.arrActivity.forEach(activity => {
             let dateActivityStart = new Date(activity.startDate);
             let dateActivityEnd = new Date(activity.endDate);
-            if (!( (dateActivityStart > dateSeasonEnd) || (dateActivityEnd < dateSeasonStart) )) arrActivitySeason.push(activity);
+            if (!((dateActivityStart > dateSeasonEnd) || (dateActivityEnd < dateSeasonStart))) arrActivitySeason.push(activity);
         })
         return arrActivitySeason;
     }
 
-    static isReserved(strId: string){
-        for (let intIndex = 0; intIndex < Activity.arrReservedInfos.length; intIndex++){
+    static isReserved(strId: string) {
+        for (let intIndex = 0; intIndex < Activity.arrReservedInfos.length; intIndex++) {
             if (Activity.arrReservedInfos[intIndex].getId() === strId) return true;
         }
         return false;
     }
-    static reserve(strId: string){
+    static reserve(strId: string) {
         if (Activity.isReserved(strId)) throw new LogicalError("Activity- 已預約過活動無法在預約 (id: " + strId + ")");
-        
+
         Activity.arrReservedInfos.push(new ReservedInfo(strId, Activity.get(strId)));
 
         Activity.sort();
         Activity.storeToLocalStorage();
     }
-    static cancel(strId: string){
+    static cancel(strId: string) {
         if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
 
         Activity.arrReservedInfos.splice(Activity.getIndexForReserved(strId), 1);
@@ -221,12 +221,12 @@ export default class Activity {
         Activity.sort();
         Activity.storeToLocalStorage();
     }
-    static clear(){
+    static clear() {
         Activity.arrReservedInfos = [];
 
         Activity.storeToLocalStorage();
     }
-    static setTime(strId: string, strStartDate: string, strEndDate: string){
+    static setTime(strId: string, strStartDate: string, strEndDate: string) {
         if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
 
         Activity.arrReservedInfos[Activity.getIndexForReserved(strId)].setTime(strStartDate, strEndDate);
@@ -234,22 +234,27 @@ export default class Activity {
         Activity.sort();
         Activity.storeToLocalStorage();
     }
-    static clearTime(){
+    static clearTime() {
         Activity.arrReservedInfos.forEach(reservedInfo => {
             reservedInfo.clearTime();
         })
     }
-    static sort(){
+    static sort() {
         Activity.arrReservedInfos.sort(ReservedInfo.compare);
     }
-    static update(arrActivitys: Array<any>){
+    static update(arrActivitys: Array<any>) {
         Activity.clearTime();
 
         arrActivitys.forEach(activity => {
-            Activity.cancel(activity.UID);
+            if (activity && activity.startDate) {
+                console.log(activity.startDate.UID)
+                Activity.cancel(activity.startDate.UID);
+            }
         })
-        for (let intIndex = (arrActivitys.length - 1); intIndex >= 0; intIndex--){
-            Activity.arrReservedInfos.unshift(new ReservedInfo(arrActivitys[intIndex].UID, Activity.get(arrActivitys[intIndex].UID), "", "", arrActivitys[intIndex].stationData));
+        for (let intIndex = (arrActivitys.length - 1); intIndex >= 0; intIndex--) {
+            if (arrActivitys[intIndex] && arrActivitys[intIndex].startDate) {
+                Activity.arrReservedInfos.unshift(new ReservedInfo(arrActivitys[intIndex].startDate.UID, Activity.get(arrActivitys[intIndex].startDate.UID), "", "", arrActivitys[intIndex].stationData));
+            }
         }
 
         Activity.storeToLocalStorage();
