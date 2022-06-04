@@ -14,7 +14,7 @@ import pubsub from 'pubsub-js'
 // import FunctionCaller from '../../tools/FunctionCaller';
 import { FUNCTION_CALLER_KEY_UPDATE_MAP, FUNCTION_CALLER_KEY_CALCULATE_ROUTER } from '../../components/ActivityMap';
 
-interface IProps {}
+interface IProps { }
 interface IState {
 	page: string;
 	renderCounterScheduleTable: number;
@@ -31,20 +31,20 @@ class SchedulePage extends PureComponent<IProps, IState> {
 		this.changePage = this.changePage.bind(this);
 	}
 
-	renderScheduleTable(){
-		this.setState({renderCounterScheduleTable: (this.state.renderCounterScheduleTable + 1)});
+	renderScheduleTable() {
+		this.setState({ renderCounterScheduleTable: (this.state.renderCounterScheduleTable + 1) });
 	}
-	resetActivity(){
+	resetActivity() {
 		Activity.clear();
 		this.renderScheduleTable();
 	}
-	resetTime(){
+	resetTime() {
 		Activity.clearTime();
 		this.renderScheduleTable();
 	}
 
-	componentDidMount(){
-		this.setState({page: '排程'});
+	componentDidMount() {
+		this.setState({ page: '排程' });
 	}
 
 	changePage = (newPage: string) => {
@@ -62,18 +62,21 @@ class SchedulePage extends PureComponent<IProps, IState> {
 						<SwitchTag changePage={this.changePage} choosePage={this.state.page} />
 					</div>
 
-					<div style={{display: (this.state.page === '排程') ? '' : 'none'}}>
+					<div style={{ display: (this.state.page === '排程') ? '' : 'none' }}>
 						<ScheduleTable renderCounter={this.state.renderCounterScheduleTable} />
 					</div>
 					{/* <ScheBlock style={{ display: this.state.page === '排程' ? 'block' : 'none' }} /> */}
-					<div style={{display: (this.state.page === '地圖') ? '' : 'none'}}>
+					<div style={{ display: (this.state.page === '地圖') ? '' : 'none' }}>
 						<ActivityMap />
 					</div>
 
 					<div id={style.btnList}>
 						<button onClick={() => pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER)}>最快路徑</button>
 						<button onClick={() => this.resetTime()}>重設時間</button>
-						<button onClick={() => this.resetActivity()}>重設活動</button>
+						<button onClick={() => {
+							this.resetActivity()
+							pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP)
+						}}>重設活動</button>
 					</div>
 				</div>
 
