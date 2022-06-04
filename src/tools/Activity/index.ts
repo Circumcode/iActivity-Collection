@@ -15,15 +15,18 @@ export class ReservedInfo {
     private strId: string;
     dateStart: Date | null = null;// private private private private private private private private private private private private private
     dateEnd: Date | null = null;// private private private private private private private private private private private private private
+    private stationData: any = null;
     activity: any;
 
     constructor(strId: string, activity: any)
     constructor(strId: string, activity: any, strStartTime: string, strEndTime: string)
-    constructor(strId: string, activity: any, strStartTime: string = "", strEndTime: string = ""){
+    constructor(strId: string, activity: any, strStartTime: string, strEndTime: string, stationData: any)
+    constructor(strId: string, activity: any, strStartTime: string = "", strEndTime: string = "", stationData?: any){
         this.strId = strId;
         this.activity = activity;
         this.dateStart = (strStartTime === '')? null : new Date(strStartTime);
         this.dateEnd = (strEndTime === '')? null : new Date(strEndTime);
+        this.stationData = stationData ?? null;
     }
 
     static compare(reservedInfo1: ReservedInfo, reservedInfo2: ReservedInfo){
@@ -41,6 +44,9 @@ export class ReservedInfo {
 
     getId(){
         return this.strId;
+    }
+    getStationData(){
+        return this.stationData;
     }
 
     clearTime(){
@@ -79,7 +85,8 @@ export class ReservedInfo {
         return {
             strId: this.strId,
             strStartDate: this.getStartTime(),
-            strEndDate: this.getEndTime()
+            strEndDate: this.getEndTime(),
+            strStationData: JSON.stringify(this.stationData)
         }
     }
 }
@@ -133,7 +140,7 @@ export default class Activity {
         Activity.arrReservedInfos = [];
 
         arrPackedReservedInfo.forEach(info => {
-            let reservedInfo = new ReservedInfo(info.strId, Activity.get(info.strId), info.strStartDate, info.strEndDate);
+            let reservedInfo = new ReservedInfo(info.strId, Activity.get(info.strId), info.strStartDate, info.strEndDate, JSON.parse(info.strStationData));
             Activity.arrReservedInfos.push(reservedInfo);
         })
     }
@@ -229,11 +236,14 @@ export default class Activity {
         Activity.arrReservedInfos.sort(ReservedInfo.compare);
     }
     static update(arrActivitys: Array<any>){
-        Activity.clear();
+        Activity.clearTime();
 
         arrActivitys.forEach(activity => {
-            Activity.arrReservedInfos.push(new ReservedInfo(activity.UID, activity));
+            Activity.cancel(activity.UID);
         })
+        for (let intIndex = (arrActivitys.length - 1); intIndex >= 0; intIndex--){
+            Activity.arrReservedInfos.unshift(new ReservedInfo(arrActivitys[intIndex].UID, Activity.get(arrActivitys[intIndex].UID), "", "", arrActivitys[intIndex].stationData));
+        }
 
         Activity.storeToLocalStorage();
     }

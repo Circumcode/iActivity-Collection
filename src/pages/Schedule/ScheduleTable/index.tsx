@@ -19,7 +19,7 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
   classActivity.getReserved().forEach(reservedInfo => {
     arrActivitys.push(
       <Activity
-        key={nanoid()} 
+        key={reservedInfo.getId()}
         reservedInfo={reservedInfo}
         render={render}
         focus={setFocusActivityId}
@@ -39,6 +39,7 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
         <span id={style.weather}>天氣提示</span>
         <Divider intHeight={30} />
       </article>
+
       {arrActivitys}
     </div>
   )
