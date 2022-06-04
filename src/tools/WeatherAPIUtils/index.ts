@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_KEY = "CWB-9D1F8318-1E3B-4A1D-BE21-87435E79CDA7"
+const API_KEY = "CWB-2071CD40-C06E-4150-8E4F-F04696CF8F1A"
 const BASE_URL = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/";
 const CITY_ID_1WEEK_MAP = new Map()
 
@@ -27,7 +27,7 @@ CITY_ID_1WEEK_MAP.set("臺南市", "F-D0047-079")
 CITY_ID_1WEEK_MAP.set("連江縣", "F-D0047-083")
 CITY_ID_1WEEK_MAP.set("金門縣", "F-D0047-087")
 
-
+// https://opendata.cwb.gov.tw/dist/opendata-swagger.html#/%E9%A0%90%E5%A0%B1/get_v1_rest_datastore_F_D0047_067
 // https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-D0047-067?Authorization=CWB-9D1F8318-1E3B-4A1D-BE21-87435E79CDA7&format=JSON&locationName=燕巢區&elementName=PoP12h,Wx,WeatherDescription
 export default class WeatherAPIUtils {
 
@@ -35,8 +35,8 @@ export default class WeatherAPIUtils {
         if (CITY_ID_1WEEK_MAP.has(strCity)) {
             const requestURL = `${BASE_URL + CITY_ID_1WEEK_MAP.get(strCity)}?Authorization=${API_KEY}&format=JSON&locationName=${strArea}&elementName=PoP12h,Wx,WeatherDescription`
             const response = await axios.get(requestURL)
-            let locationData = []
             if (response) {
+                let locationData = []
                 const element = response.data.records.locations[0].location[0].weatherElement;
                 for (let i = 0; i < element[0].time.length; i++) {
                     const item = {
@@ -52,8 +52,9 @@ export default class WeatherAPIUtils {
                     }
                     locationData.push(item)
                 }
+                return locationData;
             }
-            return locationData;
+            return response
         } else {
             throw new Error("又在搞事")
         }
