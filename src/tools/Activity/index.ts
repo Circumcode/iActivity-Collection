@@ -66,6 +66,7 @@ export class ReservedInfo {
     setStartTime(strStartTime: string){
         this.dateStart = (strStartTime === '')? null : new Date(strStartTime);
 
+        Activity.sort();
         Activity.storeToLocalStorage();
     }
     setEndTime(strEndTime: string){
@@ -195,16 +196,16 @@ export default class Activity {
         
         Activity.arrReservedInfos.push(new ReservedInfo(strId, Activity.get(strId)));
 
-        Activity.storeToLocalStorage();
         Activity.sort();
+        Activity.storeToLocalStorage();
     }
     static cancel(strId: string){
         if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
 
         Activity.arrReservedInfos.splice(Activity.getIndexForReserved(strId), 1);
 
-        Activity.storeToLocalStorage();
         Activity.sort();
+        Activity.storeToLocalStorage();
     }
     static clear(){
         Activity.arrReservedInfos = [];
@@ -216,15 +217,24 @@ export default class Activity {
 
         Activity.arrReservedInfos[Activity.getIndexForReserved(strId)].setTime(strStartDate, strEndDate);
 
-        Activity.storeToLocalStorage();
         Activity.sort();
+        Activity.storeToLocalStorage();
     }
     static clearTime(){
         Activity.arrReservedInfos.forEach(reservedInfo => {
             reservedInfo.clearTime();
         })
     }
-    private static sort(){
+    static sort(){
         Activity.arrReservedInfos.sort(ReservedInfo.compare);
+    }
+    static update(arrActivitys: Array<any>){
+        Activity.clear();
+
+        arrActivitys.forEach(activity => {
+            Activity.arrReservedInfos.push(new ReservedInfo(activity.UID, activity));
+        })
+
+        Activity.storeToLocalStorage();
     }
 }

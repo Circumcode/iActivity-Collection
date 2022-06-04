@@ -18,8 +18,9 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
   const arrActivitys: Array<JSX.Element> = [];
   classActivity.getReserved().forEach(reservedInfo => {
     arrActivitys.push(
-      <Activity key={nanoid()} 
-        reservedInfo={reservedInfo} 
+      <Activity
+        key={nanoid()} 
+        reservedInfo={reservedInfo}
         render={render}
         focus={setFocusActivityId}
         isFocus={strFocusActivityId === reservedInfo.getId()}

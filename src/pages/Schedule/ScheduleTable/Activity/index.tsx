@@ -1,4 +1,4 @@
-import { CSSProperties, memo } from 'react';
+import { CSSProperties, memo, useEffect, useRef, useState } from 'react';
 
 import './antd.css';
 import moment from 'moment';
@@ -12,6 +12,22 @@ import Weather from './Weather';
 
 
 const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, focus: Function, isFocus: boolean}) => {
+  const refActivity = useRef<HTMLDivElement>(null);
+  // const [isScrollIntoView, setScrollingState] = useState(false);
+  // const isScrolledIntoView = useRef(false);
+  // console.log("render", isScrollIntoView)//
+  // if (props.isFocus){
+  //   if (refActivity.current !== null) refActivity.current.scrollIntoView();
+  // }
+  // useEffect(() => {
+  //   console.log("useEffect", isScrolledIntoView)//
+  //   if (isScrolledIntoView.current){
+  //     console.log("scroll")//
+  //     isScrolledIntoView.current = false;
+  //     refActivity.current!.scrollIntoView();
+  //   }
+  // }, [isScrolledIntoView.current])
+
   const getFormatTime: Function = (event: moment.Moment) => {
     return event.format().split("+")[0];
   }
@@ -79,6 +95,7 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
   }
   return (
     <div
+      ref={refActivity}
       style={props.isFocus? cssBackgroundColor : undefined}
       className={style.div}
       onClick={() => props.focus(props.reservedInfo.getId())}
