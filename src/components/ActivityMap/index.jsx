@@ -5,6 +5,7 @@ import pubsub from 'pubsub-js'
 import { MapContainer, Marker, TileLayer, Popup, Polyline } from "react-leaflet";
 import React from "react";
 
+import GoogleMapIcon from '../../assets/icon/Google_Maps_icon_335.png'
 import WeatherAPIUtils from "../../tools/WeatherAPIUtils";
 import AcitvityUtils from '../../tools/Activity'
 import LocationMarker from "./LocationMarker";
@@ -68,14 +69,6 @@ export default class ActivityMap extends React.Component {
 
 
   drawRouteLines = (_, resultRoute) => {
-    // https://www.google.com.tw/maps/dir/
-    // 22.8092071,120.287032/
-    // 22.808081,120.281519/
-    // 22.8339171,120.2453587/
-    // @22.8206598,120.2684215
-    // ,13.5z/data=!4m2!4m1!3e0?hl=zh-TW
-    // https://www.google.com.tw/maps/dir/22.8092071,120.287032/22.808081,120.281519/22.8339171,120.2453587/data=!4m2!4m1!3e0?hl=zh-TW
-
     let updateActivityData = []
     let newRouterWay = []
     let routerWayTotalDistanceOfMeter = 0
@@ -175,7 +168,7 @@ export default class ActivityMap extends React.Component {
   }
 
   mappingToGoogleMap = ()=>{
-    console.log('aaa');
+    // https://www.google.com.tw/maps/dir/22.8092071,120.287032/22.808081,120.281519/22.8339171,120.2453587/data=!4m2!4m1!3e0?hl=zh-TW
     const urlHead = "https://www.google.com.tw/maps/dir/"
     const urlLast = "data=!3m1!4b1!4m2!4m1!3e0?hl=zh-TW"
     let url = urlHead
@@ -196,7 +189,7 @@ export default class ActivityMap extends React.Component {
   render() {
     return (
       <div>
-        <button className={style.map_mapping_to_google_map_but} onClick={this.mappingToGoogleMap}>Line Google map</button>
+        <div className={style.map_mapping_to_google_map_but} onClick={this.mappingToGoogleMap}><img className={style.googleMapIcon} src={GoogleMapIcon}/>Mapping to Google map</div>
         <MapContainer
           center={this.position}
           zoom={this.zoom}
@@ -211,7 +204,7 @@ export default class ActivityMap extends React.Component {
           <Polyline pathOptions={mapLineColor} positions={this.state.routerWay} />
           {
             this.state.list.map(item => (item.UID === "HOME") ? <></> : (
-              <Marker icon={mapTravelIcon} key={item.UID} position={[item.latitude, item.longitude]} title={`${item.title}`}>
+              <Marker  key={item.UID} icon={mapTravelIcon} position={[item.latitude, item.longitude]} title={`${item.title}`}>
                 <Popup>
                   <p className={style.map_dot_title_link}><strong><a target="_break" href={item.sourceWebPromote}>{item.title}</a></strong></p>
                   <p className={style.map_dot_title_location}><strong>📬地址:</strong> {item.location}</p>
