@@ -2,7 +2,7 @@ import { PureComponent, ReactNode } from 'react';
 import { Helmet } from 'react-helmet';
 
 import style from './index.module.scss';
-import { HeaderEmpty } from '../../components/Header';
+import { HeaderNoScheduleIcon } from '../../components/Header';
 import Footer from '../../components/Footer';
 import Activity from '../../tools/Activity';
 
@@ -35,6 +35,11 @@ class SchedulePage extends PureComponent<IProps, IState> {
 	renderScheduleTable() {
 		this.setState({ renderCounterScheduleTable: (this.state.renderCounterScheduleTable + 1) });
 	}
+	schedule(){
+		pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER);
+		this.renderScheduleTable();
+		console.log(Activity.getReserved())//
+	}
 	resetActivity() {
 		Activity.clear();
 		pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
@@ -51,11 +56,7 @@ class SchedulePage extends PureComponent<IProps, IState> {
 
 	changePage = (newPage: string) => {
 		this.setState({ page: newPage });
-		if (newPage === '排程') {
-			console.log(this)//
-			console.log(Activity.getReserved())//
-			this.renderScheduleTable();
-		}
+		if (newPage === '排程') this.renderScheduleTable();
 		if (newPage === '地圖') pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
 	};
 
@@ -72,7 +73,7 @@ class SchedulePage extends PureComponent<IProps, IState> {
 					</style>
 				</Helmet>
 
-				<HeaderEmpty />
+				<HeaderNoScheduleIcon />
 
 				<div className={style.schedule}>
 					<div className={style.changeList}>
@@ -88,9 +89,9 @@ class SchedulePage extends PureComponent<IProps, IState> {
 					</div>
 
 					<div id={style.btnList}>
-						<button onClick={() => pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER)}>最快路徑</button>
-						<button onClick={() => this.resetTime()}>重設時間</button>
 						<button onClick={() => this.resetActivity()}>重設活動</button>
+						<button onClick={() => this.resetTime()}>重設時間</button>
+						{(this.state.page === '地圖')? <button onClick={() => this.schedule()}>最快路徑</button> : <></>}
 					</div>
 				</div>
 

@@ -24,13 +24,23 @@ export default class index extends Component {
 	}
 }
 
-export class HeaderEmpty extends Component {
+export class HeaderNoScheduleIcon extends Component {
 	render() {
 		return (
 			<header className={style.header}>
 				<Link to="/">
 					<img className={style.logo} src={require('../../assets/logo.png')}></img>
 				</Link>
+			</header>
+		);
+	}
+}
+
+export class HeaderEmpty extends Component {
+	render() {
+		return (
+			<header className={style.header}>
+				<img className={style.logo} src={require('../../assets/logo.png')}></img>
 			</header>
 		);
 	}

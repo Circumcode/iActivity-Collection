@@ -2,7 +2,7 @@ import { memo, useRef, useState } from 'react';
 
 import style from './index.module.scss';
 import FullWindowMiddle from '../../components/FullWindowMiddle';
-import Header from '../../components/Header';
+import Header, { HeaderEmpty } from '../../components/Header'; // change change change change change change change change change change change change change change
 import Footer from '../../components/Footer';
 
 

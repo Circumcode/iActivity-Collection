@@ -13,8 +13,8 @@ const mapSeason: Map<string, number> = new Map([
 
 export class ReservedInfo {
     private strId: string;
-    dateStart: Date | null = null;// private private private private private private private private private private private private private
-    dateEnd: Date | null = null;// private private private private private private private private private private private private private
+    private dateStart: Date | null = null;
+    private dateEnd: Date | null = null;
     private stationData: any = null;
     activity: any;
 
@@ -45,6 +45,10 @@ export class ReservedInfo {
     getId(){
         return this.strId;
     }
+
+    isHavingStationData(){
+        return this.stationData !== null;
+    }
     getStationData(){
         return this.stationData;
     }
@@ -58,6 +62,9 @@ export class ReservedInfo {
     private getFormatTime(date: Date){
         return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
                 + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    }
+    getStartDate(){
+        return this.dateStart;
     }
     getStartTime(){
         return (this.dateStart === null)? "" : this.getFormatTime(this.dateStart);
