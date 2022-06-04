@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 import classActivity from '../../tools/Activity';
 import Activity, { NotExistActivity } from '../../components/Activity';
-import Header from '../../components/Header';
+import { HeaderNoScheduleIcon } from '../../components/Header';
 import Footer from '../../components/Footer';
 
 
@@ -15,8 +15,8 @@ const ActivityPage = memo(() => {
 
   return (
     <>
-      <Header />
-      {(activity == null)? <NotExistActivity /> : <Activity activity={classActivity.get(strActivityId)} />}
+      <HeaderNoScheduleIcon />
+        {(activity == null)? <NotExistActivity /> : <Activity activity={classActivity.get(strActivityId)} />}
       <Footer />
     </>
   )
