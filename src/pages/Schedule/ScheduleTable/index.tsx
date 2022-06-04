@@ -4,7 +4,8 @@ import { nanoid } from 'nanoid';
 import style from './index.module.scss';
 import classActivity from '../../../tools/Activity';
 import Activity from './Activity';
-import Divider from './Activity/Divider';
+import ActivityInterval from './ActivityInternal';
+import Divider from './Divider';
 
 
 const ScheduleTable = memo((props: {renderCounter: number}) => {
@@ -19,13 +20,21 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
   classActivity.getReserved().forEach(reservedInfo => {
     arrActivitys.push(
       <Activity
-        key={reservedInfo.getId()}
+        key={"Activity_" + reservedInfo.getId()}
         reservedInfo={reservedInfo}
         render={render}
         focus={setFocusActivityId}
         isFocus={strFocusActivityId === reservedInfo.getId()}
       />
     );
+    
+    if (reservedInfo.isHavingStationData())
+      arrActivitys.push(
+        <ActivityInterval
+          key={"ActivityInterval_" + reservedInfo.getId()}
+          reservedInfo={reservedInfo}
+        />
+      )
   })
 
 
@@ -33,11 +42,11 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
     <div className={style.div}>
       <article>
         <span id={style.title}>活動名稱</span>
-        <Divider intHeight={30} />
+        <Divider isMain={true} intHeight={30} />
         <span id={style.addressAndTime}>活動地址、參與時間</span>
-        <Divider intHeight={30} />
+        <Divider isMain={true} intHeight={30} />
         <span id={style.weather}>天氣提示</span>
-        <Divider intHeight={30} />
+        <Divider isMain={true} intHeight={30} />
       </article>
 
       {arrActivitys}

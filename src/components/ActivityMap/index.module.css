@@ -61,12 +61,30 @@
     font-size: 20px;
 }
 
+.div {
+    position: relative;
+}
+
 .map_mapping_to_google_map_but{
     position: absolute;
+    left: 10px;
+    top: 75px;
+    width: 34px;
+    height: 34px;
+
+    border-radius: 5px;
+    border: solid 2px #c0c0c0;
+    background-color: white;
+
     z-index: 2;
+}
+.map_mapping_to_google_map_but:hover {
+    background-color: #eeeeee;
+    cursor: pointer;
 }
 
 .googleMapIcon{
-    height: 30px;
+    margin: 1px 5.5px;
     width: 20px;
+    height: 28px;
 }

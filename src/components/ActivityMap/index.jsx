@@ -188,8 +188,10 @@ export default class ActivityMap extends React.Component {
 
   render() {
     return (
-      <div>
-        <div className={style.map_mapping_to_google_map_but} onClick={this.mappingToGoogleMap}><img className={style.googleMapIcon} src={GoogleMapIcon}/>Mapping to Google map</div>
+      <div className={style.div}>
+        <div className={style.map_mapping_to_google_map_but} onClick={this.mappingToGoogleMap}>
+          <img className={style.googleMapIcon} src={GoogleMapIcon}/>
+        </div>
         <MapContainer
           center={this.position}
           zoom={this.zoom}

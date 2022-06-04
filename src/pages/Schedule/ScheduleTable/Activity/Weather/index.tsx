@@ -17,8 +17,8 @@ const Weather = memo((props: {reservedInfo: ReservedInfo, isChangedStartTime: bo
   const updateWeatherData: Function = () => {
     let strCity: string = props.reservedInfo.activity.showInfo[0].city;
 
-    if (props.reservedInfo.dateStart === null) setWeatherTip("請先設定活動起始時間");
-    else if (strCity === null) setWeatherTip("線上活動 (無氣象資訊)");
+    if (strCity === null) setWeatherTip("線上活動 (無氣象資訊)");
+    else if (props.reservedInfo.getStartDate() === null) setWeatherTip("請先設定活動起始時間");
     else if (!isLoading){
       setLoadedState(false);
       setLoadingState(true);
@@ -45,7 +45,7 @@ const Weather = memo((props: {reservedInfo: ReservedInfo, isChangedStartTime: bo
     }
   }
   const getWeatherTip: Function = (arrWeatherDatas: Array<any>) => {
-    let dateStart = props.reservedInfo.dateStart;
+    let dateStart = props.reservedInfo.getStartDate();
     if (dateStart === null) return "請先設定活動起始時間"
     if (dateStart < new Date(arrWeatherDatas[0].startTime)) return "未提供過去時間資料";
     if (dateStart > new Date(arrWeatherDatas[arrWeatherDatas.length - 1].endTime)) return "未提供超過一星期的資料";

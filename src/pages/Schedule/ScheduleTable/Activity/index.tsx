@@ -7,7 +7,7 @@ import type { RangePickerProps } from 'antd/es/date-picker';
 
 import style from './index.module.scss';
 import classActivity, { ReservedInfo } from '../../../../tools/Activity'
-import Divider from './Divider';
+import Divider from '../Divider';
 import Weather from './Weather';
 
 
@@ -111,7 +111,7 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
       <section id={style.title}>
         {props.reservedInfo.activity.title}
       </section>
-      <Divider intHeight={50} />
+      <Divider isMain={true} intHeight={50} />
 
       <section id={style.addressAndTime}>
         <p>{props.reservedInfo.activity.showInfo[0].location}</p>
@@ -146,12 +146,12 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
           />
         </div>
       </section>
-      <Divider intHeight={50} />
+      <Divider isMain={true} intHeight={50} />
 
       <section id={style.weather}>
         <Weather reservedInfo={props.reservedInfo} isChangedStartTime={isChangingWeather} clearChangedState={() => setChangingWeatherState(false)} />
       </section>
-      <Divider intHeight={50} />
+      <Divider isMain={true} intHeight={50} />
 
       <img
         id={style.btnCross}
