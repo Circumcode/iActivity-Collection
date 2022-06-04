@@ -1,4 +1,5 @@
 import { PureComponent, ReactNode } from 'react';
+import { Helmet } from 'react-helmet';
 
 import style from './index.module.scss';
 import { HeaderEmpty } from '../../components/Header';
@@ -11,8 +12,8 @@ import ScheduleTable from './ScheduleTable';
 
 import ActivityMap from '../../components/ActivityMap';
 import pubsub from 'pubsub-js'
-// import FunctionCaller from '../../tools/FunctionCaller';
 import { FUNCTION_CALLER_KEY_UPDATE_MAP, FUNCTION_CALLER_KEY_CALCULATE_ROUTER } from '../../components/ActivityMap';
+
 
 interface IProps {}
 interface IState {
@@ -55,6 +56,16 @@ class SchedulePage extends PureComponent<IProps, IState> {
 	render(): ReactNode {
 		return (
 			<>
+				<Helmet>
+					<style>
+						{`
+							body {
+								overflow: hidden;
+							}
+						`}
+					</style>
+				</Helmet>
+
 				<HeaderEmpty />
 
 				<div className={style.schedule}>

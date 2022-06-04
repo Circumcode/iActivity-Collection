@@ -1,4 +1,4 @@
-import { CSSProperties, memo, useEffect, useRef, useState } from 'react';
+import { CSSProperties, memo, useRef, useState } from 'react';
 
 import './antd.css';
 import moment from 'moment';
@@ -13,29 +13,34 @@ import Weather from './Weather';
 
 const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, focus: Function, isFocus: boolean}) => {
   const refActivity = useRef<HTMLDivElement>(null);
-  // const [isScrollIntoView, setScrollingState] = useState(false);
-  // const isScrolledIntoView = useRef(false);
-  // console.log("render", isScrollIntoView)//
-  // if (props.isFocus){
-  //   if (refActivity.current !== null) refActivity.current.scrollIntoView();
-  // }
-  // useEffect(() => {
-  //   console.log("useEffect", isScrolledIntoView)//
-  //   if (isScrolledIntoView.current){
-  //     console.log("scroll")//
-  //     isScrolledIntoView.current = false;
-  //     refActivity.current!.scrollIntoView();
-  //   }
-  // }, [isScrolledIntoView.current])
+  const [isChangingWeather, setChangingWeatherState] = useState(false);
+  const [isScrollingToFocus, setScrollingToFocusState] = useState(false);
+
+  if (isScrollingToFocus){
+    setScrollingToFocusState(false);
+    setTimeout(() => { // 等待 Activity 重新排序 (更新時間)
+      refActivity.current!.scrollIntoView(
+        {
+          behavior: "smooth",
+          block: "center"
+        }
+      );
+    }, 100)
+  }
 
   const getFormatTime: Function = (event: moment.Moment) => {
     return event.format().split("+")[0];
   }
   const setStartDatePicker: Function = (event: moment.Moment) => {
+    props.focus(props.reservedInfo.getId()); // 按叉叉 (取消時間) 不會處發 onClick
+
     let strStartTime: string = "";
     if (event !== null) strStartTime = getFormatTime(event);
     props.reservedInfo.setStartTime( strStartTime );
     props.render();
+
+    setChangingWeatherState(true);
+    setScrollingToFocusState(true);
   }
   const setEndDatePicker: Function = (event: moment.Moment) => {
     let strEndTime: string = "";
@@ -53,6 +58,7 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
     let strStartTime = props.reservedInfo.getStartTime();
     return ( (dateSelectionTime < new Date()) || ((strStartTime !== "") && (dateSelectionTime < new Date(strStartTime))) );
   }
+  // 設定無法選取的時間 (不是日期)
   // const range: Function = (intStart: number, intEnd: number) => {
   //   let arrNumbers: Array<number> = [];
 
@@ -111,7 +117,7 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
           <DatePicker
             style={{cursor: "pointer"}}
 
-            placement={"bottomLeft"}
+            placement={"topLeft"}
             placeholder="Select start time"
 
             format="YYYY-MM-DD HH:mm:ss"
@@ -141,7 +147,7 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
       <Divider intHeight={50} />
 
       <section id={style.weather}>
-        <Weather reservedInfo={props.reservedInfo} />
+        <Weather reservedInfo={props.reservedInfo} isChangedStartTime={isChangingWeather} clearChangedState={() => setChangingWeatherState(false)} />
       </section>
       <Divider intHeight={50} />
 

@@ -18,7 +18,7 @@ $intActivityHeight: 100px;
 
 	& article {
 		position: fixed;
-    	left: calc((100vw - 1200px) / 2 - 10px);
+    	left: calc((100vw - 1200px) / 2 - 8px);
 		top: calc($intHeaderHeight + $intSwitchTagHeight + 2px);
 
 		padding-left: 15px;

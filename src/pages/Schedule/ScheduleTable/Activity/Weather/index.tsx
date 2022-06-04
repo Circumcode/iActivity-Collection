@@ -5,43 +5,45 @@ import { ReservedInfo } from '../../../../../tools/Activity'
 import WeatherAPIUtils from '../../../../../tools/WeatherAPIUtils';
 
 
-const intWaitingTime: number = 7000;
+const intWaitingTime: number = 3000;
 
-const Weather = memo((props: {reservedInfo: ReservedInfo}) => {
+const Weather = memo((props: {reservedInfo: ReservedInfo, isChangedStartTime: boolean, clearChangedState: Function}) => {
   const isFirstRender = useRef(true);
-  const [isLoaded, setLoadedState] = useState(false);
-  const [strWeatherTip, setWeatherTip] = useState("請先設定活動起始時間");
-  console.log("render", props.reservedInfo.activity.title, isFirstRender.current)//
-  useEffect(() => {
-    console.log("mounted")//
-  }, []);
-  if (isFirstRender.current && !isLoaded){
-    console.log("firstRender")//
-    let timeoutId = setTimeout(() => {
-      if (!isLoaded && (props.reservedInfo.dateStart !== null)){
-        setLoadedState(true);
-        setWeatherTip("加載氣象局資料逾時");
-      }
-    }, intWaitingTime)
+  const [isLoaded, setLoadedState] = useState(true);
+  const [isLoading, setLoadingState] = useState(false);
+  const [isFocusPrevious, setFocusPreviousState] = useState(false);
+  const [strWeatherTip, setWeatherTip] = useState("");
 
-    let strCity: string | null = props.reservedInfo.activity.showInfo[0].city;
-    if (strCity === null) {
-      setLoadedState(true);
-      setWeatherTip("線上活動 (無氣象資訊)");
-    }
-    else
-      WeatherAPIUtils.getByLocation(props.reservedInfo.activity.showInfo[0].city, props.reservedInfo.activity.showInfo[0].area)
+  const updateWeatherData: Function = () => {
+    let strCity: string = props.reservedInfo.activity.showInfo[0].city;
+
+    if (props.reservedInfo.dateStart === null) setWeatherTip("請先設定活動起始時間");
+    else if (strCity === null) setWeatherTip("線上活動 (無氣象資訊)");
+    else if (!isLoading){
+      setLoadedState(false);
+      setLoadingState(true);
+
+      let timeoutId = setTimeout(() => {
+        setLoadedState(true);
+        setLoadingState(false);
+        setWeatherTip("加載氣象局資料逾時");
+      }, intWaitingTime)
+
+      WeatherAPIUtils.getByLocation(strCity, props.reservedInfo.activity.showInfo[0].area)
         .then((arrWeatherDatas) => {
-          clearTimeout(timeoutId);
-          setWeatherTip(getWeatherTip(arrWeatherDatas));
           setLoadedState(true);
+          setLoadingState(false);
+          clearTimeout(timeoutId);
+          setWeatherTip( getWeatherTip(arrWeatherDatas) );
         })
         .catch((error) => {
           setLoadedState(true);
+          setLoadingState(false);
+          clearTimeout(timeoutId);
           setWeatherTip("氣象局資料索取錯誤");
         })
+    }
   }
-
   const getWeatherTip: Function = (arrWeatherDatas: Array<any>) => {
     let dateStart = props.reservedInfo.dateStart;
     if (dateStart === null) return "請先設定活動起始時間"
@@ -54,6 +56,12 @@ const Weather = memo((props: {reservedInfo: ReservedInfo}) => {
         // return arrWeatherDatas[intIndex].values.WeatherDescription;
     }
   }
+  if (isFirstRender.current) updateWeatherData();
+  useEffect(() => {
+    if (props.isChangedStartTime && !isFocusPrevious) updateWeatherData();
+    setFocusPreviousState(props.isChangedStartTime);
+    props.clearChangedState();
+  })
 
 
   const elementWeather: JSX.Element = (
