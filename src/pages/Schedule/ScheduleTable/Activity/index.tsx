@@ -25,22 +25,24 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
           block: "center"
         }
       );
-    }, 100)
+    }, 300)
   }
 
   const getFormatTime: Function = (event: moment.Moment) => {
     return event.format().split("+")[0];
   }
   const setStartDatePicker: Function = (event: moment.Moment) => {
-    props.focus(props.reservedInfo.getId()); // 按叉叉 (取消時間) 不會處發 onClick
-
-    let strStartTime: string = "";
-    if (event !== null) strStartTime = getFormatTime(event);
-    props.reservedInfo.setStartTime( strStartTime );
-    props.render();
-
-    setChangingWeatherState(true);
-    setScrollingToFocusState(true);
+    setTimeout(() => { // 等待 DatePicker 關閉
+      props.focus(props.reservedInfo.getId()); // 按叉叉 (取消時間) 不會處發 onClick
+  
+      let strStartTime: string = "";
+      if (event !== null) strStartTime = getFormatTime(event);
+      props.reservedInfo.setStartTime( strStartTime );
+      props.render();
+  
+      setChangingWeatherState(true);
+      setScrollingToFocusState(true);
+    }, 400)
   }
   const setEndDatePicker: Function = (event: moment.Moment) => {
     let strEndTime: string = "";

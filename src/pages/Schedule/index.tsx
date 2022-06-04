@@ -37,6 +37,7 @@ class SchedulePage extends PureComponent<IProps, IState> {
 	}
 	resetActivity() {
 		Activity.clear();
+		pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
 		this.renderScheduleTable();
 	}
 	resetTime() {
@@ -50,7 +51,12 @@ class SchedulePage extends PureComponent<IProps, IState> {
 
 	changePage = (newPage: string) => {
 		this.setState({ page: newPage });
-		if (newPage === '地圖') pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP)
+		if (newPage === '排程') {
+			console.log(this)//
+			console.log(Activity.getReserved())//
+			this.renderScheduleTable();
+		}
+		if (newPage === '地圖') pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
 	};
 
 	render(): ReactNode {
@@ -84,10 +90,7 @@ class SchedulePage extends PureComponent<IProps, IState> {
 					<div id={style.btnList}>
 						<button onClick={() => pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER)}>最快路徑</button>
 						<button onClick={() => this.resetTime()}>重設時間</button>
-						<button onClick={() => {
-							this.resetActivity()
-							pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP)
-						}}>重設活動</button>
+						<button onClick={() => this.resetActivity()}>重設活動</button>
 					</div>
 				</div>
 
