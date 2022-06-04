@@ -20,7 +20,12 @@ export default function LocationMarker(props: any) {
         locationfound(event: any) {
             setPosition(event.latlng)
             props.setHomePosition([event.latitude, event.longitude])
-            map.flyTo(event.latlng, map.getZoom())
+            if (props.parentState.isUpdateMap) {
+                // console.log(event.latlng)
+                const temp = [event.lat, event.lng]
+                props.parentThis.setState({isUpdateMap: false}, )
+            }
+            else map.flyTo(event.latlng, map.getZoom())
         },
     })
 
