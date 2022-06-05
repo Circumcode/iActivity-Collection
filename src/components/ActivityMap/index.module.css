@@ -50,6 +50,8 @@
 }
 
 .map_dot_station_title {
+    display:flex;
+    justify-content: center;
     line-height: 0px;
     padding-top: 10px;
     font-size: 23px;
@@ -81,6 +83,9 @@
 .map_mapping_to_google_map_but:hover {
     background-color: #eeeeee;
     cursor: pointer;
+}
+.space{
+    height: 5px;
 }
 
 .googleMapIcon{
