@@ -14,6 +14,7 @@ import LoadingPage from './pages/Loading';
 import Warning from './pages/Warning';
 import NotMatch from './pages/NotMatch';
 
+import ActivityMap from './components/ActivityMap'
 
 function App() {
   const [isLoaded, setLoadedState] = useState(classActivity.isLoaded());
@@ -31,6 +32,7 @@ function App() {
         <Route path='/schedule' element={<Schedule />}></Route>
         <Route path='/loading' element={<LoadingPage />}></Route>
         <Route path='/warning' element={<Warning />}></Route>
+        <Route path="/schedule/map" element={<ActivityMap/>}/>
         <Route path='*' element={<NotMatch />}></Route>
       </Routes>
     </Router>

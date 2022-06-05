@@ -214,8 +214,8 @@ export default class Activity {
         Activity.storeToLocalStorage();
     }
     static cancel(strId: string){
-        if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
-
+        // if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
+        if (Activity.isReserved(strId)) return 
         Activity.arrReservedInfos.splice(Activity.getIndexForReserved(strId), 1);
 
         Activity.sort();
@@ -251,7 +251,6 @@ export default class Activity {
         for (let intIndex = (arrActivitys.length - 1); intIndex >= 0; intIndex--){
             Activity.arrReservedInfos.unshift(new ReservedInfo(arrActivitys[intIndex].UID, Activity.get(arrActivitys[intIndex].UID), "", "", arrActivitys[intIndex].stationData));
         }
-
         Activity.storeToLocalStorage();
     }
 }

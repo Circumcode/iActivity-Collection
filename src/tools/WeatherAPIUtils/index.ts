@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const API_KEY = "CWB-2071CD40-C06E-4150-8E4F-F04696CF8F1A"
-const API_KEY = "CWB-A2C32E82-5DCC-4EA3-A871-C9CD101F1160"
+const API_KEY = "CWB-2071CD40-C06E-4150-8E4F-F04696CF8F1A"
+// const API_KEY = "CWB-A2C32E82-5DCC-4EA3-A871-C9CD101F1160"
 const BASE_URL = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/";
 const CITY_ID_1WEEK_MAP = new Map()
 

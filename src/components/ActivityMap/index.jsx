@@ -52,6 +52,7 @@ export default class ActivityMap extends React.Component {
   }
 
   calculateRouter = () => {
+    // console.log("calculateRouter")
     let listPositions = []
     if (this.state.homePosition.length !== 0) {
       const temp = {
@@ -67,28 +68,40 @@ export default class ActivityMap extends React.Component {
     ACOCalculateRouter(listPositions)
   }
 
-
   drawRouteLines = (_, resultRoute) => {
+    // console.log("@4", resultRoute)
     let updateActivityData = []
+    let newList = []
     let newRouterWay = []
     let routerWayTotalDistanceOfMeter = 0
     let routerWayTotalTimeInMinutes = 0
     resultRoute.map(item => {
+      // console.log("@5", item)
       const temp = [item.latitude, item.longitude]
-      routerWayTotalDistanceOfMeter += item.distanceToThisStationNeedMeter
-      routerWayTotalTimeInMinutes += item.estimatedTimeInMinutes
+      routerWayTotalDistanceOfMeter += item.stationData.distanceToThisStationNeedMeter
+      routerWayTotalTimeInMinutes += item.stationData.estimatedTimeInMinutes
       newRouterWay.push(temp)
+      if(item.UID !== "HOME") newList.push(item)
     })
+    
+    // console.log("@6",newList)
+    // console.log("@7", this.state.list)
+    AcitvityUtils.update(newList.filter(item => item.UID !== "HOME"))
+    this.setState({ list: [...newList], routerWay: [...newRouterWay], routerWayTotalDistanceOfMeter, routerWayTotalTimeInMinutes })
+    setTimeout(() => {
+      console.log(this.state)
+    }, 1000);
+    return 
     const tempMap = new Map();
     this.state.list.map(item => tempMap.set(item.UID, item))
-    if (this.state.homePosition.length !== 0) {
-      let temp = {
-        UID: "HOME",
-        latitude: this.state.homePosition[0],
-        longitude: this.state.homePosition[1],
-      }
-      tempMap.set(temp.UID, temp)
-    }
+    // if (this.state.homePosition.length !== 0) {
+    //   let temp = {
+    //     UID: "HOME",
+    //     latitude: this.state.homePosition[0],
+    //     longitude: this.state.homePosition[1],
+    //   }
+    //   tempMap.set(temp.UID, temp)
+    // }
     updateActivityData = resultRoute.map(item => {
       const temp = tempMap.get(item.UID)
       const newItem = {
@@ -107,7 +120,7 @@ export default class ActivityMap extends React.Component {
       item = iterator.next()
     }
 
-    AcitvityUtils.update(updateActivityData.filter(item => item.UID !== "HOME"))
+    // AcitvityUtils.update(updateActivityData.filter(item => item.UID !== "HOME"))
     // setTimeout(() => console.log(AcitvityUtils.getReserved()) ,1000)
     this.setState({ list: [...tempList], routerWay: [...newRouterWay], routerWayTotalDistanceOfMeter, routerWayTotalTimeInMinutes })
     // setTimeout(() => console.log(this.state), 1000)
@@ -119,6 +132,7 @@ export default class ActivityMap extends React.Component {
 
   updateMap = () => {
     const userReserved = AcitvityUtils.getReserved()
+    // console.log(userReserved)
     // console.log(userReserved)
     let promiseList = []
     let maxDistance = [Number.MAX_VALUE, Number.MIN_VALUE, Number.MAX_VALUE, Number.MIN_VALUE]
@@ -180,9 +194,19 @@ export default class ActivityMap extends React.Component {
   }
 
   componentDidMount() {
-    pubsub.subscribe(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, this.drawRouteLines)
-    pubsub.subscribe(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap)
-    pubsub.subscribe(FUNCTION_CALLER_KEY_CALCULATE_ROUTER, this.calculateRouter)
+    // console.log("Map componentDidMount")
+    pubsub.unsubscribe(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES)
+    pubsub.unsubscribe(FUNCTION_CALLER_KEY_UPDATE_MAP)
+    pubsub.unsubscribe(FUNCTION_CALLER_KEY_CALCULATE_ROUTER)
+    // let temp = pubsub.getSubscriptions(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES)
+    // console.log(temp)
+    // !pubsub.has(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES)
+    // if(temp.length === 0){
+      pubsub.subscribe(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, this.drawRouteLines)
+      pubsub.subscribe(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap)
+      pubsub.subscribe(FUNCTION_CALLER_KEY_CALCULATE_ROUTER, this.calculateRouter)
+    // }
+    
     this.updateMap()
   }
 

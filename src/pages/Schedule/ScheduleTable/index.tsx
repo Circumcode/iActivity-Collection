@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 
 import style from './index.module.scss';
