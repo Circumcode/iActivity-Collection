@@ -37,8 +37,9 @@ class SchedulePage extends PureComponent<IProps, IState> {
 	}
 	schedule(){
 		pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER);
-		this.renderScheduleTable();
-		console.log(Activity.getReserved())//
+		setTimeout(() => {
+			this.renderScheduleTable();
+		}, 1000)
 	}
 	resetActivity() {
 		Activity.clear();
@@ -91,7 +92,7 @@ class SchedulePage extends PureComponent<IProps, IState> {
 					<div id={style.btnList}>
 						<button onClick={() => this.resetActivity()}>重設活動</button>
 						<button onClick={() => this.resetTime()}>重設時間</button>
-						{(this.state.page === '地圖')? <button onClick={() => this.schedule()}>最快路徑</button> : <></>}
+						<button onClick={() => this.schedule()}>最快路徑</button>
 					</div>
 				</div>
 

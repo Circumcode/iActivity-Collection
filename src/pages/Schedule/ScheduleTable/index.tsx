@@ -17,7 +17,8 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
   const [strFocusActivityId, setFocusActivityId] = useState("");
 
   const arrActivitys: Array<JSX.Element> = [];
-  classActivity.getReserved().forEach(reservedInfo => {
+  let intUpdateDataNumberMinusOne = classActivity.getUpdatedDataNumber() - 1;
+  classActivity.getReserved().forEach((reservedInfo, index) => {
     arrActivitys.push(
       <Activity
         key={"Activity_" + reservedInfo.getId()}
@@ -28,7 +29,7 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
       />
     );
     
-    if (reservedInfo.isHavingStationData())
+    if ( reservedInfo.isHavingStationData() && (index < intUpdateDataNumberMinusOne) )
       arrActivitys.push(
         <ActivityInterval
           key={"ActivityInterval_" + reservedInfo.getId()}
@@ -47,6 +48,8 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
         <Divider isMain={true} intHeight={30} />
         <span id={style.weather}>天氣提示</span>
         <Divider isMain={true} intHeight={30} />
+        <span>已選擇活動數量:&nbsp;&nbsp;</span>
+        <span>{classActivity.getReservedQuantity()}</span>
       </article>
 
       {arrActivitys}
