@@ -12,10 +12,16 @@ TYPE_AVG_ONE_METER_NEED_MINUTE.set(1, 0.0013)
 // 走路 分速為50.000 公尺/分鐘 m/min
 TYPE_AVG_ONE_METER_NEED_MINUTE.set(2, 0.02)
 
+let aco
+
+export const getACOCalculateState = ()=>{
+    if(aco) return aco.getState()
+    return aco
+}
 
 const calculateRouter = (reservedActivity, transportType = 0 // 0:car, 1:scooter, 2:walk
 ) => {
-    console.log("@", reservedActivity)
+    // console.log("@", reservedActivity)
 
     let cityList = reservedActivity.map(item =>
         (item && item.UID && item.latitude && item.longitude) ?
@@ -37,7 +43,7 @@ const calculateRouter = (reservedActivity, transportType = 0 // 0:car, 1:scooter
     }
 
     let resultRoute = []
-    const aco = new ACO(cityList)
+    aco = new ACO(cityList)
     aco.done = () => {
         let bestRoute = aco.getBestRoute()
         let startIndex = findStartIndex(cityList[0][2].UID, bestRoute)
@@ -66,7 +72,7 @@ const calculateRouter = (reservedActivity, transportType = 0 // 0:car, 1:scooter
                 }
             }
             for (let i = 1; i < resultRoute.length; i++) {
-                console.log("@2",resultRoute)
+                // console.log("@2",resultRoute)
                 let prev = resultRoute[i - 1];
                 let curr = resultRoute[i];
                 const distance = LocationUtils.getDistance(prev.longitude, prev.latitude, curr.longitude, curr.latitude)

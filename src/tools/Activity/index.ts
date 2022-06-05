@@ -214,8 +214,7 @@ export default class Activity {
         Activity.storeToLocalStorage();
     }
     static cancel(strId: string){
-        // if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
-        if (Activity.isReserved(strId)) return 
+        if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
         Activity.arrReservedInfos.splice(Activity.getIndexForReserved(strId), 1);
 
         Activity.sort();
