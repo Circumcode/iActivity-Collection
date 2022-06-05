@@ -34,6 +34,7 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
   const setStartDatePicker: Function = (event: moment.Moment) => {
     setTimeout(() => { // 等待 DatePicker 關閉
       props.focus(props.reservedInfo.getId()); // 按叉叉 (取消時間) 不會處發 onClick
+      classActivity.clearStationData();
   
       let strStartTime: string = "";
       if (event !== null) strStartTime = getFormatTime(event);

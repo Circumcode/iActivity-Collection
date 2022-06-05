@@ -49,6 +49,9 @@ export class ReservedInfo {
     isHavingStationData(){
         return this.stationData !== null;
     }
+    clearStationData(){
+        this.stationData = null;
+    }
     getStationData(){
         return this.stationData;
     }
@@ -107,6 +110,8 @@ export default class Activity {
 
     private static arrReservedInfos: Array<ReservedInfo> = [];
     private static arrActivity: Array<any> = [];
+
+    private static intUpdatedDataNumber: number = 0;
 
 
     static async load() {
@@ -184,6 +189,9 @@ export default class Activity {
     static getReserved(){
         return Activity.arrReservedInfos;
     }
+    static getReservedQuantity(){
+        return this.arrReservedInfos.length;
+    }
 
     static getBySeason(intYear: number, strSeason: "spring" | "summer" | "fall" | "winter"){
         let intSeasonMonth: number = mapSeason.get(strSeason)!;
@@ -215,6 +223,7 @@ export default class Activity {
     }
     static cancel(strId: string){
         if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
+
         Activity.arrReservedInfos.splice(Activity.getIndexForReserved(strId), 1);
 
         Activity.sort();
@@ -238,10 +247,16 @@ export default class Activity {
             reservedInfo.clearTime();
         })
     }
+    static clearStationData(){
+        Activity.arrReservedInfos.forEach(reservedInfo => {
+            reservedInfo.clearStationData();
+        })
+    }
     static sort(){
         Activity.arrReservedInfos.sort(ReservedInfo.compare);
     }
     static update(arrActivitys: Array<any>){
+        this.intUpdatedDataNumber = arrActivitys.length;
         Activity.clearTime();
 
         arrActivitys.forEach(activity => {
@@ -250,6 +265,11 @@ export default class Activity {
         for (let intIndex = (arrActivitys.length - 1); intIndex >= 0; intIndex--){
             Activity.arrReservedInfos.unshift(new ReservedInfo(arrActivitys[intIndex].UID, Activity.get(arrActivitys[intIndex].UID), "", "", arrActivitys[intIndex].stationData));
         }
+
         Activity.storeToLocalStorage();
+    }
+
+    static getUpdatedDataNumber(){
+        return this.intUpdatedDataNumber;
     }
 }
