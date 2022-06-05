@@ -27,6 +27,12 @@ export default function LocationMarker(props: any) {
                 longitude: event.latlng.lng,
                 stationData: {}
             }
+            
+            let newRouterWay = props.parentState.list.map((item: any) => {
+                return [item.latitude, item.longitude]
+            })
+            newRouterWay.unshift([newHomePosition.latitude, newHomePosition.longitude])
+            newRouterWay.push([newHomePosition.latitude, newHomePosition.longitude])
 
             let newList = props.parentThis.state.list
             newList.unshift(newHomePosition)
@@ -37,11 +43,8 @@ export default function LocationMarker(props: any) {
             newList = newList.filter((item: any) => item.UID !== "HOME")
 
             if (props.parentState.isUpdateMap) {
-                let newRouterWay = props.parentState.routerWay
-                newRouterWay.unshift([newHomePosition.latitude, newHomePosition.longitude])
-                newRouterWay.push([newHomePosition.latitude, newHomePosition.longitude])
-
-                props.parentThis.setState({ isUpdateMap: false, 
+                props.parentThis.setState({ 
+                    isUpdateMap: false, 
                     routerWay: [...newRouterWay], 
                     list: newList, 
                     homePosition: newHomePosition, 
@@ -50,13 +53,8 @@ export default function LocationMarker(props: any) {
                 })
             } else {
                 map.flyTo(event.latlng, map.getZoom())
-                let newRouterWay = props.parentState.list.map((item: any) => {
-                    return [item.latitude, item.longitude]
-                })
-                newRouterWay.unshift([newHomePosition.latitude, newHomePosition.longitude])
-                newRouterWay.push([newHomePosition.latitude, newHomePosition.longitude])
-
-                props.parentThis.setState({ routerWay: [...newRouterWay], 
+                props.parentThis.setState({ 
+                    routerWay: [...newRouterWay], 
                     list: newList, 
                     homePosition: newHomePosition, 
                     routerWayTotalDistanceOfMeter: distanceAndTime[0], 

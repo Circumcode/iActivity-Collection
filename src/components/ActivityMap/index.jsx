@@ -120,6 +120,10 @@ export default class ActivityMap extends React.Component {
       this.state.weatherMap.set(item[0].city + item[0].area, item)
       this.setState({})
     }))
+    
+    this.setState({ list: [...activityInfo], routerWay: [...newRouterWay], isUpdateMap: true })
+    // setTimeout(() => console.log(this.state))
+    
     const interval = setInterval(() => {
       if (this.mapRef.current) {
         window.clearInterval(interval);
@@ -130,8 +134,6 @@ export default class ActivityMap extends React.Component {
         // map.setView([avgLat, avgLon], 7)
       }
     }, 300)
-    this.setState({ list: [...activityInfo], routerWay: [...newRouterWay], isUpdateMap: true })
-    // setTimeout(() => console.log(this.state))
   }
 
   mappingToGoogleMap = () => {
