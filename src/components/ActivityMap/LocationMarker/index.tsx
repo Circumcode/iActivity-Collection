@@ -27,7 +27,7 @@ export default function LocationMarker(props: any) {
                 longitude: event.latlng.lng,
                 stationData: {}
             }
-            
+
             let newRouterWay = props.parentState.list.map((item: any) => {
                 return [item.latitude, item.longitude]
             })
@@ -43,27 +43,51 @@ export default function LocationMarker(props: any) {
             newList = newList.filter((item: any) => item.UID !== "HOME")
 
             if (props.parentState.isUpdateMap) {
-                props.parentThis.setState({ 
-                    isUpdateMap: false, 
-                    routerWay: [...newRouterWay], 
-                    list: newList, 
-                    homePosition: newHomePosition, 
-                    routerWayTotalDistanceOfMeter: distanceAndTime[0], 
-                    routerWayTotalTimeInMinutes: distanceAndTime[1] 
+                props.parentThis.setState({
+                    isUpdateMap: false,
+                    routerWay: [...newRouterWay],
+                    list: newList,
+                    homePosition: newHomePosition,
+                    routerWayTotalDistanceOfMeter: distanceAndTime[0],
+                    routerWayTotalTimeInMinutes: distanceAndTime[1]
                 })
             } else {
                 map.flyTo(event.latlng, map.getZoom())
-                props.parentThis.setState({ 
-                    routerWay: [...newRouterWay], 
-                    list: newList, 
-                    homePosition: newHomePosition, 
-                    routerWayTotalDistanceOfMeter: distanceAndTime[0], 
-                    routerWayTotalTimeInMinutes: distanceAndTime[1] 
+                props.parentThis.setState({
+                    routerWay: [...newRouterWay],
+                    list: newList,
+                    homePosition: newHomePosition,
+                    routerWayTotalDistanceOfMeter: distanceAndTime[0],
+                    routerWayTotalTimeInMinutes: distanceAndTime[1]
                 })
             }
             ActivityUtils.update(newList)
             setPosition(event.latlng)
-        },
+        }, locationerror(event: any) {
+            let newList = props.parentThis.state.list
+            buildStationList(newList)
+            const distanceAndTime = props.getTotalDistanceOfMeterAndTimeInMinutes(newList)
+            newList = newList.filter((item: any) => item.UID !== "HOME")
+            if (newList.length > 1) {
+                newList[0].stationData.station = "起點"
+                newList[newList.length - 1].stationData = {
+                    distanceOfKilometer: 0,
+                    distanceOfMeter: 0,
+                    distanceToThisStationNeedMeter: 0,
+                    estimatedDays: 0,
+                    estimatedHours: 0,
+                    estimatedMinute: 0,
+                    estimatedTimeInMinutes: 0,
+                    station: "終點"
+                }
+            }
+            props.parentThis.setState({
+                list: newList,
+                routerWayTotalDistanceOfMeter: distanceAndTime[0],
+                routerWayTotalTimeInMinutes: distanceAndTime[1]
+            })
+            ActivityUtils.update(newList)
+        }
     })
 
     return position === null ? null : (

@@ -56,7 +56,7 @@ export default class ActivityMap extends React.Component {
     ACOCalculateRouter(prepareList)
   }
   getTotalDistanceOfMeterAndTimeInMinutes = list => {
-    let distanceAndTime = [0,0]
+    let distanceAndTime = [0, 0]
     for (let i = 0; i < list.length - 1; i++) {
       distanceAndTime[0] += list[i].stationData.distanceToThisStationNeedMeter
       distanceAndTime[1] += list[i].stationData.estimatedTimeInMinutes
@@ -68,13 +68,35 @@ export default class ActivityMap extends React.Component {
     let newList = []
     let newRouterWay = []
     const distanceAndTime = this.getTotalDistanceOfMeterAndTimeInMinutes(resultRoute)
-    resultRoute.map(item => {
-      newRouterWay.push([item.latitude, item.longitude])
-      if (item.UID !== "HOME") newList.push(item)
-    })
-    this.setState({ list: [...newList], 
-      routerWay: [...newRouterWay], 
-      routerWayTotalDistanceOfMeter: distanceAndTime[0], 
+    if (resultRoute && resultRoute[0] && resultRoute[0].UID === "HOME") {
+      resultRoute.map(item => {
+        newRouterWay.push([item.latitude, item.longitude])
+        if (item.UID !== "HOME") newList.push(item)
+      })
+
+    } else {
+      resultRoute = resultRoute.slice(0, -1);
+      newList = [...resultRoute]
+      newRouterWay = resultRoute.map(item => [item.latitude, item.longitude])
+      if (newList.length > 1) {
+        newList[0].stationData.station = "起點"
+        newList[newList.length - 1].stationData = {
+          distanceOfKilometer: 0,
+          distanceOfMeter: 0,
+          distanceToThisStationNeedMeter: 0,
+          estimatedDays: 0,
+          estimatedHours: 0,
+          estimatedMinute: 0,
+          estimatedTimeInMinutes: 0,
+          station: "終點"
+        }
+      }
+    }
+
+    this.setState({
+      list: [...newList],
+      routerWay: [...newRouterWay],
+      routerWayTotalDistanceOfMeter: distanceAndTime[0],
       routerWayTotalTimeInMinutes: distanceAndTime[1]
     })
 
@@ -120,10 +142,10 @@ export default class ActivityMap extends React.Component {
       this.state.weatherMap.set(item[0].city + item[0].area, item)
       this.setState({})
     }))
-    
+
     this.setState({ list: [...activityInfo], routerWay: [...newRouterWay], isUpdateMap: true })
     // setTimeout(() => console.log(this.state))
-    
+
     const interval = setInterval(() => {
       if (this.mapRef.current) {
         window.clearInterval(interval);
@@ -176,7 +198,7 @@ export default class ActivityMap extends React.Component {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          <LocationMarker parentState={this.state} parentThis={this} getTotalDistanceOfMeterAndTimeInMinutes={this.getTotalDistanceOfMeterAndTimeInMinutes}/>
+          <LocationMarker parentState={this.state} parentThis={this} getTotalDistanceOfMeterAndTimeInMinutes={this.getTotalDistanceOfMeterAndTimeInMinutes} />
           <Polyline pathOptions={mapLineColor} positions={this.state.routerWay} />
           {
             this.state.list.map(item => (item.UID === "HOME") ? <></> : (
@@ -191,11 +213,20 @@ export default class ActivityMap extends React.Component {
                   </div>) : <></>}
                   {
                     (item.stationData) ? (<div>
-                      <strong><p className={style.map_dot_station_title}>🚩{`第 ${item.stationData.station} 站`}</p></strong>
-                      <p className={style.map_dot_station_values}><strong>估計距離下一站:</strong> {item.stationData.distanceOfKilometer} 公里 {item.stationData.distanceOfMeter} 公尺</p>
-                      <p className={style.map_dot_station_values}><strong>估計站點轉移時間:</strong> {(item.stationData.estimatedDays !== 0) ? `${item.stationData.estimatedDays} 天 ` : ""}
-                        {(item.stationData.estimatedHours !== 0) ? `${item.stationData.estimatedHours} 小時 ` : ""}
-                        {(item.stationData.estimatedMinute !== 0) ? `${item.stationData.estimatedMinute} 分鐘 ` : ""}</p>
+                      <strong><p className={style.map_dot_station_title}>🚩{(isNaN(item.stationData.station) ? item.stationData.station : `第 ${item.stationData.station} 站`)}</p></strong>
+                      <p className={style.map_dot_station_values}>{(item.stationData.distanceToThisStationNeedMeter != 0) ?
+                        <span>
+                          <strong>估計距離下一站:</strong>
+                          {(item.stationData.distanceOfKilometer !== 0) ? `${item.stationData.distanceOfKilometer} 公里` : ""}
+                          {(item.stationData.distanceOfMeter !== 0) ? `${item.stationData.distanceOfMeter} 公尺` : ""}
+                        </span> : <></>}</p>
+                      <p className={style.map_dot_station_values}>{(item.stationData.estimatedTimeInMinutes != 0) ?
+                        <span>
+                          <strong>估計站點轉移時間:</strong>
+                          {(item.stationData.estimatedDays !== 0) ? `${item.stationData.estimatedDays} 天 ` : ""}
+                          {(item.stationData.estimatedHours !== 0) ? `${item.stationData.estimatedHours} 小時 ` : ""}
+                          {(item.stationData.estimatedMinute !== 0) ? `${item.stationData.estimatedMinute} 分鐘 ` : ""}
+                        </span> : <></>}</p>
                     </div>) : <></>
                   }
                 </Popup>
