@@ -2,13 +2,12 @@ import { PureComponent, ReactNode } from 'react';
 import { Helmet } from 'react-helmet';
 
 import style from './index.module.scss';
+import Activity from '../../tools/Activity';
 import { HeaderNoScheduleIcon } from '../../components/Header';
 import Footer from '../../components/Footer';
-import Activity from '../../tools/Activity';
 
 import SwitchTag from './switchTag';
 import ScheduleTable from './ScheduleTable';
-// import ScheBlock from './scheBlock';
 
 import ActivityMap from '../../components/ActivityMap';
 import pubsub from 'pubsub-js'
@@ -38,7 +37,7 @@ class SchedulePage extends PureComponent<IProps, IState> {
 	renderScheduleTable() {
 		this.setState({ renderCounterScheduleTable: (this.state.renderCounterScheduleTable + 1) });
 	}
-	executeAfterACOIsDone(){
+	renderScheduleAfterACOIsDone(){
 		let timeoutId = setInterval(() => {
 			if (getACOCalculateState() === "DONE"){
 				clearInterval(timeoutId);
@@ -48,7 +47,7 @@ class SchedulePage extends PureComponent<IProps, IState> {
 	}
 	schedule(){
 		pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER);
-		this.executeAfterACOIsDone();
+		this.renderScheduleAfterACOIsDone();
 	}
 	resetActivity() {
 		Activity.clear();
@@ -62,10 +61,14 @@ class SchedulePage extends PureComponent<IProps, IState> {
 
 	componentDidMount() {
 		this.setState({ page: '排程' });
+		// pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
+		pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER);
+		this.renderScheduleAfterACOIsDone();
 	}
 
 	changePage = (newPage: string) => {
 		this.setState({ page: newPage });
+
 		if (newPage === '排程') this.renderScheduleTable();
 		if (newPage === '地圖') pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
 	};

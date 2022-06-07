@@ -35,8 +35,12 @@ $intActivityHeight: 100px;
 		z-index: 10;
 
 
+		& #number {
+			width: 30px;
+		}
+
 		& #title {
-			width: 400px;
+			width: 380px;
 		}
 	
 		& #addressAndTime {

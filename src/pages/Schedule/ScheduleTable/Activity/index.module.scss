@@ -22,8 +22,14 @@
         background-color: #cbebff;
     }
 
+	& #number {
+		width: 30px;
+
+		text-align: center;
+	}
+
 	& #title {
-		width: 400px;
+		width: 380px;
 	}
 
 	& #addressAndTime {

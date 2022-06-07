@@ -1,10 +1,11 @@
-import React, { Component, useRef, useState } from 'react';
+import { Component, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import style from './index.module.scss';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
 
 import Activity from '../../../tools/Activity';
+
 
 class Frame extends Component {
 	render() {

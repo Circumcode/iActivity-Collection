@@ -1,5 +1,4 @@
-import { memo, useEffect, useState } from 'react';
-import { nanoid } from 'nanoid';
+import { memo, useState } from 'react';
 
 import style from './index.module.scss';
 import classActivity from '../../../tools/Activity';
@@ -22,6 +21,7 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
     arrActivitys.push(
       <Activity
         key={"Activity_" + reservedInfo.getId()}
+        number={index + 1}
         reservedInfo={reservedInfo}
         render={render}
         focus={setFocusActivityId}
@@ -42,14 +42,17 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
   return (
     <div className={style.div}>
       <article>
+        <span id={style.number}>編號</span>
+        <Divider isMain={true} intHeight={30} />
         <span id={style.title}>活動名稱</span>
         <Divider isMain={true} intHeight={30} />
         <span id={style.addressAndTime}>活動地址、參與時間</span>
         <Divider isMain={true} intHeight={30} />
         <span id={style.weather}>天氣提示</span>
         <Divider isMain={true} intHeight={30} />
-        <span>已選擇活動數量:&nbsp;&nbsp;</span>
+        <span>已選擇&nbsp;&nbsp;</span>
         <span>{classActivity.getReservedQuantity()}</span>
+        <span>個活動</span>
       </article>
 
       {arrActivitys}

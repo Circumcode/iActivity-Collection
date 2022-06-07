@@ -1,17 +1,20 @@
 import { CSSProperties, memo, useRef, useState } from 'react';
 
-import './antd.css';
-import moment from 'moment';
-import { DatePicker } from 'antd';
-import type { RangePickerProps } from 'antd/es/date-picker';
-
 import style from './index.module.scss';
 import classActivity, { ReservedInfo } from '../../../../tools/Activity'
 import Divider from '../Divider';
 import Weather from './Weather';
 
+import './antd.css';
+import moment from 'moment';
+import { DatePicker } from 'antd';
+import type { RangePickerProps } from 'antd/es/date-picker';
 
-const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, focus: Function, isFocus: boolean}) => {
+import pubsub from 'pubsub-js'
+import { FUNCTION_CALLER_KEY_UPDATE_MAP } from '../../../../components/ActivityMap';
+
+
+const Activity = memo((props: {number: number, reservedInfo: ReservedInfo, render: Function, focus: Function, isFocus: boolean}) => {
   const refActivity = useRef<HTMLDivElement>(null);
   const [isChangingWeather, setChangingWeatherState] = useState(false);
   const [isScrollingToFocus, setScrollingToFocusState] = useState(false);
@@ -43,6 +46,8 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
   
       setChangingWeatherState(true);
       setScrollingToFocusState(true);
+
+      pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
     }, 400)
   }
   const setEndDatePicker: Function = (event: moment.Moment) => {
@@ -109,6 +114,11 @@ const Activity = memo((props: {reservedInfo: ReservedInfo, render: Function, foc
       className={style.div}
       onClick={() => props.focus(props.reservedInfo.getId())}
     >
+      <section id={style.number}>
+        {props.number}
+      </section>
+      <Divider isMain={true} intHeight={50} />
+
       <section id={style.title}>
         {props.reservedInfo.activity.title}
       </section>
