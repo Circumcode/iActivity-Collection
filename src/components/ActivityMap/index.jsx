@@ -7,9 +7,9 @@ import React from "react";
 
 import GoogleMapIcon from '../../assets/icon/Google_Maps_icon_335.png'
 import WeatherAPIUtils from "../../tools/WeatherAPIUtils";
-import AcitvityUtils from '../../tools/Activity'
+import ActivityUtils from '../../tools/Activity'
 import LocationMarker from "./LocationMarker";
-import ACOCalculateRouter, {getACOCalculateState} from '../../tools/ACO'
+import ACOCalculateRouter from '../../tools/ACO'
 import style from './index.module.css'
 
 
@@ -34,17 +34,14 @@ export default class ActivityMap extends React.Component {
   zoom = 7;
 
   mapRef = React.createRef();
-  constructor(props) {
-    super(props)
-    this.state = {
-      list: [],
-      routerWay: [],
-      routerWayTotalDistanceOfMeter: 0,
-      routerWayTotalTimeInMinutes: 0,
-      homePosition: [],
-      weatherMap: new Map(),
-      isUpdateMap: false,
-    }
+  state = {
+    list: [],
+    routerWay: [],
+    routerWayTotalDistanceOfMeter: 0,
+    routerWayTotalTimeInMinutes: 0,
+    homePosition: {},
+    weatherMap: new Map(),
+    isUpdateMap: false,
   }
 
   setHomePosition = (homePosition) => {
@@ -52,78 +49,58 @@ export default class ActivityMap extends React.Component {
   }
 
   calculateRouter = () => {
-    // console.log("calculateRouter")
-    let listPositions = []
-    if (this.state.homePosition.length !== 0) {
-      const temp = {
-        UID: "HOME",
-        latitude: this.state.homePosition[0],
-        longitude: this.state.homePosition[1],
-      }
-      listPositions.push(temp)
+    let prepareList = this.state.list.filter(item => item.UID !== "HOME")
+    if (this.state.homePosition.UID) {
+      prepareList.unshift(this.state.homePosition)
     }
-    if (this.state.list.length !== 0) {
-      this.state.list.map(item => listPositions.push(item))
+    ACOCalculateRouter(prepareList)
+  }
+  getTotalDistanceOfMeterAndTimeInMinutes = list => {
+    let distanceAndTime = [0, 0]
+    for (let i = 0; i < list.length - 1; i++) {
+      distanceAndTime[0] += list[i].stationData.distanceToThisStationNeedMeter
+      distanceAndTime[1] += list[i].stationData.estimatedTimeInMinutes
     }
-    ACOCalculateRouter(listPositions)
+    return distanceAndTime
   }
 
   drawRouteLines = (_, resultRoute) => {
-    // console.log("@4", resultRoute)
-    let updateActivityData = []
     let newList = []
     let newRouterWay = []
-    let routerWayTotalDistanceOfMeter = 0
-    let routerWayTotalTimeInMinutes = 0
-    resultRoute.map(item => {
-      // console.log("@5", item)
-      const temp = [item.latitude, item.longitude]
-      routerWayTotalDistanceOfMeter += item.stationData.distanceToThisStationNeedMeter
-      routerWayTotalTimeInMinutes += item.stationData.estimatedTimeInMinutes
-      newRouterWay.push(temp)
-      if(item.UID !== "HOME") newList.push(item)
-    })
-    
-    // console.log("@6",newList)
-    // console.log("@7", this.state.list)
-    AcitvityUtils.update(newList.filter(item => item.UID !== "HOME"))
-    this.setState({ list: [...newList], routerWay: [...newRouterWay], routerWayTotalDistanceOfMeter, routerWayTotalTimeInMinutes })
-    setTimeout(() => {
-      console.log(this.state)
-    }, 1000);
-    return 
-    const tempMap = new Map();
-    this.state.list.map(item => tempMap.set(item.UID, item))
-    // if (this.state.homePosition.length !== 0) {
-    //   let temp = {
-    //     UID: "HOME",
-    //     latitude: this.state.homePosition[0],
-    //     longitude: this.state.homePosition[1],
-    //   }
-    //   tempMap.set(temp.UID, temp)
-    // }
-    updateActivityData = resultRoute.map(item => {
-      const temp = tempMap.get(item.UID)
-      const newItem = {
-        ...temp,
-        stationData: item
-      }
-      tempMap.set(item.UID, newItem)
-      return newItem
-    })
+    const distanceAndTime = this.getTotalDistanceOfMeterAndTimeInMinutes(resultRoute)
+    if (resultRoute && resultRoute[0] && resultRoute[0].UID === "HOME") {
+      resultRoute.map(item => {
+        newRouterWay.push([item.latitude, item.longitude])
+        if (item.UID !== "HOME") newList.push(item)
+      })
 
-    let tempList = []
-    let iterator = tempMap.values();
-    let item = iterator.next()
-    while (!item.done) {
-      tempList.push(item.value)
-      item = iterator.next()
+    } else {
+      resultRoute = resultRoute.slice(0, -1);
+      newList = [...resultRoute]
+      newRouterWay = resultRoute.map(item => [item.latitude, item.longitude])
+      if (newList.length > 1) {
+        newList[0].stationData.station = "起點"
+        newList[newList.length - 1].stationData = {
+          distanceOfKilometer: 0,
+          distanceOfMeter: 0,
+          distanceToThisStationNeedMeter: 0,
+          estimatedDays: 0,
+          estimatedHours: 0,
+          estimatedMinute: 0,
+          estimatedTimeInMinutes: 0,
+          station: "終點"
+        }
+      }
     }
 
-    // AcitvityUtils.update(updateActivityData.filter(item => item.UID !== "HOME"))
-    // setTimeout(() => console.log(AcitvityUtils.getReserved()) ,1000)
-    this.setState({ list: [...tempList], routerWay: [...newRouterWay], routerWayTotalDistanceOfMeter, routerWayTotalTimeInMinutes })
-    // setTimeout(() => console.log(this.state), 1000)
+    this.setState({
+      list: [...newList],
+      routerWay: [...newRouterWay],
+      routerWayTotalDistanceOfMeter: distanceAndTime[0],
+      routerWayTotalTimeInMinutes: distanceAndTime[1]
+    })
+
+    ActivityUtils.update(newList)
   }
 
   getPromiseWeatherData = (city, area) => {
@@ -131,9 +108,7 @@ export default class ActivityMap extends React.Component {
   }
 
   updateMap = () => {
-    const userReserved = AcitvityUtils.getReserved()
-    // console.log(userReserved)
-    // console.log(userReserved)
+    const userReserved = ActivityUtils.getReserved()
     let promiseList = []
     let maxDistance = [Number.MAX_VALUE, Number.MIN_VALUE, Number.MAX_VALUE, Number.MIN_VALUE]
     let activityInfo = []
@@ -167,6 +142,10 @@ export default class ActivityMap extends React.Component {
       this.state.weatherMap.set(item[0].city + item[0].area, item)
       this.setState({})
     }))
+
+    this.setState({ list: [...activityInfo], routerWay: [...newRouterWay], isUpdateMap: true })
+    // setTimeout(() => console.log(this.state))
+
     const interval = setInterval(() => {
       if (this.mapRef.current) {
         window.clearInterval(interval);
@@ -177,36 +156,29 @@ export default class ActivityMap extends React.Component {
         // map.setView([avgLat, avgLon], 7)
       }
     }, 300)
-    this.setState({ list: [...activityInfo], routerWay: [...newRouterWay], isUpdateMap: true })
-    // setTimeout(() => console.log(this.state))
   }
 
-  mappingToGoogleMap = ()=>{
+  mappingToGoogleMap = () => {
     // https://www.google.com.tw/maps/dir/22.8092071,120.287032/22.808081,120.281519/22.8339171,120.2453587/data=!4m2!4m1!3e0?hl=zh-TW
     const urlHead = "https://www.google.com.tw/maps/dir/"
     const urlLast = "data=!3m1!4b1!4m2!4m1!3e0?hl=zh-TW"
     let url = urlHead
-    this.state.routerWay.map( item => {
-      url += `${item[0]},${item[1]}/` 
+    this.state.routerWay.map(item => {
+      url += `${item[0]},${item[1]}/`
     })
     url += urlLast
     window.open(url, "_black")
   }
 
   componentDidMount() {
-    // console.log("Map componentDidMount")
     pubsub.unsubscribe(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES)
     pubsub.unsubscribe(FUNCTION_CALLER_KEY_UPDATE_MAP)
     pubsub.unsubscribe(FUNCTION_CALLER_KEY_CALCULATE_ROUTER)
-    // let temp = pubsub.getSubscriptions(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES)
-    // console.log(temp)
-    // !pubsub.has(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES)
-    // if(temp.length === 0){
-      pubsub.subscribe(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, this.drawRouteLines)
-      pubsub.subscribe(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap)
-      pubsub.subscribe(FUNCTION_CALLER_KEY_CALCULATE_ROUTER, this.calculateRouter)
-    // }
-    
+
+    pubsub.subscribe(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, this.drawRouteLines)
+    pubsub.subscribe(FUNCTION_CALLER_KEY_UPDATE_MAP, this.updateMap)
+    pubsub.subscribe(FUNCTION_CALLER_KEY_CALCULATE_ROUTER, this.calculateRouter)
+
     this.updateMap()
   }
 
@@ -214,7 +186,7 @@ export default class ActivityMap extends React.Component {
     return (
       <div className={style.div}>
         <div className={style.map_mapping_to_google_map_but} onClick={this.mappingToGoogleMap}>
-          <img className={style.googleMapIcon} src={GoogleMapIcon}/>
+          <img className={style.googleMapIcon} src={GoogleMapIcon} />
         </div>
         <MapContainer
           center={this.position}
@@ -225,12 +197,12 @@ export default class ActivityMap extends React.Component {
             attribution="&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          
-          <LocationMarker setHomePosition={this.setHomePosition} parentState={this.state} parentThis={this} />
+
+          <LocationMarker parentState={this.state} parentThis={this} getTotalDistanceOfMeterAndTimeInMinutes={this.getTotalDistanceOfMeterAndTimeInMinutes} />
           <Polyline pathOptions={mapLineColor} positions={this.state.routerWay} />
           {
             this.state.list.map(item => (item.UID === "HOME") ? <></> : (
-              <Marker  key={item.UID} icon={mapTravelIcon} position={[item.latitude, item.longitude]} title={`${item.title}`}>
+              <Marker key={item.UID} icon={mapTravelIcon} position={[item.latitude, item.longitude]} title={`${item.title}`}>
                 <Popup>
                   <p className={style.map_dot_title_link}><strong><a target="_break" href={item.sourceWebPromote}>{item.title}</a></strong></p>
                   <p className={style.map_dot_title_location}><strong>📬地址:</strong> {item.location}</p>
@@ -241,11 +213,20 @@ export default class ActivityMap extends React.Component {
                   </div>) : <></>}
                   {
                     (item.stationData) ? (<div>
-                      <strong><p className={style.map_dot_station_title}>🚩{`第 ${item.stationData.station} 站`}</p></strong>
-                      <p className={style.map_dot_station_values}><strong>估計距離前一站:</strong> {item.stationData.distanceOfKilometer} 公里 {item.stationData.distanceOfMeter} 公尺</p>
-                      <p className={style.map_dot_station_values}><strong>估計站點轉移時間:</strong> {(item.stationData.estimatedDays !== 0) ? `${item.stationData.estimatedDays} 天 ` : ""}
-                        {(item.stationData.estimatedHours !== 0) ? `${item.stationData.estimatedHours} 小時 ` : ""}
-                        {(item.stationData.estimatedMinute !== 0) ? `${item.stationData.estimatedMinute} 分鐘 ` : ""}</p>
+                      <strong><p className={style.map_dot_station_title}>🚩{(isNaN(item.stationData.station) ? item.stationData.station : `第 ${item.stationData.station} 站`)}</p></strong>
+                      <p className={style.map_dot_station_values}>{(item.stationData.distanceToThisStationNeedMeter != 0) ?
+                        <span>
+                          <strong>估計距離下一站:</strong>
+                          {(item.stationData.distanceOfKilometer !== 0) ? `${item.stationData.distanceOfKilometer} 公里` : ""}
+                          {(item.stationData.distanceOfMeter !== 0) ? `${item.stationData.distanceOfMeter} 公尺` : ""}
+                        </span> : <></>}</p>
+                      <p className={style.map_dot_station_values}>{(item.stationData.estimatedTimeInMinutes != 0) ?
+                        <span>
+                          <strong>估計站點轉移時間:</strong>
+                          {(item.stationData.estimatedDays !== 0) ? `${item.stationData.estimatedDays} 天 ` : ""}
+                          {(item.stationData.estimatedHours !== 0) ? `${item.stationData.estimatedHours} 小時 ` : ""}
+                          {(item.stationData.estimatedMinute !== 0) ? `${item.stationData.estimatedMinute} 分鐘 ` : ""}
+                        </span> : <></>}</p>
                     </div>) : <></>
                   }
                 </Popup>

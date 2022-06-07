@@ -19,6 +19,30 @@ export const getACOCalculateState = ()=>{
     return aco
 }
 
+export const getEstimatedTimeInMinutes = (meter, transportType) => {
+    const oneMeterNeedMinute = TYPE_AVG_ONE_METER_NEED_MINUTE.get(transportType);
+    return meter * oneMeterNeedMinute
+}
+
+export const buildStationList = (list, transportType=0) => {
+    // console.log(list)
+    for (let i = 1; i < list.length; i++) {
+        let prev = list[i - 1];
+        let curr = list[i];
+        const distance = LocationUtils.getDistance(prev.longitude, prev.latitude, curr.longitude, curr.latitude)
+        prev.stationData = {}
+        prev.stationData.distanceToThisStationNeedMeter = distance
+        prev.stationData.distanceOfKilometer = Math.floor(distance / 1000)
+        prev.stationData.distanceOfMeter = Math.floor(distance % 1000)
+        let estimatedTimeInMinutes = getEstimatedTimeInMinutes(distance, transportType)
+        prev.stationData.estimatedTimeInMinutes = estimatedTimeInMinutes
+        prev.stationData.estimatedDays = Math.floor(estimatedTimeInMinutes / 60 / 24)
+        prev.stationData.estimatedHours = Math.floor(estimatedTimeInMinutes / 60 % 24)
+        prev.stationData.estimatedMinute = Math.floor(estimatedTimeInMinutes % 60)
+        prev.stationData.station = i-1;
+    }
+}
+
 const calculateRouter = (reservedActivity, transportType = 0 // 0:car, 1:scooter, 2:walk
 ) => {
     // console.log("@", reservedActivity)
@@ -37,11 +61,6 @@ const calculateRouter = (reservedActivity, transportType = 0 // 0:car, 1:scooter
         return -1;
     }
 
-    const getEstimatedTimeInMinutes = (meter, transportType) => {
-        const oneMeterNeedMinute = TYPE_AVG_ONE_METER_NEED_MINUTE.get(transportType);
-        return meter * oneMeterNeedMinute
-    }
-
     let resultRoute = []
     aco = new ACO(cityList)
     aco.done = () => {
@@ -50,45 +69,18 @@ const calculateRouter = (reservedActivity, transportType = 0 // 0:car, 1:scooter
 
         if (startIndex !== -1) {
             for (let i = startIndex; i < bestRoute.length - 1; i++) {
-                // const item = {
-                //     UID: bestRoute[i][2],
-                //     latitude: Number.parseFloat(bestRoute[i][0]),
-                //     longitude: Number.parseFloat(bestRoute[i][1])
-                // }
-                // resultRoute.push(item)
                 resultRoute.push(bestRoute[i][2])
             }
             for (let i = 0; i <= startIndex; i++) {
                 if (i === startIndex) {
                     resultRoute.push(resultRoute[0])
                 } else {
-                    // const item = {
-                    //     UID: bestRoute[i][2],
-                    //     latitude: Number.parseFloat(bestRoute[i][0]),
-                    //     longitude: Number.parseFloat(bestRoute[i][1])
-                    // }
-                    // resultRoute.push(item)
                     resultRoute.push(bestRoute[i][2])
                 }
             }
-            for (let i = 1; i < resultRoute.length; i++) {
-                // console.log("@2",resultRoute)
-                let prev = resultRoute[i - 1];
-                let curr = resultRoute[i];
-                const distance = LocationUtils.getDistance(prev.longitude, prev.latitude, curr.longitude, curr.latitude)
-                curr.stationData = {}
-                curr.stationData.distanceToThisStationNeedMeter = distance
-                curr.stationData.distanceOfKilometer = Math.floor(distance / 1000)
-                curr.stationData.distanceOfMeter = Math.floor(distance % 1000)
-                let estimatedTimeInMinutes = getEstimatedTimeInMinutes(distance, transportType)
-                curr.stationData.estimatedTimeInMinutes = estimatedTimeInMinutes
-                curr.stationData.estimatedDays = Math.floor(estimatedTimeInMinutes / 60 / 24)
-                curr.stationData.estimatedHours = Math.floor(estimatedTimeInMinutes / 60 % 24)
-                curr.stationData.estimatedMinute = Math.floor(estimatedTimeInMinutes % 60)
-                curr.stationData.station = i;
-            }
+            buildStationList(resultRoute)
         }
-        console.log("@3", resultRoute)
+        // console.log("@3", resultRoute)
         pubsub.publish(FUNCTION_CALLER_KEY_DRAW_ROUTER_LINES, resultRoute)
     }
     aco.start()
