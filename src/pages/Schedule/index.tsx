@@ -13,7 +13,10 @@ import ScheduleTable from './ScheduleTable';
 import ActivityMap from '../../components/ActivityMap';
 import pubsub from 'pubsub-js'
 import { FUNCTION_CALLER_KEY_UPDATE_MAP, FUNCTION_CALLER_KEY_CALCULATE_ROUTER } from '../../components/ActivityMap';
+import { getACOCalculateState } from '../../tools/ACO'
 
+
+const intWaitingTime: number = 100;
 
 interface IProps {}
 interface IState {
@@ -35,11 +38,17 @@ class SchedulePage extends PureComponent<IProps, IState> {
 	renderScheduleTable() {
 		this.setState({ renderCounterScheduleTable: (this.state.renderCounterScheduleTable + 1) });
 	}
+	executeAfterACOIsDone(){
+		let timeoutId = setInterval(() => {
+			if (getACOCalculateState() === "DONE"){
+				clearInterval(timeoutId);
+				this.renderScheduleTable();
+			}
+		}, intWaitingTime)
+	}
 	schedule(){
 		pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER);
-		setTimeout(() => {
-			this.renderScheduleTable();
-		}, 1000)
+		this.executeAfterACOIsDone();
 	}
 	resetActivity() {
 		Activity.clear();
