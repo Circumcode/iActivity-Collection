@@ -8,7 +8,6 @@ const Loading = memo(() => {
     const isFirstRender = useRef(true);
     const navigate = useNavigate();
     const location = useLocation();
-    const strTargetPathname = useRef(location.pathname); 
     const [intWindowWidth, setWindowWidth] = useState(window.innerWidth);
     if (isFirstRender.current){
         window.addEventListener("resize", () => {
@@ -18,7 +17,7 @@ const Loading = memo(() => {
     
     useEffect(() => {
         if (intWindowWidth < intMinWindowWidth) navigate('/warning');
-        else if (location.pathname === '/warning') navigate(strTargetPathname.current);
+        else if (location.pathname === '/warning') navigate('/');
     }, [intWindowWidth])
 
     isFirstRender.current = false;

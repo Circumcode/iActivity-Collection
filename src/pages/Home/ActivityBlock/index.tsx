@@ -62,7 +62,7 @@ export default class index extends Component<IProps, IState> {
 			}
 
 			tempArray.push(
-				new ActivityDetail(arrSeason[index].UID, arrSeason[index].title, strSeason, arrSeason[index].imageUrl, false)
+				new ActivityDetail(arrSeason[index].UID, arrSeason[index].title, strSeason, Activity.getImageUrl(arrSeason[index].UID), false)
 			);
 		}
 

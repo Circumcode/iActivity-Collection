@@ -11,14 +11,16 @@ const intWaitingTime: number = 7000;
 const LoadingPage = memo(() => {
   const isFirstRender = useRef(true);
   const [isOverTime, setOverTimeState] = useState(false);
-  const checkCookieEnable: Function = () => {
-    if (!navigator.cookieEnabled) alert("請允許運行 Cookie 以利於使用本系統");
-  }
+  const [strLoadingFailureText, setLoadingFailureText] = useState("Sorry... 伺服器繁忙，請稍後再試");
   if (isFirstRender.current){
-    checkCookieEnable();
-    setTimeout(() => {
+    if (!navigator.cookieEnabled) {
       setOverTimeState(true);
-    }, intWaitingTime)
+      setLoadingFailureText("請允許運行 Cookie 以利於使用本系統");
+    }
+    else
+      setTimeout(() => {
+        setOverTimeState(true);
+      }, intWaitingTime)
   }
 
 
@@ -29,7 +31,7 @@ const LoadingPage = memo(() => {
     </div>
   )
   const elementLoadingFailure = (
-    <p className={style.p}>Sorry... 伺服器繁忙，請稍後再試 &gt;&lt;</p>
+    <p className={style.p}>{strLoadingFailureText} &gt;&lt;</p>
   )
   return (
     <>

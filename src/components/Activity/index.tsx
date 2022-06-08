@@ -39,7 +39,7 @@ const Activity = memo((props: {activity: any}) => {
 
       <section id={style.secondSection}>
         <div>
-          <img id={style.image} src={props.activity.imageUrl} />
+          <img id={style.image} src={classActivity.getImageUrl(props.activity.UID)} />
           <section
             id={style.info}
             style={cssInfo}

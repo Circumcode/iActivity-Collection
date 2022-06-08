@@ -192,7 +192,6 @@ export default class Activity {
     static getReservedQuantity(){
         return this.arrReservedInfos.length;
     }
-
     static getBySeason(intYear: number, strSeason: "spring" | "summer" | "fall" | "winter"){
         let intSeasonMonth: number = mapSeason.get(strSeason)!;
         let dateSeasonStart: Date = new Date(intYear + "/" + intSeasonMonth + "/1");
@@ -205,6 +204,10 @@ export default class Activity {
             if (!( (dateActivityStart > dateSeasonEnd) || (dateActivityEnd < dateSeasonStart) )) arrActivitySeason.push(activity);
         })
         return arrActivitySeason;
+    }
+    static getImageUrl(strId: string){
+        // return Activity.get(strId).imageUrl; // 原 API 圖片路徑
+        return `https://raw.githubusercontent.com/Circumcode/iActivity-Collection/APIData/img/${strId}.jpg`; // APIData 圖片路徑
     }
 
 
