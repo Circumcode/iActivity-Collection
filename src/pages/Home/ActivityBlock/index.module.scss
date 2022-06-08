@@ -1,0 +1,53 @@
+.activityList {
+	margin: 0 0 60px 60px;
+	user-select: none;
+
+	& .Row {
+		display: flex;
+		justify-content: left;
+		margin-bottom: 20px;
+
+		& .Col {
+			width: 30em;
+			margin-right: 30px;
+		}
+
+		& .block {
+			width: calc(90em + 60px);
+			padding-left: 20px;
+			display: flex;
+			align-items: center;
+
+			text-shadow: 1px 0 0;
+		}
+
+		& .dateBlock {
+			height: 290px;
+			min-width: 290px;
+			
+			margin: 60px 0 100px 0;
+			padding-right: 40px;
+
+			display: flex;
+			justify-content: right;
+
+			border-left: 3px solid rgb(255, 153, 0);
+
+			text-shadow: 2px 1px 0 rgb(255, 153, 0);
+			user-select: none;
+
+			& h2 {
+				color: rgb(255, 170, 0);
+				font-weight: bolder;
+			}
+		}
+	}
+}
+
+.targetFix {
+	position: relative;
+    top: -60px; // 偏移爲nav被fixed元素的高度
+    display: block;
+    height: 0; //高度爲0
+    overflow: hidden;
+}

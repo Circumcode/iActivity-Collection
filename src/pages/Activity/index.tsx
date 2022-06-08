@@ -1,15 +1,24 @@
-import { memo } from 'react';
+import { memo, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import style from './index.module.scss';
+import classActivity from '../../tools/Activity';
+import Activity, { NotExistActivity } from '../../components/Activity';
+import { HeaderNoScheduleIcon } from '../../components/Header';
+import Footer from '../../components/Footer';
 
 
 const ActivityPage = memo(() => {
+  const location = useLocation();
+  const strActivityId = location.pathname.split("/")[2];
+  const activity = classActivity.get(strActivityId, false);
+
+
   return (
-    <div
-      className={style.div}
-    >
-      Activity
-    </div>
+    <>
+      <HeaderNoScheduleIcon />
+        {(activity == null)? <NotExistActivity /> : <Activity activity={classActivity.get(strActivityId)} />}
+      <Footer />
+    </>
   )
 })
 

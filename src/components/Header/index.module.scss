@@ -1,0 +1,57 @@
+.header {
+	width: 100vw;
+	height: 80px;
+	display: flex;
+	align-items: center;
+	background-color: rgb(255, 255, 255);
+	border-bottom: solid 1px #74b7d6;
+
+	top: 0;
+	position: fixed;
+
+	z-index: 10;
+	box-sizing: content-box;
+	user-select: none;
+
+	& .logo {
+		margin-left: 55px;
+		height: 30px;
+	}
+
+	& h4 {
+		margin-top: 10px;
+		color: #74b7d6;
+	}
+
+	& .rightLink {
+		margin-top: -5px;
+		position: absolute;
+		right: 55px;
+		height: 60px;
+		display: flex;
+		align-items: center;
+
+		text-decoration: none;
+
+		& img {
+			position: relative;
+			top: 10px;
+			right: -12px;
+			height: 35px;
+		}
+
+		& input {
+			width: 50px;
+			height: 50px;
+			border: none;
+
+			color: #74b7d6;
+			background-color: transparent;
+			font-size: 15px;
+			font-weight: bold;
+			font-family: DFKai-sb;
+
+			white-space: pre-line;
+		}
+	}
+}

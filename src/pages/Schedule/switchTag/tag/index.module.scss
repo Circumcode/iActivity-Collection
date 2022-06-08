@@ -1,0 +1,31 @@
+.tag {
+	width: 50vw;
+	height: 40px;
+	padding-top: 5px;
+
+	color: rgb(0, 0, 0);
+	background-color: rgb(255, 255, 255);
+
+	border: 0;
+	border-radius: 5px 5px 0 0;
+
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+
+	font-size: larger;
+
+	transition: all 0.3s linear;
+}
+.tag:hover {
+	background-color: rgb(224, 224, 224);
+}
+.tag:focus {
+	color: white;
+	background-color: #74b7d6;
+}
+
+.isChoose {
+	color: white;
+	background-color: #74b7d6;
+}
