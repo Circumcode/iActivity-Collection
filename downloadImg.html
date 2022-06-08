@@ -1,0 +1,44 @@
+<head>
+    <script>
+        let jsonData;
+        let intCurrentIndex = 0;
+
+        function Ajax(){
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(){
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log("Success");
+                    } 
+                    else if (xhr.status === 404) {
+                        // Do something when file not found
+                        alert("Error 404");
+                    }
+                }
+            }
+    
+            xhr.onload = function() {
+                jsonData = JSON.parse(xhr.responseText);
+                readData(0);
+            };
+            
+            xhr.open('GET', './ActivityData.json', true);
+            xhr.send();
+        }
+        Ajax();
+
+
+        function next(){
+            readData(++intCurrentIndex);
+        }
+        function readData(intIndex){
+            document.getElementById("id").textContent = jsonData[intIndex].UID;
+            document.getElementById("img").src = jsonData[intIndex].imageUrl;
+        }
+    </script>
+</head>
+<body>
+    <button onclick="next()">next</button>
+    <p id="id"></p>
+    <img id="img" />
+</body>
