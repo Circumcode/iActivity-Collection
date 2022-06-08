@@ -11,7 +11,11 @@ const intWaitingTime: number = 7000;
 const LoadingPage = memo(() => {
   const isFirstRender = useRef(true);
   const [isOverTime, setOverTimeState] = useState(false);
+  const checkCookieEnable: Function = () => {
+    if (!navigator.cookieEnabled) alert("請允許運行 Cookie 以利於使用本系統");
+  }
   if (isFirstRender.current){
+    checkCookieEnable();
     setTimeout(() => {
       setOverTimeState(true);
     }, intWaitingTime)

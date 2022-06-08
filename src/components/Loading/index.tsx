@@ -21,7 +21,7 @@ const Loading = memo((props: {setLoadedState: Function}) => {
 
     
     if (isFirstRender.current){
-        // Activity.load();
+        Activity.load();
         const timeoutId = setInterval(() => {
             if (Activity.isLoaded()) {
                 clearInterval(timeoutId);

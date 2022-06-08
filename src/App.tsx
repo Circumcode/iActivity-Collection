@@ -22,8 +22,7 @@ function App() {
 
   return (
     <Router>
-      {(isLoaded)? <></> : <Loading setLoadedState={setLoadedState} />}
-      <CheckWindowWidth />
+      {(isLoaded)? <CheckWindowWidth /> : <Loading setLoadedState={setLoadedState} />}
       <ScrollToTop />
 
       <Routes>
