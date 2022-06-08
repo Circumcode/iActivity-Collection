@@ -12,7 +12,6 @@ import ScheduleTable from './ScheduleTable';
 import ActivityMap from '../../components/ActivityMap';
 import pubsub from 'pubsub-js'
 import { FUNCTION_CALLER_KEY_UPDATE_MAP, FUNCTION_CALLER_KEY_CALCULATE_ROUTER } from '../../components/ActivityMap';
-import { getACOCalculateState } from '../../tools/ACO'
 
 
 const intWaitingTime: number = 100;
@@ -37,17 +36,19 @@ class SchedulePage extends PureComponent<IProps, IState> {
 	renderScheduleTable() {
 		this.setState({ renderCounterScheduleTable: (this.state.renderCounterScheduleTable + 1) });
 	}
-	renderScheduleAfterACOIsDone(){
+	renderScheduleAfterUpdatingActivity(){
+		Activity.clearUpdateState();
 		let timeoutId = setInterval(() => {
-			if (getACOCalculateState() === "DONE"){
+			if (Activity.isUpdated()){
 				clearInterval(timeoutId);
 				this.renderScheduleTable();
 			}
 		}, intWaitingTime)
 	}
 	schedule(){
+		Activity.clearTime();
+		this.renderScheduleAfterUpdatingActivity();
 		pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER);
-		this.renderScheduleAfterACOIsDone();
 	}
 	resetActivity() {
 		Activity.clear();
@@ -61,9 +62,8 @@ class SchedulePage extends PureComponent<IProps, IState> {
 
 	componentDidMount() {
 		this.setState({ page: '排程' });
-		// pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
-		pubsub.publish(FUNCTION_CALLER_KEY_CALCULATE_ROUTER);
-		this.renderScheduleAfterACOIsDone();
+		this.renderScheduleAfterUpdatingActivity();
+		pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
 	}
 
 	changePage = (newPage: string) => {
@@ -96,7 +96,6 @@ class SchedulePage extends PureComponent<IProps, IState> {
 					<div style={{ display: (this.state.page === '排程') ? '' : 'none' }}>
 						<ScheduleTable renderCounter={this.state.renderCounterScheduleTable} />
 					</div>
-					{/* <ScheBlock style={{ display: this.state.page === '排程' ? 'block' : 'none' }} /> */}
 					<div style={{ display: (this.state.page === '地圖') ? '' : 'none' }}>
 						<ActivityMap />
 					</div>

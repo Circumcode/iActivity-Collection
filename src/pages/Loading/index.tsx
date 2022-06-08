@@ -2,7 +2,7 @@ import { memo, useRef, useState } from 'react';
 
 import style from './index.module.scss';
 import FullWindowMiddle from '../../components/FullWindowMiddle';
-import Header, { HeaderEmpty } from '../../components/Header'; // change change change change change change change change change change change change change change
+import { HeaderEmpty } from '../../components/Header';
 import Footer from '../../components/Footer';
 
 
@@ -29,7 +29,7 @@ const LoadingPage = memo(() => {
   )
   return (
     <>
-      <Header />
+      <HeaderEmpty />
 
         <FullWindowMiddle>
           {isOverTime? elementLoadingFailure : elementLoading}

@@ -14,6 +14,8 @@ import pubsub from 'pubsub-js'
 import { FUNCTION_CALLER_KEY_UPDATE_MAP } from '../../../../components/ActivityMap';
 
 
+const intWaitingTime: number = 100;
+
 const Activity = memo((props: {number: number, reservedInfo: ReservedInfo, render: Function, focus: Function, isFocus: boolean}) => {
   const refActivity = useRef<HTMLDivElement>(null);
   const [isChangingWeather, setChangingWeatherState] = useState(false);
@@ -31,25 +33,33 @@ const Activity = memo((props: {number: number, reservedInfo: ReservedInfo, rende
     }, 300)
   }
 
+  const renderScheduleAfterUpdatingActivity: Function = () => {
+		classActivity.clearUpdateState();
+		let timeoutId = setInterval(() => {
+			if (classActivity.isUpdated()){
+				clearInterval(timeoutId);
+        props.render();
+
+        setChangingWeatherState(true);
+        setScrollingToFocusState(true);
+			}
+		}, intWaitingTime)
+	}
   const getFormatTime: Function = (event: moment.Moment) => {
     return event.format().split("+")[0];
   }
   const setStartDatePicker: Function = (event: moment.Moment) => {
-    setTimeout(() => { // 等待 DatePicker 關閉
-      props.focus(props.reservedInfo.getId()); // 按叉叉 (取消時間) 不會處發 onClick
-      classActivity.clearStationData();
-  
-      let strStartTime: string = "";
-      if (event !== null) strStartTime = getFormatTime(event);
-      props.reservedInfo.setStartTime( strStartTime );
-      props.render();
-  
-      setChangingWeatherState(true);
-      setScrollingToFocusState(true);
+    props.focus(props.reservedInfo.getId()); // 按叉叉 (取消時間) 不會處發 onClick
+    classActivity.clearStationData();
 
-      pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
-    }, 400)
+    let strStartTime: string = "";
+    if (event !== null) strStartTime = getFormatTime(event);
+    props.reservedInfo.setStartTime( strStartTime );
+
+    renderScheduleAfterUpdatingActivity();
+    pubsub.publish(FUNCTION_CALLER_KEY_UPDATE_MAP);
   }
+
   const setEndDatePicker: Function = (event: moment.Moment) => {
     let strEndTime: string = "";
     if (event !== null) strEndTime = getFormatTime(event);

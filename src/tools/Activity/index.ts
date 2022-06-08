@@ -111,7 +111,7 @@ export default class Activity {
     private static arrReservedInfos: Array<ReservedInfo> = [];
     private static arrActivity: Array<any> = [];
 
-    private static intUpdatedDataNumber: number = 0;
+    private static boolUpdated: boolean = false; // 異步函數可以使用 Promise 改寫
 
 
     static async load() {
@@ -207,6 +207,7 @@ export default class Activity {
         return arrActivitySeason;
     }
 
+
     static isReserved(strId: string){
         for (let intIndex = 0; intIndex < Activity.arrReservedInfos.length; intIndex++){
             if (Activity.arrReservedInfos[intIndex].getId() === strId) return true;
@@ -224,10 +225,11 @@ export default class Activity {
     static cancel(strId: string){
         if (!Activity.isReserved(strId)) throw new LogicalError("Activity- 此活動尚未預約 (id: " + strId + ")");
 
-        Activity.arrReservedInfos.splice(Activity.getIndexForReserved(strId), 1);
+        const reservedInfo = Activity.arrReservedInfos.splice(Activity.getIndexForReserved(strId), 1);
 
         Activity.sort();
         Activity.storeToLocalStorage();
+        return reservedInfo[0];
     }
     static clear(){
         Activity.arrReservedInfos = [];
@@ -255,21 +257,26 @@ export default class Activity {
     static sort(){
         Activity.arrReservedInfos.sort(ReservedInfo.compare);
     }
-    static update(arrActivitys: Array<any>){
-        this.intUpdatedDataNumber = arrActivitys.length;
-        Activity.clearTime();
 
-        arrActivitys.forEach(activity => {
-            Activity.cancel(activity.UID);
-        })
-        for (let intIndex = (arrActivitys.length - 1); intIndex >= 0; intIndex--){
-            Activity.arrReservedInfos.unshift(new ReservedInfo(arrActivitys[intIndex].UID, Activity.get(arrActivitys[intIndex].UID), "", "", arrActivitys[intIndex].stationData));
+
+    static update(arrActivitys: Array<any>){
+        for (let intIndex = 0; intIndex < arrActivitys.length; intIndex++){
+            const reservedInfo = Activity.cancel(arrActivitys[intIndex].UID);
+            Activity.arrReservedInfos.push(
+                new ReservedInfo(
+                    arrActivitys[intIndex].UID, Activity.get(arrActivitys[intIndex].UID), reservedInfo.getStartTime(), reservedInfo.getEndTime(), arrActivitys[intIndex].stationData
+                )
+            );
         }
 
+        Activity.sort();
         Activity.storeToLocalStorage();
+        this.boolUpdated = true;
     }
-
-    static getUpdatedDataNumber(){
-        return this.intUpdatedDataNumber;
+    static clearUpdateState(){
+        this.boolUpdated = false;
+    }
+    static isUpdated(){
+        return this.boolUpdated;
     }
 }

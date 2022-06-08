@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { CSSProperties, memo } from 'react';
 
 
 import style from './index.module.scss';
@@ -28,3 +28,14 @@ const ActivityInterval = memo((props: {reservedInfo: ReservedInfo}) => {
 })
 
 export default ActivityInterval;
+
+
+export const OnlineActivityInterval = memo(() => {
+  return (
+    <div className={style.div}>
+      <div className={style.container}>
+        <span>不列入站點計算 (線上活動)</span>
+      </div>
+    </div>
+  )
+})

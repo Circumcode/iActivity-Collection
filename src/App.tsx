@@ -23,7 +23,7 @@ function App() {
   return (
     <Router>
       {(isLoaded)? <></> : <Loading setLoadedState={setLoadedState} />}
-      {(process.env.NODE_ENV === "development")? <></> : <CheckWindowWidth /> /* 清除 *//* 清除 *//* 清除 *//* 清除 *//* 清除 *//* 清除 *//* 清除 *//* 清除 *//* 清除 *//* 清除 */}
+      <CheckWindowWidth />
       <ScrollToTop />
 
       <Routes>

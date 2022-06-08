@@ -3,7 +3,7 @@ import { memo, useState } from 'react';
 import style from './index.module.scss';
 import classActivity from '../../../tools/Activity';
 import Activity from './Activity';
-import ActivityInterval from './ActivityInternal';
+import ActivityInterval, { OnlineActivityInterval } from './ActivityInternal';
 import Divider from './Divider';
 
 
@@ -16,7 +16,7 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
   const [strFocusActivityId, setFocusActivityId] = useState("");
 
   const arrActivitys: Array<JSX.Element> = [];
-  let intUpdateDataNumberMinusOne = classActivity.getUpdatedDataNumber() - 1;
+  const intLastReservedIndex = classActivity.getReservedQuantity() - 1;
   classActivity.getReserved().forEach((reservedInfo, index) => {
     arrActivitys.push(
       <Activity
@@ -28,8 +28,13 @@ const ScheduleTable = memo((props: {renderCounter: number}) => {
         isFocus={strFocusActivityId === reservedInfo.getId()}
       />
     );
-    
-    if ( reservedInfo.isHavingStationData() && (index < intUpdateDataNumberMinusOne) )
+    if (!reservedInfo.isHavingStationData())
+      arrActivitys.push(
+        <OnlineActivityInterval
+          key={"ActivityInterval_" + reservedInfo.getId()}
+        />
+      )
+    else if (index !== intLastReservedIndex)
       arrActivitys.push(
         <ActivityInterval
           key={"ActivityInterval_" + reservedInfo.getId()}
