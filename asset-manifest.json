@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "https://iactivitycollection.circumcode.com/static/css/main.acc91e1d.css",
-    "main.js": "https://iactivitycollection.circumcode.com/static/js/main.9d5a9c77.js",
-    "static/media/logo.png": "https://iactivitycollection.circumcode.com/static/media/logo.b8efd3da16e167b2c4f2.png",
-    "static/media/Google_Maps_icon_335.png": "https://iactivitycollection.circumcode.com/static/media/Google_Maps_icon_335.a0617c8042e604140056.png",
-    "static/media/map-travel-dot.svg": "https://iactivitycollection.circumcode.com/static/media/map-travel-dot.f09af8df4a8ed41cfd96.svg",
-    "static/media/map-home-dot.svg": "https://iactivitycollection.circumcode.com/static/media/map-home-dot.80dee09dc39f8d86d1cc.svg",
-    "index.html": "https://iactivitycollection.circumcode.com/index.html",
-    "static/media/calendar.svg": "https://iactivitycollection.circumcode.com/static/media/calendar.27bdb1e41877b473ba3f31c4468f8a9a.svg",
-    "main.acc91e1d.css.map": "https://iactivitycollection.circumcode.com/static/css/main.acc91e1d.css.map",
-    "main.9d5a9c77.js.map": "https://iactivitycollection.circumcode.com/static/js/main.9d5a9c77.js.map"
+    "main.css": "https://iac.sninjo.com/static/css/main.9ef57f03.css",
+    "main.js": "https://iac.sninjo.com/static/js/main.e22f880f.js",
+    "static/media/logo.png": "https://iac.sninjo.com/static/media/logo.b8efd3da16e167b2c4f2.png",
+    "static/media/Google_Maps_icon_335.png": "https://iac.sninjo.com/static/media/Google_Maps_icon_335.a0617c8042e604140056.png",
+    "static/media/map-travel-dot.svg": "https://iac.sninjo.com/static/media/map-travel-dot.f09af8df4a8ed41cfd96.svg",
+    "static/media/map-home-dot.svg": "https://iac.sninjo.com/static/media/map-home-dot.80dee09dc39f8d86d1cc.svg",
+    "index.html": "https://iac.sninjo.com/index.html",
+    "static/media/calendar.svg": "https://iac.sninjo.com/static/media/calendar.27bdb1e41877b473ba3f31c4468f8a9a.svg",
+    "main.9ef57f03.css.map": "https://iac.sninjo.com/static/css/main.9ef57f03.css.map",
+    "main.e22f880f.js.map": "https://iac.sninjo.com/static/js/main.e22f880f.js.map"
   },
   "entrypoints": [
-    "static/css/main.acc91e1d.css",
-    "static/js/main.9d5a9c77.js"
+    "static/css/main.9ef57f03.css",
+    "static/js/main.e22f880f.js"
   ]
 }
